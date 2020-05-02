@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>consumed on Jef Claes</title>
+    <link>http://localhost:1313/tags/consumed/</link>
+    <description>Recent content in consumed on Jef Claes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Jan 2018 21:28:00 +0100</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/consumed/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Consumed in 2017</title>
+      <link>http://localhost:1313/2018/01/consumed-in-2017.html</link>
+      <pubDate>Wed, 03 Jan 2018 21:28:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2018/01/consumed-in-2017.html</guid>
+      <description>Another year, another 17 books, 6 shows and 3 movies consumed. Here&amp;rsquo;s this year&amp;rsquo;s highlights.
+Books The Zen and Art of Motor Cycle Maintenance The author is a tormented soul on a quest to define quality. You&amp;rsquo;re his passenger, driving shot gun on a CB77 Super Hawk, in for an exhausting intellectual journey through the high mountains of reasoning. You will often fear getting lost and feel slightly anxious that the driver might drive of a cliff any moment, but he won&amp;rsquo;t.</description>
+    </item>
+    
+    <item>
+      <title>Consumed in 2016</title>
+      <link>http://localhost:1313/2016/12/consumed-in-2016.html</link>
+      <pubDate>Tue, 27 Dec 2016 22:10:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2016/12/consumed-in-2016.html</guid>
+      <description>I&amp;rsquo;m keeping the tradition alive, sharing how much I&amp;rsquo;ve consumed over the last year highlighting the things that stood out. 18 books, 8 movies and 9 shows. Looks like I consumed more than other years, which probably also explains why I produced less after-hours.
+Books I finished the Dark Tower series after 3 years. Following Roland Deschain and his ka-tet throughout the 8 books has been an epic adventure. Finishing Harry Potter by the time I was 18, I had little hopes to be ever dragged into such a long and captivating tale ever again.</description>
+    </item>
+    
+    <item>
+      <title>Consumed in 2015</title>
+      <link>http://localhost:1313/2016/01/consumed-in-2015.html</link>
+      <pubDate>Fri, 01 Jan 2016 14:49:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2016/01/consumed-in-2015.html</guid>
+      <description>I started in 2014 to keep lists of everything I consume. I&amp;rsquo;ve continued this effort throughout 2015 and can now share the items I particularly enjoyed.
+In 2015, I read 16 books and 3 papers, watched 3 movies and 4 shows, listened to 1 audio book and no podcasts. A lot less TV compared to 2014, but most of that time went to playing video games with some of my friends.</description>
+    </item>
+    
+    <item>
+      <title>Consumed in 2014</title>
+      <link>http://localhost:1313/2015/01/consumed-in-2014.html</link>
+      <pubDate>Sun, 11 Jan 2015 17:45:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2015/01/consumed-in-2014.html</guid>
+      <description>Starting 2014, I wanted to look more closely at everything I consume. So I started keeping a list of everything I read, watch and listen to.
+I started off with a markdown file on Github that quikcly evolved into a good excuse to dabble with an alternative stack. I ended up writing an event sourced node.js application on top of postgres, hosted on Heroku. I could write a post on that particular experience, but it&amp;rsquo;s safe to say this blog post captures it better than I ever could.</description>
+    </item>
+    
+    <item>
+      <title>Paper notes: A Study and Toolkit for Asynchronous Programming in C#</title>
+      <link>http://localhost:1313/2014/06/paper-notes-study-and-toolkit-for.html</link>
+      <pubDate>Sun, 08 Jun 2014 18:33:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2014/06/paper-notes-study-and-toolkit-for.html</guid>
+      <description>The .NET framework mainly provides two models for asynchronous programming: (1) the Asynchronous Programming Model (APM), that uses callbacks, and (2) the Task Asynchronous Pattern (TAP), that uses Tasks, which are similar to the concept of futures.
+The Task represents the operation in progress, and its future result. The Task can be (1) queried for the status of the operation, (2) synchronized upon to wait for the result of the operation, or (3) set up with a continuation that resumes in the background when the task completes.</description>
+    </item>
+    
+    <item>
+      <title>Thinking in Systems</title>
+      <link>http://localhost:1313/2014/02/thinking-in-systems.html</link>
+      <pubDate>Sun, 02 Feb 2014 18:19:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2014/02/thinking-in-systems.html</guid>
+      <description>We are surrounded by systems day in, day out. As software developers, we even get to spend a big portion of our day actively building and changing systems - be it software, teams, communities or businesses. Seeing the whole, but more importantly understanding how systems exist of inter-related parts that affect each other in all kinds of interesting ways, is crucial to growing sustainable systems.
+Thinking in Systems is a primer on the subject of system thinking written by Donella H.</description>
+    </item>
+    
+    <item>
+      <title>Happiness before success</title>
+      <link>http://localhost:1313/2014/01/happiness-before-success.html</link>
+      <pubDate>Sun, 12 Jan 2014 18:57:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2014/01/happiness-before-success.html</guid>
+      <description>Somewhere in the beginning of last century, two shoes salesmen were sent to Africa hoping to expand their employer&amp;rsquo;s market. Both salesmen reported home within days of their arrival. The first salesman wrote: &amp;ldquo;This trip turned out to be a waste of time; the locals are not wearing any shoes.&amp;rdquo; The second salesman wrote something similar, yet very different: &amp;ldquo;This is looking very promising; people aren&amp;rsquo;t wearing any shoes yet!&amp;rdquo;</description>
+    </item>
+    
+    <item>
+      <title>Databases are growing on me</title>
+      <link>http://localhost:1313/2013/12/databases-are-growing-on-me.html</link>
+      <pubDate>Sun, 22 Dec 2013 21:53:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2013/12/databases-are-growing-on-me.html</guid>
+      <description>I learned all about logical design of relational databases back in school; tables, columns, data types, views, normalization, constraints, primary keys, foreign keys&amp;hellip; At the same time, I learned how to use SQL to put data in, and how to get it out again; INSERT INTO, SELECT, FROM, WHERE, JOIN, GROUP...
+In the first project I worked on just out of school, we weren&amp;rsquo;t doing anything interesting with databases; we didn&amp;rsquo;t have that many users, or that much data.</description>
+    </item>
+    
+    <item>
+      <title>Book review: Antifragile</title>
+      <link>http://localhost:1313/2013/12/book-review-antifragile.html</link>
+      <pubDate>Sun, 08 Dec 2013 17:30:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2013/12/book-review-antifragile.html</guid>
+      <description>When things are fragile, they break easily. We often see fragility as a bad thing and design things to be robust. But this isn&amp;rsquo;t what we&amp;rsquo;re really after either; things that are robust might be hard to break, but they&amp;rsquo;re also hard to change, making them fail to adapt to new stressors over time. The model that we&amp;rsquo;re really after is antifragility; when something is antifragile it will benefit from stressors and get better over time.</description>
+    </item>
+    
+    <item>
+      <title>Multiplayer Enterprise Architect</title>
+      <link>http://localhost:1313/2013/06/multiplayer-enterprise-architect.html</link>
+      <pubDate>Sun, 30 Jun 2013 17:00:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2013/06/multiplayer-enterprise-architect.html</guid>
+      <description>Hanging around in the pub after DDDX, I ended up talking to Alberto Brandolini. For those who have never met him; he&amp;rsquo;s very much into visualization. You will always see him carrying a drawing pad, with a dash of permanent marker on his cheek, and a few lost sticky notes on his back. I don&amp;rsquo;t know if it was the Italian accent and the strong gestures, or my mildly intoxicated condition, but the idea of visualization as an important tool grew on me even more that evening.</description>
+    </item>
+    
+    <item>
+      <title>IDDD Tour notes (2/2)</title>
+      <link>http://localhost:1313/2013/05/iddd-tour-notes-22.html</link>
+      <pubDate>Sun, 12 May 2013 15:44:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2013/05/iddd-tour-notes-22.html</guid>
+      <description>This is the second and last part of my notes I scribbled down attending the IDDD Tour. The first part was published last week.
+A better model  Even if you come up with a better model, the fact that it has been the ubiquitous language of the domain for decades proves that it works for them.
+ This quote bothers me a bit. There definitely is truth to this, but modeling an existing process often presents such a great opportunity to revise and improve it.</description>
+    </item>
+    
+    <item>
+      <title>IDDD Tour notes (1/2)</title>
+      <link>http://localhost:1313/2013/05/iddd-tour-notes-12.html</link>
+      <pubDate>Sun, 05 May 2013 17:10:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2013/05/iddd-tour-notes-12.html</guid>
+      <description>Two weeks ago I got to spend four days attending the IDDD Tour by Vaughn Vernon. Although my book queue has only allowed me to shallowly browse the book, I had high hopes for this course. I anticipated a week of getting lectured on DDD with a few practical exercises, but was blown away by the openness and interaction promoted by Vaughn and his associate Alberto Brandolini. A passionate group, engaging workshops, long days and lots of sharing made these few days exceptionally satisfying and inspirational.</description>
+    </item>
+    
+  </channel>
+</rss>

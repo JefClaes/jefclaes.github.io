@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tools on Jef Claes</title>
+    <link>http://localhost:1313/tags/tools/</link>
+    <description>Recent content in Tools on Jef Claes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 16 Dec 2012 16:44:00 +0100</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Some notes on performance tuning with NHibernate</title>
+      <link>http://localhost:1313/2012/12/some-notes-on-performance-tuning-with-nhibernate/</link>
+      <pubDate>Sun, 02 Dec 2012 17:36:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/12/some-notes-on-performance-tuning-with-nhibernate/</guid>
+      <description>A few weeks back, I spent an intensive day performance tuning parts of a, to me, relatively unfamiliar part of our codebase. Like it often is, the biggest optimizations were to be found in how we work with the database. Now, I don&amp;rsquo;t consider myself to be an NHibernate expert; I read this book and have used it on two projects, but in the end I just do my best to avoid doing stupid things with it.</description>
+    </item>
+    
+    <item>
+      <title>Released: Kill long meetings</title>
+      <link>http://localhost:1313/2012/11/released-kill-long-meetings/</link>
+      <pubDate>Sun, 25 Nov 2012 17:45:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/11/released-kill-long-meetings/</guid>
+      <description>A lot has already been said and written about meetings, and some have carried the message above par; &amp;lsquo;Meetings: where work goes to die&#39;. Today, I&amp;rsquo;m not going to foul the internet with another rant, but I&amp;rsquo;d like to show you a small application built over the last few weeks after work.
+I regularly find myself building small things as an antitoxin to the regular periods of not writing and shipping code at work.</description>
+    </item>
+    
+    <item>
+      <title>Add images to a GitHub readme</title>
+      <link>http://localhost:1313/2012/04/add-images-to-a-github-readme/</link>
+      <pubDate>Sun, 01 Apr 2012 19:32:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/04/add-images-to-a-github-readme/</guid>
+      <description>Today I wanted to add some screenshots to a GitHub readme for the sake of documenting. While this wasn&amp;rsquo;t particularly hard, I do had to iterate a few times before I got it right.
+Hosting the images
+You could simply add the images to your repository and reference them using the raw url&amp;rsquo;s, but this isn&amp;rsquo;t very efficient. Using this method, every request needs to go through GitHub&amp;rsquo;s application layer. It&amp;rsquo;s far better to make use of GitHub Pages, a feature purely designed to publish web content.</description>
+    </item>
+    
+    <item>
+      <title>Should we get this tool?</title>
+      <link>http://localhost:1313/2011/06/should-we-get-this-tool/</link>
+      <pubDate>Wed, 15 Jun 2011 21:45:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2011/06/should-we-get-this-tool/</guid>
+      <description>This is a decision that often needs to be made by middle management. For managers the most natural way to make this call is by evaluating the return on investment. To calculate the ROI, you need to compare the gain of an investment relative to the amount of investment. And this is exactly where things get hard, if not impossible. Measuring developer productivity is one of the unsolvable problems in our industry.</description>
+    </item>
+    
+    <item>
+      <title>Quick and dirty tool for sending UDP packets</title>
+      <link>http://localhost:1313/2010/03/quick-and-dirty-tool-for-sending-udp-packets/</link>
+      <pubDate>Mon, 15 Mar 2010 18:57:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2010/03/quick-and-dirty-tool-for-sending-udp-packets/</guid>
+      <description>While I was playing with my UDPListener I needed a small tool which could send some UDP packets to a certain hostname and port. That&amp;rsquo;s why I wrote a console application which uses an UdpClient to send some UDP packets. It&amp;rsquo;s quick and dirty, but it serves the cause.
+ 1: namespace UdpSender 2: { 3: class Program 4: { 5: //Constants 6: private const string HOSTNAME = &amp;quot;LocalHost&amp;quot;; 7: private const int PORT = 800; 8: private const int TIMES = 5; 9: private const string MESSAGE = &amp;quot;This is a TestMessage&amp;quot;; 10: private const int SLEEP = 50; 11: 12: static void Main(string[] args) 13: { 14: using (UdpClient client = new UdpClient()) 15: { 16: //Connect 17: client.</description>
+    </item>
+    
+  </channel>
+</rss>

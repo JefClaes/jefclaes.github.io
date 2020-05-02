@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ramblings on Jef Claes</title>
+    <link>http://localhost:1313/tags/ramblings/</link>
+    <description>Recent content in Ramblings on Jef Claes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 02 Jun 2013 16:24:00 +0200</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/tags/ramblings/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2012 Annual Review</title>
+      <link>http://localhost:1313/2012/12/2012-annual-review/</link>
+      <pubDate>Mon, 31 Dec 2012 15:58:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/12/2012-annual-review/</guid>
+      <description>It&amp;rsquo;s that time of the year again where I take some time to look back on the year passed and peek at the year ahead. This is mostly a post I like to write up for myself, forcing reflection.
+The biggest personal changes this year were moving out of my parents&amp;rsquo; place, and my girlfriend&amp;rsquo;s decision to study medicine after graduating as a Master of Arts earlier this year. I had no idea how things would turn out once we lived together, but so far we have been doing great.</description>
+    </item>
+    
+    <item>
+      <title>It&#39;s not cake we are baking</title>
+      <link>http://localhost:1313/2012/12/its-not-cake-we-are-baking/</link>
+      <pubDate>Sun, 09 Dec 2012 16:08:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/12/its-not-cake-we-are-baking/</guid>
+      <description>I recently watched a talk on Vimeo where Christin Gorman talks about how cookie dough relates to Hibernate; why use the generic, bloated and one-fits-all solution when you can mix together your own yummy cookie dough? We should aspire to be the Gordon Ramsey of software, not the college student who can only cook Ramen noodles. If you haven&amp;rsquo;t watched or listened to her talk, you should; it&amp;rsquo;s only a few minutes long, and she brings it really well.</description>
+    </item>
+    
+    <item>
+      <title>Commuting? Have you done the math?</title>
+      <link>http://localhost:1313/2012/11/commuting-have-you-done-the-math/</link>
+      <pubDate>Sun, 04 Nov 2012 20:24:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/11/commuting-have-you-done-the-math/</guid>
+      <description>On my first job interview, over four years ago, I was asked whether I would relocate if I was hired. Back then, I still lived in the Campine region with my parents, while the Ferranti Computer Systems headquarters are in Antwerp. I thought about it for a few seconds and told the interviewer that I didn&amp;rsquo;t plan on moving out of my parents&amp;rsquo; place in the first few years. Besides, the distance isn&amp;rsquo;t that great; it&amp;rsquo;s only 60km (=37 miles) of highway, how bad could it be?</description>
+    </item>
+    
+    <item>
+      <title>Post Web.NET Europe</title>
+      <link>http://localhost:1313/2012/10/post-web.net-europe/</link>
+      <pubDate>Mon, 22 Oct 2012 20:35:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/10/post-web.net-europe/</guid>
+      <description>I attended and spoke at Web.NET Europe in Milan over the weekend. This was only my fourth full day- or more conference (Techdays Belgium, TechEd Berlin and HTML5 WebCamps), but it was undoubtedly the best one so far.
+The quality of the sessions was definitely not inferior to those of bigger conferences. I especially enjoyed the talks on SignalR, OAuth and scaling data (I included some of my notes below). The strength of this conference doesn&amp;rsquo;t lie in the exceptional speakers or sessions though, but in its cozy size and the type of attendees it attracts.</description>
+    </item>
+    
+    <item>
+      <title>Commands, queries and testing</title>
+      <link>http://localhost:1313/2012/10/commands-queries-and-testing/</link>
+      <pubDate>Sun, 14 Oct 2012 17:45:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/10/commands-queries-and-testing/</guid>
+      <description>Also read:
+ Self-contained commands with dependencies Separating command data from logic and sending it on a bus  We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.
+That being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries.</description>
+    </item>
+    
+    <item>
+      <title>On job titles</title>
+      <link>http://localhost:1313/2012/10/on-job-titles/</link>
+      <pubDate>Sun, 07 Oct 2012 19:22:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/10/on-job-titles/</guid>
+      <description>It didn&amp;rsquo;t take long before I noticed how little job titles mean. In my first job, you were assured to be granted a fancy title after only having acquired a minimum seniority, if you knew how to play the game. A more important sounding job title was HR&amp;rsquo;s default bribe that often kept people from leaving for greener pastures, for a short while. But even after being upgraded from a stable cleaner to a Senior Barn Hygiene Technician, you&amp;rsquo;re still cleaning shit though.</description>
+    </item>
+    
+    <item>
+      <title>Is serialization really that expensive?</title>
+      <link>http://localhost:1313/2012/08/is-serialization-really-that-expensive/</link>
+      <pubDate>Wed, 22 Aug 2012 13:19:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/08/is-serialization-really-that-expensive/</guid>
+      <description>While wading through an exotic codebase, I stumbled upon a static class named Convert. This class contained somewhere around 2700 (non-generated) lines of code, where each method manually converted some object to a simple textual representation. These methods were then used to convert requests and reponses to and from a remote third party service before logging them to the database for auditing reasons.
+public static class Convert { public static string PaymentRequest(PaymentRequest req) { var sb = new StringBuilder(); sb.</description>
+    </item>
+    
+    <item>
+      <title>My learning resources distilled</title>
+      <link>http://localhost:1313/2012/08/my-learning-resources-distilled/</link>
+      <pubDate>Sun, 19 Aug 2012 16:10:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/08/my-learning-resources-distilled/</guid>
+      <description>I have picked up a few new tools this summer (MongoDB, NancyFx and WebAPI), and it occurred to me that I&amp;rsquo;ve built certain habits these last few years in how I make use of all the learning resources out there.
+I tried to identify all of them, to then categorize them, to finally order them according to in which phase of my study process I use them.
+The written and spoken word</description>
+    </item>
+    
+    <item>
+      <title>The &#39;everyone should learn to code&#39; dilemma</title>
+      <link>http://localhost:1313/2012/06/the-everyone-should-learn-to-code-dilemma/</link>
+      <pubDate>Sun, 03 Jun 2012 16:40:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/06/the-everyone-should-learn-to-code-dilemma/</guid>
+      <description>Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, &amp;hellip; , even politics.</description>
+    </item>
+    
+    <item>
+      <title>The open plan fallacy testimonials</title>
+      <link>http://localhost:1313/2012/05/the-open-plan-fallacy-testimonials/</link>
+      <pubDate>Sun, 27 May 2012 15:36:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/05/the-open-plan-fallacy-testimonials/</guid>
+      <description>I wrote an article titled &amp;lsquo;The open plan fallacy&amp;rsquo; just two weeks ago. Earlier this week a similar article was published by the New York Times. The content of that article wasn&amp;rsquo;t particularly extraordinary, but the comments were. I waded through all of them on my daily commute, and it&amp;rsquo;s really hard to find one in favor of open plan offices - people seem to be enraged.
+I handpicked some of the most interesting ones.</description>
+    </item>
+    
+    <item>
+      <title>The open plan fallacy</title>
+      <link>http://localhost:1313/2012/05/the-open-plan-fallacy/</link>
+      <pubDate>Sun, 13 May 2012 16:20:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/05/the-open-plan-fallacy/</guid>
+      <description>I haven&amp;rsquo;t worked in a whole lot of places, somewhere around four, but every single one of them used an open plan to structure their workplace. From what I hear from others, it&amp;rsquo;s the standard.
+There are a few things to say about the advantages of an open office layout. They should stimulate communication, create more opportunities for observing and learning from others and be more cost-effective. I&amp;rsquo;m afraid it&amp;rsquo;s the latter which is the biggest driver though.</description>
+    </item>
+    
+    <item>
+      <title>Why I will always love RSS</title>
+      <link>http://localhost:1313/2012/05/why-i-will-always-love-rss/</link>
+      <pubDate>Sun, 06 May 2012 16:50:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/05/why-i-will-always-love-rss/</guid>
+      <description>There has been a lot of noise in the tech community earlier this year about how RSS is supposedly having one foot in the grave. If that would be even remotely true, I hope it dies with its boots on. The herald would be browsers and social networking sites killing or hiding support for RSS. While that may be true, their motives shouldn&amp;rsquo;t rig our opinions.
+RSS has never worked out for the regular consumer, not directly anyways.</description>
+    </item>
+    
+    <item>
+      <title>Some Servicelocator pattern stinks</title>
+      <link>http://localhost:1313/2012/04/some-servicelocator-pattern-stinks/</link>
+      <pubDate>Tue, 17 Apr 2012 20:33:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2012/04/some-servicelocator-pattern-stinks/</guid>
+      <description>I have been working on a somewhat legacy codebase which makes use of the Servicelocator pattern. Although I always thought of Dependecy Injection to be the superior pattern, I was pleased to find some Inversion of Control implementation in there. Working with the codebase, I discovered first hand how easily, when used without caution and discipline, the Servicelocator pattern can introduce code rot.
+I will walk you through some of the issues I have with the Servicelocator pattern, mostly looking at it from a test perspective.</description>
+    </item>
+    
+    <item>
+      <title>Sent from my phone</title>
+      <link>http://localhost:1313/2012/03/sent-from-my-phone/</link>
+      <pubDate>Sat, 17 Mar 2012 19:46:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/03/sent-from-my-phone/</guid>
+      <description>According to Matt from 37signals the line &amp;ldquo;Sent from my iPhone&amp;rdquo; at the bottom of an email means this:
+ Let’s be honest. “Sent from my iPhone” really means “I’m not going to bother to proofread and correct this because it would take me an extra 30 seconds.”
+ I agree. I too use this line as an excuse to write a terse message and omit proper salutations.
+However, I also think these four simple words greatly helped the viral growth of the mobile phone.</description>
+    </item>
+    
+    <item>
+      <title>A solar storm anecdote</title>
+      <link>http://localhost:1313/2012/02/a-solar-storm-anecdote/</link>
+      <pubDate>Wed, 01 Feb 2012 08:43:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2012/02/a-solar-storm-anecdote/</guid>
+      <description>Last week, several news channels reported on the strongest solar storm since 2005. This news item reminded me of a peculiar support ticket we received one gray Monday morning a few years ago, when I was still writing software for fire departments.
+ *********************************************************************************
+Ticket 7238
+Subject: AVL broken
+Status: New
+Description
+06:22 Vehicles stay mostly stationary on the map, even when we are
+positive they are en route.
+*********************************************************************************</description>
+    </item>
+    
+    <item>
+      <title>When should you take performance into consideration?</title>
+      <link>http://localhost:1313/2011/11/when-should-you-take-performance-into-consideration/</link>
+      <pubDate>Sun, 27 Nov 2011 17:55:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2011/11/when-should-you-take-performance-into-consideration/</guid>
+      <description>Before publishing my previous post on rewriting an if, I knew some people would hate it, because the refactored construct is less performant.
+Although I think performance is important, relevant performance improvements are, apart from in tight loops, hardly ever to find in language constructs. To put it more bluntly, they are a waste of time. When translating your thoughts into code, you should aim to make your intentions as clear as possible for the person who comes after you.</description>
+    </item>
+    
+    <item>
+      <title>Blame no one but yourself</title>
+      <link>http://localhost:1313/2011/11/blame-no-one-but-yourself/</link>
+      <pubDate>Wed, 23 Nov 2011 21:24:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2011/11/blame-no-one-but-yourself/</guid>
+      <description>Blame no one but yourself. This is one of the few quotes I remember months after reading this book. Although it&amp;rsquo;s a harsh statement, there definitely is some truth to it.
+Once I started observing my own behavior when faced with failure, I caught myself regularly blaming others for failures to which I am - at least - an accomplice.
+Think about it. You might be guilty of this too.</description>
+    </item>
+    
+    <item>
+      <title>Daydreaming about jQuery Mobile and the WebAPI</title>
+      <link>http://localhost:1313/2011/11/daydreaming-about-jquery-mobile-and-the-webapi/</link>
+      <pubDate>Sun, 20 Nov 2011 17:24:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2011/11/daydreaming-about-jquery-mobile-and-the-webapi/</guid>
+      <description>I recently blogged about programming for the future of mobile with jQuery Mobile and the WebAPI. You probably heard that jQuery Mobile 1.0 was released earlier this week. Although it will take a while before we will see some actual results from the WebAPI initiative, that shouldn&amp;rsquo;t keep us from letting our minds play with things that might be possible one day using the WebAPI.
+The thoughts in this post were provoked by an interesting comment Kristof Claes left on my previous post.</description>
+    </item>
+    
+    <item>
+      <title>Programming for the future of mobile</title>
+      <link>http://localhost:1313/2011/11/programming-for-the-future-of-mobile/</link>
+      <pubDate>Wed, 09 Nov 2011 22:27:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2011/11/programming-for-the-future-of-mobile/</guid>
+      <description>I have been working on something small on the side lately. I hardly have anything to show for it though, most of it is still being shaped in my head.
+Anyhow, a very important part of the front-end is built using jQuery mobile. Although the framework hasn&amp;rsquo;t been released - release candidates are available though -, it&amp;rsquo;s something you should start looking into today. Why? Because the browser is the future of mobile applications.</description>
+    </item>
+    
+    <item>
+      <title>The gift of legacy</title>
+      <link>http://localhost:1313/2011/10/the-gift-of-legacy/</link>
+      <pubDate>Sun, 30 Oct 2011 13:36:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2011/10/the-gift-of-legacy/</guid>
+      <description>Just after graduating, I hated legacy with the heat of a thousand suns. I felt unfortunate, having to work on old code, built using outdated technologies, while software is all about making new and shiny things. Right, guys? Those naïve expectations of a rookie got crumbled very soon. Legacy is a constant in our industry. You can try to ignore it as long as possible, but it&amp;rsquo;s impossible to keep that up forever.</description>
+    </item>
+    
+    <item>
+      <title>Oops, Pluralsight</title>
+      <link>http://localhost:1313/2011/10/oops-pluralsight/</link>
+      <pubDate>Wed, 26 Oct 2011 21:10:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2011/10/oops-pluralsight/</guid>
+      <description>Only a few weeks ago, we got an annual Pluralsight subscription at Euricom. Since then, I have downloaded a couple of videos, raw wmv&amp;rsquo;s, to watch offline on my laptop, commuting.
+Yesterday, being out of material, I headed over to the Pluralsight website to download some more content. I discovered the site was redesigned, removing download links next to the videos.
+Heading over to their blog, I found out more.</description>
+    </item>
+    
+    <item>
+      <title>Should we get this tool?</title>
+      <link>http://localhost:1313/2011/06/should-we-get-this-tool/</link>
+      <pubDate>Wed, 15 Jun 2011 21:45:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2011/06/should-we-get-this-tool/</guid>
+      <description>This is a decision that often needs to be made by middle management. For managers the most natural way to make this call is by evaluating the return on investment. To calculate the ROI, you need to compare the gain of an investment relative to the amount of investment. And this is exactly where things get hard, if not impossible. Measuring developer productivity is one of the unsolvable problems in our industry.</description>
+    </item>
+    
+    <item>
+      <title>Doing the groceries in parallel</title>
+      <link>http://localhost:1313/2010/05/doing-the-groceries-in-parallel/</link>
+      <pubDate>Mon, 10 May 2010 20:36:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2010/05/doing-the-groceries-in-parallel/</guid>
+      <description>I&amp;rsquo;ve started reading the excellent paper &amp;ldquo;Patterns for Parallel Programming: Understanding and Applying Parallel Patterns with the .NET Framework 4&amp;quot;.
+There is a section in this whitepaper which explains perfectly why parallel programming was and still is such an interesting problem.
+ Consider an analogy: shopping with some friends at a grocery store. You come into the store with a grocery list, and you rip the list into one piece per friend, such that every friend is responsible for retrieving the elements on his or her list.</description>
+    </item>
+    
+    <item>
+      <title>Webforms lessons learned the hard way (Part 1)</title>
+      <link>http://localhost:1313/2010/02/webforms-lessons-learned-the-hard-way-part-1/</link>
+      <pubDate>Sun, 14 Feb 2010 16:22:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2010/02/webforms-lessons-learned-the-hard-way-part-1/</guid>
+      <description>I&amp;rsquo;ve been spending a lot of my days in Webforms the last two years. In this post I want to share some best practices I&amp;rsquo;ve learned the hard way over these years. A lot of MVC developers might think this post comes a bit late (who still cares about Webforms?!), I do think (in the real world) a lot of the ASP.NET developers are still using Webforms. This post is directly targeting them.</description>
+    </item>
+    
+    <item>
+      <title>&#34;Excellence&#34; is a drive from inside, not outside</title>
+      <link>http://localhost:1313/2010/01/excellence-is-a-drive-from-inside-not-outside/</link>
+      <pubDate>Mon, 11 Jan 2010 15:06:00 +0100</pubDate>
+      
+      <guid>http://localhost:1313/2010/01/excellence-is-a-drive-from-inside-not-outside/</guid>
+      <description>A little story I found which I think relates to software development in a way..
+ A tourist once visited a temple under construction where he saw a sculptor making an idol of God. Suddenly he noticed a similar idol lying nearby. Surprised, he asked the sculptor, &amp;ldquo;Do you need two statues of the same idol?&amp;rdquo; &amp;ldquo;No,&amp;rdquo; said the sculptor without looking up, &amp;ldquo;We need only one, but the first one got damaged at the last stage.</description>
+    </item>
+    
+    <item>
+      <title>Why the javascript beforeunload event is incomplete</title>
+      <link>http://localhost:1313/2009/09/why-the-javascript-beforeunload-event-is-incomplete/</link>
+      <pubDate>Sat, 12 Sep 2009 21:13:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2009/09/why-the-javascript-beforeunload-event-is-incomplete/</guid>
+      <description>The onbeforeunload event fires when a page is being unloaded.
+In the intranet webapplications world customers pretty often ask to show a warning when a user leaves a page (by closing the browser, closing a tab, clicking a link,..). This feature is specifically very interesting for data-input-driven webforms where one wrong click can make ten minutes of work undone.
+Last week I had to implement this feature in a huge webform which is causing lots of postbacks (firing the onbeforeunload event).</description>
+    </item>
+    
+    <item>
+      <title>Why code reviews should be a teamthing</title>
+      <link>http://localhost:1313/2009/08/why-code-reviews-should-be-a-teamthing/</link>
+      <pubDate>Sun, 23 Aug 2009 19:22:00 +0200</pubDate>
+      
+      <guid>http://localhost:1313/2009/08/why-code-reviews-should-be-a-teamthing/</guid>
+      <description>Often code reviews are done by one person, the technical lead of your team.
+In my opinion it&amp;rsquo;s better to make each developer of your team do code reviews.
+My arguments Having all developers doing code reviews enforces well-documented coding standards.. Which also leads to discussions about what these codings tandards should be. Each developer is forced to understand the workflow of an application which isn&amp;rsquo;t his, which expands his domain knowledge.</description>
+    </item>
+    
+  </channel>
+</rss>
