@@ -1,203 +1,99 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Exception handling in batch operations with the AggregateException - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Exception handling in batch operations with the AggregateException">
-<meta itemprop="description" content="Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations.">
-<meta itemprop="datePublished" content="2010-05-15T18:34:00&#43;02:00" />
-<meta itemprop="dateModified" content="2010-05-15T18:34:00&#43;02:00" />
-<meta itemprop="wordCount" content="340">
-
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="Exception handling in batch operations with the AggregateException" />
-<meta property="og:description" content="Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html" />
-<meta property="article:published_time" content="2010-05-15T18:34:00+02:00" />
-<meta property="article:modified_time" content="2010-05-15T18:34:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Exception handling in batch operations with the AggregateException"/>
-<meta name="twitter:description" content="Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">15</span>
-							<span class="rest">May 2010</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Exception handling in batch operations with the AggregateException</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Doing batch operations and elegantly handling exceptions is a problem
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Exception handling in batch operations with the AggregateException | Jef Claes</title><meta name=keywords content="code"><meta name=description content="Doing batch operations and elegantly handling exceptions is a problem
 which every developer has faced before. In .NET 3.5 or older there is no
 out-of-the-box solution to handle exceptions in these types of
 scenarios, without being inconsistent to the normal flow of exception
 handling. .NET 4 introduces the
-<a href="http://msdn.microsoft.com/en-us/library/system.aggregateexception.aspx">AggregateException</a>;
+AggregateException;
 an exception representing multiple exceptions. The AggregateException
-was introduced in the first place to be used with the <a href="http://msdn.microsoft.com/en-us/concurrency/default.aspx">parallel
+was introduced in the first place to be used with the parallel
+framework,
+but it can be used in other scenarios as well, such as batch
+operations."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Exception handling in batch operations with the AggregateException"><meta property="og:description" content="Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2010-05-15T18:34:00+02:00"><meta property="article:modified_time" content="2010-05-15T18:34:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="Exception handling in batch operations with the AggregateException"><meta name=twitter:description content="Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Exception handling in batch operations with the AggregateException","item":"https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Exception handling in batch operations with the AggregateException","name":"Exception handling in batch operations with the AggregateException","description":"Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations.\n","keywords":["code"],"articleBody":"Doing batch operations and elegantly handling exceptions is a problem which every developer has faced before. In .NET 3.5 or older there is no out-of-the-box solution to handle exceptions in these types of scenarios, without being inconsistent to the normal flow of exception handling. .NET 4 introduces the AggregateException; an exception representing multiple exceptions. The AggregateException was introduced in the first place to be used with the parallel framework, but it can be used in other scenarios as well, such as batch operations.\nTake a look at the following example..\nI have a single action which I want to peform in batch. This single action might throw some exceptions.\nprivate static void ExecuteSingleAction(int i) { if (i == 5) throw new ArgumentNullException(\"You forgot an argument.\"); if (i == 18) throw new ArgumentException(\"This argument doesn't make sense.\"); } Most of the exceptions the single action might throw shouldn’t break my whole batch operation. While I’m executing the single actions I catch the exceptions which shouldn’t break the batch operation and hold them in a list of exceptions. The AggregateException has a public constructor taking an IEnumerable of exceptions. If I catch some exceptions while executing the single action I throw an AggregateException passing in that list of exceptions to its constructor.\nprivate static void ExecuteBatch() { List exceptions = new List(); for (int i = 0; i \u003c 100; i++) { try { ExecuteSingleAction(i); } catch (ArgumentNullException nullRefEx) { exceptions.Add(nullRefEx); } catch (ArgumentException argumentEx) { exceptions.Add(argumentEx); } } if (exceptions.Count \u003e 0) throw new AggregateException(exceptions); } In the front-end I can catch the AggregateException, run over its InnerExceptions and act based on the type of exception.\nstatic void Main(string[] args) { try { ExecuteBatch(); } catch (AggregateException aggEx) { foreach(Exception ex in aggEx.InnerExceptions) { Console.WriteLine(ex.Message); if (ex is ArgumentNullException) { //Do something } if (ex is ArgumentException) { //Do something else } } } Console.ReadLine(); } The result looks like this.\nCan you imagine other scenarios where the AggregateException might be able to add some value?\nRelated post: Handling the AggregateException\n","wordCount":"340","inLanguage":"en","datePublished":"2010-05-15T18:34:00+02:00","dateModified":"2010-05-15T18:34:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Exception handling in batch operations with the AggregateException</h1><div class=post-meta><span title='2010-05-15 18:34:00 +0200 CEST'>May 15, 2010</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Doing batch operations and elegantly handling exceptions is a problem
+which every developer has faced before. In .NET 3.5 or older there is no
+out-of-the-box solution to handle exceptions in these types of
+scenarios, without being inconsistent to the normal flow of exception
+handling. .NET 4 introduces the
+<a href=http://msdn.microsoft.com/en-us/library/system.aggregateexception.aspx>AggregateException</a>;
+an exception representing multiple exceptions. The AggregateException
+was introduced in the first place to be used with the <a href=http://msdn.microsoft.com/en-us/concurrency/default.aspx>parallel
 framework</a>,
 but it can be used in other scenarios as well, such as batch
-operations.</p>
-<p><strong>Take a look at the following example..</strong></p>
-<p>I have a single action which I want to peform in batch. This single
-action might throw some exceptions.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">private</span> <span style="color:#859900">static</span> <span style="color:#859900">void</span> <span style="color:#268bd2">ExecuteSingleAction</span>(<span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">i</span>)
-{
-      <span style="color:#859900">if</span> (<span style="color:#268bd2">i</span> == <span style="color:#2aa198;font-weight:bold">5</span>)            
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArgumentNullException</span>(<span style="color:#2aa198">&#34;You forgot an argument.&#34;</span>);       
-      <span style="color:#859900">if</span> (<span style="color:#268bd2">i</span> == <span style="color:#2aa198;font-weight:bold">18</span>)
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArgumentException</span>(<span style="color:#2aa198">&#34;This argument doesn&#39;t make sense.&#34;</span>);
-}
-</code></pre></div><p>Most of the exceptions the single action might throw shouldn&rsquo;t break my
+operations.</p><p><strong>Take a look at the following example..</strong></p><p>I have a single action which I want to peform in batch. This single
+action might throw some exceptions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> ExecuteSingleAction(<span style=color:#66d9ef>int</span> i)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (i == <span style=color:#ae81ff>5</span>)            
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> ArgumentNullException(<span style=color:#e6db74>&#34;You forgot an argument.&#34;</span>);       
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (i == <span style=color:#ae81ff>18</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> ArgumentException(<span style=color:#e6db74>&#34;This argument doesn&#39;t make sense.&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Most of the exceptions the single action might throw shouldn&rsquo;t break my
 whole batch operation. While I&rsquo;m executing the single actions I catch
 the exceptions which shouldn&rsquo;t break the batch operation and hold them
 in a list of exceptions. The <code>AggregateException</code> has a public constructor
 taking an <code>IEnumerable</code> of exceptions. If I catch some exceptions while
 executing the single action I throw an <code>AggregateException</code> passing in
-that list of exceptions to its constructor.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">private</span> <span style="color:#859900">static</span> <span style="color:#859900">void</span> <span style="color:#268bd2">ExecuteBatch</span>()
-{
-      <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">Exception</span>&gt; <span style="color:#268bd2">exceptions</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">Exception</span>&gt;();
-      
-      <span style="color:#859900">for</span> (<span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">i</span> = <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#2aa198;font-weight:bold">100</span>; <span style="color:#268bd2">i</span>++)
-      {
-            <span style="color:#859900">try</span>
-            {
-                  <span style="color:#268bd2">ExecuteSingleAction</span>(<span style="color:#268bd2">i</span>);
-            }
-            <span style="color:#859900">catch</span> (<span style="color:#268bd2">ArgumentNullException</span> <span style="color:#268bd2">nullRefEx</span>)
-            {
-                  <span style="color:#268bd2">exceptions</span>.<span style="color:#268bd2">Add</span>(<span style="color:#268bd2">nullRefEx</span>);
-            }
-            <span style="color:#859900">catch</span> (<span style="color:#268bd2">ArgumentException</span> <span style="color:#268bd2">argumentEx</span>)
-            {
-                  <span style="color:#268bd2">exceptions</span>.<span style="color:#268bd2">Add</span>(<span style="color:#268bd2">argumentEx</span>);
-            }             
-      }
-
-      <span style="color:#859900">if</span> (<span style="color:#268bd2">exceptions</span>.<span style="color:#268bd2">Count</span> &gt; <span style="color:#2aa198;font-weight:bold">0</span>)           
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">AggregateException</span>(<span style="color:#268bd2">exceptions</span>);            
-}
-</code></pre></div><p>In the front-end I can catch the <code>AggregateException</code>, run over its
+that list of exceptions to its constructor.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> ExecuteBatch()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>      List&lt;Exception&gt; exceptions = <span style=color:#66d9ef>new</span> List&lt;Exception&gt;();
+</span></span><span style=display:flex><span>      
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; <span style=color:#ae81ff>100</span>; i++)
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>try</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                  ExecuteSingleAction(i);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>catch</span> (ArgumentNullException nullRefEx)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                  exceptions.Add(nullRefEx);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>catch</span> (ArgumentException argumentEx)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                  exceptions.Add(argumentEx);
+</span></span><span style=display:flex><span>            }             
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (exceptions.Count &gt; <span style=color:#ae81ff>0</span>)           
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> AggregateException(exceptions);            
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In the front-end I can catch the <code>AggregateException</code>, run over its
 <a href="http://msdn.microsoft.com/en-us/library/system.aggregateexception.innerexceptions(v=VS.100).aspx">InnerExceptions</a>
-and act based on the type of exception.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">static</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Main</span>(<span style="color:#859900;font-weight:bold">string</span>[] <span style="color:#268bd2">args</span>)
-{
-      <span style="color:#859900">try</span>
-      {
-            <span style="color:#268bd2">ExecuteBatch</span>();
-      }
-      <span style="color:#859900">catch</span> (<span style="color:#268bd2">AggregateException</span> <span style="color:#268bd2">aggEx</span>)
-      {
-            <span style="color:#859900">foreach</span>(<span style="color:#268bd2">Exception</span> <span style="color:#268bd2">ex</span> <span style="color:#859900">in</span> <span style="color:#268bd2">aggEx</span>.<span style="color:#268bd2">InnerExceptions</span>)
-            {                  
-                  <span style="color:#268bd2">Console</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#268bd2">ex</span>.<span style="color:#268bd2">Message</span>);
-
-                  <span style="color:#859900">if</span> (<span style="color:#268bd2">ex</span> <span style="color:#859900">is</span> <span style="color:#268bd2">ArgumentNullException</span>)
-                  {
-                        <span style="color:#93a1a1;font-style:italic">//Do something
-</span><span style="color:#93a1a1;font-style:italic"></span>                  }
-
-                  <span style="color:#859900">if</span> (<span style="color:#268bd2">ex</span> <span style="color:#859900">is</span> <span style="color:#268bd2">ArgumentException</span>)
-                  {
-                        <span style="color:#93a1a1;font-style:italic">//Do something else
-</span><span style="color:#93a1a1;font-style:italic"></span>                  }
-            }
-      }
-
-      <span style="color:#268bd2">Console</span>.<span style="color:#268bd2">ReadLine</span>();
-}
-</code></pre></div><p>The result looks like this.</p>
-<p><a href="/post/images/2010-05-15-exception-handling-in-batch-operations-with-the-aggregateexception-ResultAggregateException.png"><img src="/post/images/thumbnails/2010-05-15-exception-handling-in-batch-operations-with-the-aggregateexception-ResultAggregateException.png" alt=""></a></p>
-<p>Can you imagine other scenarios where the <code>AggregateException</code> might be
-able to add some value?</p>
-<p>Related post: <a href="https://jefclaes.be/2010/05/handling-aggregateexception.html">Handling the AggregateException</a><!-- raw HTML omitted --></p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2010  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+and act based on the type of exception.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>try</span>
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>            ExecuteBatch();
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>catch</span> (AggregateException aggEx)
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span>(Exception ex <span style=color:#66d9ef>in</span> aggEx.InnerExceptions)
+</span></span><span style=display:flex><span>            {                  
+</span></span><span style=display:flex><span>                  Console.WriteLine(ex.Message);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                  <span style=color:#66d9ef>if</span> (ex <span style=color:#66d9ef>is</span> ArgumentNullException)
+</span></span><span style=display:flex><span>                  {
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>//Do something</span>
+</span></span><span style=display:flex><span>                  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                  <span style=color:#66d9ef>if</span> (ex <span style=color:#66d9ef>is</span> ArgumentException)
+</span></span><span style=display:flex><span>                  {
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>//Do something else</span>
+</span></span><span style=display:flex><span>                  }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      Console.ReadLine();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The result looks like this.</p><p><a href=/post/images/2010-05-15-exception-handling-in-batch-operations-with-the-aggregateexception-ResultAggregateException.png><img loading=lazy src=/post/images/thumbnails/2010-05-15-exception-handling-in-batch-operations-with-the-aggregateexception-ResultAggregateException.png></a></p><p>Can you imagine other scenarios where the <code>AggregateException</code> might be
+able to add some value?</p><p>Related post: <a href=https://jefclaes.be/2010/05/handling-aggregateexception.html>Handling the AggregateException</a></span></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2010/05/handling-aggregateexception.html><span class=title>« Prev</span>
+<span>Handling the AggregateException</span>
+</a><a class=next href=https://jefclaes.be/2010/04/trip-report-czech-republic.html><span class=title>Next »</span>
+<span>Trip Report Czech Republic</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

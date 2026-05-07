@@ -1,154 +1,78 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Event projections - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Event projections">
-<meta itemprop="description" content="In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?
-In traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model.">
-<meta itemprop="datePublished" content="2013-10-27T17:43:00&#43;01:00" />
-<meta itemprop="dateModified" content="2013-10-27T17:43:00&#43;01:00" />
-<meta itemprop="wordCount" content="765">
-
-
-
-<meta itemprop="keywords" content="code,infrastructure," /><meta property="og:title" content="Event projections" />
-<meta property="og:description" content="In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?
-In traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2013/10/event-projections.html" />
-<meta property="article:published_time" content="2013-10-27T17:43:00+01:00" />
-<meta property="article:modified_time" content="2013-10-27T17:43:00+01:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Event projections"/>
-<meta name="twitter:description" content="In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?
-In traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">27</span>
-							<span class="rest">Oct 2013</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Event projections</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>In my first two posts on event sourcing, I implemented <a href="http://www.jefclaes.be/2013/10/an-event-sourced-aggregate.html">an event sourced
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Event projections | Jef Claes</title><meta name=keywords content="code,infrastructure"><meta name=description content="In my first two posts on event sourcing, I implemented an event sourced
 aggregate from
-scratch</a>.
+scratch.
 After being able to have an aggregate record and play events, I looked
-at persisting them in <a href="http://www.jefclaes.be/2013/10/an-event-store.html">an event
-store</a>. Logically,
+at persisting them in an event
+store. Logically,
 the next question is: how do I query my aggregates, how do I get my
-state out?</p>
-<p>In traditional systems, write and read models are not separated, they
+state out?
+In traditional systems, write and read models are not separated, they
 are one and the same. Event sourced systems on the other hand have a
 write model - event streams, and a separate read model. The read model
 is built from events committed to the write model; events are projected
-into one or more read models.</p>
-<p><a href="/post/images/2013-10-27-event-projections-Projections.PNG"><img src="/post/images/thumbnails/2013-10-27-event-projections-Projections.PNG" alt=""></a></p>
-<p>An interface for a projection could look like this.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">interface</span> <span style="color:#268bd2">IProjection</span> {
-    <span style="color:#859900">void</span> <span style="color:#268bd2">Handle</span>(<span style="color:#268bd2">EventStream</span> <span style="color:#268bd2">eventStream</span>);                     
-}
-</code></pre></div><p>A projection takes in an event stream, and projects it to <em>some</em> read
-model.</p>
-<p>A read model can be anything; a cache, a document store, a key value
-store, a relational database, a file, or even some evil global state.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">EvilStatisticsReadModel</span> {
-    <span style="color:#859900">public</span> <span style="color:#859900">static</span> <span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">WithdrawalAmountExceededCount</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">public</span> <span style="color:#859900">static</span> <span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">AmountDepositedCount</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-}
-</code></pre></div><p>In this model, we want to maintain statistics of events that happened.
-For that to happen, we need to define a projection of our event stream.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">ProjectionsToEvilStaticsReadModel</span> : <span style="color:#268bd2">IProjection</span> {
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Handle</span>(<span style="color:#268bd2">EventStream</span> <span style="color:#268bd2">eventStream</span>) {
-        <span style="color:#859900">foreach</span> (<span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">@event</span> <span style="color:#859900">in</span> <span style="color:#268bd2">eventStream</span>)
-            <span style="color:#268bd2">When</span>((<span style="color:#859900;font-weight:bold">dynamic</span>)<span style="color:#268bd2">@event</span>);
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">When</span>(<span style="color:#268bd2">WithdrawalAmountExceeded</span> <span style="color:#268bd2">@event</span>) {
-        <span style="color:#268bd2">EvilStatisticsReadModel</span>.<span style="color:#268bd2">WithdrawalAmountExceededCount</span>++;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">When</span>(<span style="color:#268bd2">AmountDeposited</span> <span style="color:#268bd2">@event</span>) {
-        <span style="color:#268bd2">EvilStatisticsReadModel</span>.<span style="color:#268bd2">AmountDepositedCount</span>++;
-    }    
-}
-</code></pre></div><p>If we now let this projection handle an event stream, our read model
-will be kept up-to-date.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#268bd2">[TestMethod]</span>
-<span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">ReadModelIsKeptUpToDateWhileProjectingTheEventStream</span>() {
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">events</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#268bd2">IEvent</span>&gt;() {
-        <span style="color:#859900">new</span> <span style="color:#268bd2">WithdrawalAmountExceeded</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Amount</span>(<span style="color:#2aa198;font-weight:bold">3000</span>)),
-        <span style="color:#859900">new</span> <span style="color:#268bd2">AmountDeposited</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Amount</span>(<span style="color:#2aa198;font-weight:bold">300</span>)),
-        <span style="color:#859900">new</span> <span style="color:#268bd2">AmountDeposited</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Amount</span>(<span style="color:#2aa198;font-weight:bold">500</span>)),
-        <span style="color:#859900">new</span> <span style="color:#268bd2">AmountWithdrawn</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Amount</span>(<span style="color:#2aa198;font-weight:bold">100</span>))
-    };
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">stream</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">EventStream</span>(<span style="color:#268bd2">events</span>);
-
-    <span style="color:#859900">new</span> <span style="color:#268bd2">ProjectionsToEvilStaticsReadModel</span>().<span style="color:#268bd2">Handle</span>(<span style="color:#268bd2">stream</span>);
-
-    <span style="color:#268bd2">Assert</span>.<span style="color:#268bd2">AreEqual</span>(<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">EvilStatisticsReadModel</span>.<span style="color:#268bd2">WithdrawalAmountExceededCount</span>);
-    <span style="color:#268bd2">Assert</span>.<span style="color:#268bd2">AreEqual</span>(<span style="color:#2aa198;font-weight:bold">2</span>, <span style="color:#268bd2">EvilStatisticsReadModel</span>.<span style="color:#268bd2">AmountDepositedCount</span>);    
-}
-</code></pre></div><p>One could argue that all of this is too much - not worth the effort.
+into one or more read models."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2013/10/event-projections.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2013/10/event-projections.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2013/10/event-projections.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Event projections"><meta property="og:description" content="In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?
+In traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model. The read model is built from events committed to the write model; events are projected into one or more read models."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2013-10-27T17:43:00+01:00"><meta property="article:modified_time" content="2013-10-27T17:43:00+01:00"><meta property="article:tag" content="Code"><meta property="article:tag" content="Infrastructure"><meta name=twitter:card content="summary"><meta name=twitter:title content="Event projections"><meta name=twitter:description content="In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?
+In traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model. The read model is built from events committed to the write model; events are projected into one or more read models."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Event projections","item":"https://jefclaes.be/2013/10/event-projections.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Event projections","name":"Event projections","description":"In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?\nIn traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model. The read model is built from events committed to the write model; events are projected into one or more read models.\n","keywords":["code","infrastructure"],"articleBody":"In my first two posts on event sourcing, I implemented an event sourced aggregate from scratch. After being able to have an aggregate record and play events, I looked at persisting them in an event store. Logically, the next question is: how do I query my aggregates, how do I get my state out?\nIn traditional systems, write and read models are not separated, they are one and the same. Event sourced systems on the other hand have a write model - event streams, and a separate read model. The read model is built from events committed to the write model; events are projected into one or more read models.\nAn interface for a projection could look like this.\npublic interface IProjection { void Handle(EventStream eventStream); } A projection takes in an event stream, and projects it to some read model.\nA read model can be anything; a cache, a document store, a key value store, a relational database, a file, or even some evil global state.\npublic class EvilStatisticsReadModel { public static int WithdrawalAmountExceededCount { get; set; } public static int AmountDepositedCount { get; set; } } In this model, we want to maintain statistics of events that happened. For that to happen, we need to define a projection of our event stream.\npublic class ProjectionsToEvilStaticsReadModel : IProjection { public void Handle(EventStream eventStream) { foreach (var @event in eventStream) When((dynamic)@event); } public void When(WithdrawalAmountExceeded @event) { EvilStatisticsReadModel.WithdrawalAmountExceededCount++; } public void When(AmountDeposited @event) { EvilStatisticsReadModel.AmountDepositedCount++; } } If we now let this projection handle an event stream, our read model will be kept up-to-date.\n[TestMethod] public void ReadModelIsKeptUpToDateWhileProjectingTheEventStream() { var events = new List() { new WithdrawalAmountExceeded(new Amount(3000)), new AmountDeposited(new Amount(300)), new AmountDeposited(new Amount(500)), new AmountWithdrawn(new Amount(100)) }; var stream = new EventStream(events); new ProjectionsToEvilStaticsReadModel().Handle(stream); Assert.AreEqual(1, EvilStatisticsReadModel.WithdrawalAmountExceededCount); Assert.AreEqual(2, EvilStatisticsReadModel.AmountDepositedCount); } One could argue that all of this is too much - not worth the effort. Where you first just persisted the structure of an aggregate, and could query that same structure, you now first have to persist events for then to write projections that maintain separate read models that can be queried.\nYou have to look beyond that though. Those that have done any serious work on a traditional stack have felt the pain of migrations, complex queries that take up three pages, obscure stored procedures that run for hours, optimizing while having to consider a handful of different use cases, finding the balance between write- and read performance, database servers that can’t handle the load on special events, expensive licenses and so on. While these first few concerns are mostly technical, personally I’m often overwhelmed by how much concepts these designs force you to keep in your head all at once.\nSeparating reads from writes using event sourcing might bring some relief. Reducing cognitive overload by separating responsibilities into smaller, more granular bits might be the only argument you need. However, there’s a lot more. Running an event store should be low-maintenance; it’s an append-only data model storing simple serialized DTO’s with some meta data - forget about big migrations (not completely though), schemas, indexes and so on. Even if you project into a relational database, being able to re-run projections should make migration scripts and versioning avoidable. An event can be projected into multiple read models, allowing you to optimize per use case, without having to take other use cases into account. Since it should be easy to rebuild read models, they can be stored in cheap and volatile storage - think key-value store, in-memory and so on, allowing for crazy fast reads.\nLetting go of the single-model dogma seems to enable so much more, giving you a whole new set of possibilities. Another extremely useful use case that suddenly becomes a lot easier to support is business intelligence; when business experts think of new ways to look at the past, you just create a new projection and project events from day one. Getting statistics of how your users are using your system doesn’t sound that hard now, does it?\nOne of the obvious drawbacks next to writing a bit more, boring code is that storage costs will increase - you are now persisting the same data in multiple representations. But storage is cheap, right? Maybe money isn’t an issue, but what about performance? It’s slower to do three writes instead of one, right? For a lot of scenarios this won’t be much of an issue, but if it is, there is a lot of room for optimiziations doing projections; parallelization, eventual consistency and so on.\nNext week: event source all the things?\n","wordCount":"765","inLanguage":"en","datePublished":"2013-10-27T17:43:00+01:00","dateModified":"2013-10-27T17:43:00+01:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2013/10/event-projections.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Event projections</h1><div class=post-meta><span title='2013-10-27 17:43:00 +0100 CET'>October 27, 2013</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>In my first two posts on event sourcing, I implemented <a href=http://www.jefclaes.be/2013/10/an-event-sourced-aggregate.html>an event sourced
+aggregate from
+scratch</a>.
+After being able to have an aggregate record and play events, I looked
+at persisting them in <a href=http://www.jefclaes.be/2013/10/an-event-store.html>an event
+store</a>. Logically,
+the next question is: how do I query my aggregates, how do I get my
+state out?</p><p>In traditional systems, write and read models are not separated, they
+are one and the same. Event sourced systems on the other hand have a
+write model - event streams, and a separate read model. The read model
+is built from events committed to the write model; events are projected
+into one or more read models.</p><p><a href=/post/images/2013-10-27-event-projections-Projections.PNG><img loading=lazy src=/post/images/thumbnails/2013-10-27-event-projections-Projections.PNG></a></p><p>An interface for a projection could look like this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IProjection</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> Handle(EventStream eventStream);                     
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>A projection takes in an event stream, and projects it to <em>some</em> read
+model.</p><p>A read model can be anything; a cache, a document store, a key value
+store, a relational database, a file, or even some evil global state.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>EvilStatisticsReadModel</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> WithdrawalAmountExceededCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> AmountDepositedCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In this model, we want to maintain statistics of events that happened.
+For that to happen, we need to define a projection of our event stream.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ProjectionsToEvilStaticsReadModel</span> : IProjection {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Handle(EventStream eventStream) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> @event <span style=color:#66d9ef>in</span> eventStream)
+</span></span><span style=display:flex><span>            When((<span style=color:#66d9ef>dynamic</span>)@event);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> When(WithdrawalAmountExceeded @event) {
+</span></span><span style=display:flex><span>        EvilStatisticsReadModel.WithdrawalAmountExceededCount++;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> When(AmountDeposited @event) {
+</span></span><span style=display:flex><span>        EvilStatisticsReadModel.AmountDepositedCount++;
+</span></span><span style=display:flex><span>    }    
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>If we now let this projection handle an event stream, our read model
+will be kept up-to-date.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[TestMethod]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ReadModelIsKeptUpToDateWhileProjectingTheEventStream() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> events = <span style=color:#66d9ef>new</span> List&lt;IEvent&gt;() {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> WithdrawalAmountExceeded(<span style=color:#66d9ef>new</span> Amount(<span style=color:#ae81ff>3000</span>)),
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> AmountDeposited(<span style=color:#66d9ef>new</span> Amount(<span style=color:#ae81ff>300</span>)),
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> AmountDeposited(<span style=color:#66d9ef>new</span> Amount(<span style=color:#ae81ff>500</span>)),
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> AmountWithdrawn(<span style=color:#66d9ef>new</span> Amount(<span style=color:#ae81ff>100</span>))
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> stream = <span style=color:#66d9ef>new</span> EventStream(events);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>new</span> ProjectionsToEvilStaticsReadModel().Handle(stream);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Assert.AreEqual(<span style=color:#ae81ff>1</span>, EvilStatisticsReadModel.WithdrawalAmountExceededCount);
+</span></span><span style=display:flex><span>    Assert.AreEqual(<span style=color:#ae81ff>2</span>, EvilStatisticsReadModel.AmountDepositedCount);    
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>One could argue that all of this is too much - not worth the effort.
 Where you first just persisted the structure of an aggregate, and could
 query that same structure, you now first have to persist events for then
 to write projections that maintain separate read models that can be
-queried.</p>
-<p>You have to look beyond that though. Those that have done any serious
+queried.</p><p>You have to look beyond that though. Those that have done any serious
 work on a traditional stack have felt the pain of migrations, complex
 queries that take up three pages, obscure stored procedures that run for
 hours, optimizing while having to consider a handful of different use
@@ -156,8 +80,7 @@ cases, finding the balance between write- and read performance, database
 servers that can&rsquo;t handle the load on special events, expensive licenses
 and so on. While these first few concerns are mostly technical,
 personally I&rsquo;m often overwhelmed by how much concepts these designs
-force you to keep in your head all at once.</p>
-<p>Separating reads from writes using event sourcing might bring some
+force you to keep in your head all at once.</p><p>Separating reads from writes using event sourcing might bring some
 relief. Reducing cognitive overload by separating responsibilities into
 smaller, more granular bits might be the only argument you need.
 However, there&rsquo;s a lot more. Running an event store should be
@@ -170,56 +93,23 @@ into multiple read models, allowing you to optimize per use case,
 without having to take other use cases into account. Since it should be
 easy to rebuild read models, they can be stored in cheap and volatile
 storage - think key-value store, in-memory and so on, allowing for crazy
-fast reads.</p>
-<p>Letting go of the single-model dogma seems to enable so much more,
+fast reads.</p><p>Letting go of the single-model dogma seems to enable so much more,
 giving you a whole new set of possibilities. Another extremely useful
 use case that suddenly becomes a lot easier to support is business
 intelligence; when business experts think of new ways to look at the
 past, you just create a new projection and project events from day one.
 Getting statistics of how your users are using your system doesn&rsquo;t sound
-that hard now, does it?</p>
-<p>One of the obvious drawbacks next to writing a bit more, boring code is
+that hard now, does it?</p><p>One of the obvious drawbacks next to writing a bit more, boring code is
 that storage costs will increase - you are now persisting the same data
 in multiple representations. But storage is cheap, right? Maybe money
 isn&rsquo;t an issue, but what about performance? It&rsquo;s slower to do three
 writes instead of one, right? For a lot of scenarios this won&rsquo;t be much
 of an issue, but if it is, there is a lot of room for optimiziations
-doing projections; parallelization, eventual consistency and so on.</p>
-<p><em>Next week: event source all the things?</em></p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-							<li><a href="/tags/infrastructure">infrastructure</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2013  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+doing projections; parallelization, eventual consistency and so on.</p><p><em>Next week: event source all the things?</em></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li><li><a href=https://jefclaes.be/tags/infrastructure/>Infrastructure</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2013/11/event-source-all-things.html><span class=title>« Prev</span>
+<span>Event source all the things?</span>
+</a><a class=next href=https://jefclaes.be/2013/10/an-event-store.html><span class=title>Next »</span>
+<span>An event store</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

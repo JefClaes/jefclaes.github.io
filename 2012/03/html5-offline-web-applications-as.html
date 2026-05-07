@@ -1,96 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>HTML5 Offline Web applications as an afterthought in ASP.NET MVC - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="HTML5 Offline Web applications as an afterthought in ASP.NET MVC">
-<meta itemprop="description" content="Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web &lsquo;application&rsquo; until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.
-However - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already.">
-<meta itemprop="datePublished" content="2012-03-14T15:39:00&#43;01:00" />
-<meta itemprop="dateModified" content="2012-03-14T15:39:00&#43;01:00" />
-<meta itemprop="wordCount" content="1017">
-
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="HTML5 Offline Web applications as an afterthought in ASP.NET MVC" />
-<meta property="og:description" content="Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web &lsquo;application&rsquo; until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.
-However - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2012/03/html5-offline-web-applications-as.html" />
-<meta property="article:published_time" content="2012-03-14T15:39:00+01:00" />
-<meta property="article:modified_time" content="2012-03-14T15:39:00+01:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="HTML5 Offline Web applications as an afterthought in ASP.NET MVC"/>
-<meta name="twitter:description" content="Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web &lsquo;application&rsquo; until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.
-However - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">14</span>
-							<span class="rest">Mar 2012</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">HTML5 Offline Web applications as an afterthought in ASP.NET MVC</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Recently I prototyped a mobile web application using ASP.NET MVC,
-<a href="http://jquerymobile.com/">jQuery Mobile</a> and some HTML5 features. One
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>HTML5 Offline Web applications as an afterthought in ASP.NET MVC | Jef Claes</title><meta name=keywords content="code"><meta name=description content="Recently I prototyped a mobile web application using ASP.NET MVC,
+jQuery Mobile and some HTML5 features. One
 of the key goals was to find out how far you can push a web
 &lsquo;application&rsquo; until the browser starts getting in the way. Working
 disconnected is one of these things that appear to be a major
-showstopper at first.</p>
-<p>However - to my surprise honestly - the <a href="http://dev.w3.org/html5/spec/offline.html">HTML5 Offline Web applications
+showstopper at first.
+However - to my surprise honestly - the HTML5 Offline Web applications
+API seems to be widely
+implemented across modern browsers
+already. Not of all of them
+though.
+Looking into the specifics, the API itself is fairly straightforward. At
+his core, you will find the manifest file, which dictates which files
+should be cached by the browser. The API provides other useful events
+and methods for inspecting the status of the cache and swapping the
+cache for a newer version, but they are out of scope today. A useful
+resource to read up on the full API can be found
+here,
+and a working example implementation can be found
+here."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2012/03/html5-offline-web-applications-as.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2012/03/html5-offline-web-applications-as.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2012/03/html5-offline-web-applications-as.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="HTML5 Offline Web applications as an afterthought in ASP.NET MVC"><meta property="og:description" content="Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web ‘application’ until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.
+However - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already. Not of all of them though. Looking into the specifics, the API itself is fairly straightforward. At his core, you will find the manifest file, which dictates which files should be cached by the browser. The API provides other useful events and methods for inspecting the status of the cache and swapping the cache for a newer version, but they are out of scope today. A useful resource to read up on the full API can be found here, and a working example implementation can be found here."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2012-03-14T15:39:00+01:00"><meta property="article:modified_time" content="2012-03-14T15:39:00+01:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="HTML5 Offline Web applications as an afterthought in ASP.NET MVC"><meta name=twitter:description content="Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web ‘application’ until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.
+However - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already. Not of all of them though. Looking into the specifics, the API itself is fairly straightforward. At his core, you will find the manifest file, which dictates which files should be cached by the browser. The API provides other useful events and methods for inspecting the status of the cache and swapping the cache for a newer version, but they are out of scope today. A useful resource to read up on the full API can be found here, and a working example implementation can be found here."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"HTML5 Offline Web applications as an afterthought in ASP.NET MVC","item":"https://jefclaes.be/2012/03/html5-offline-web-applications-as.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"HTML5 Offline Web applications as an afterthought in ASP.NET MVC","name":"HTML5 Offline Web applications as an afterthought in ASP.NET MVC","description":"Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web \u0026lsquo;application\u0026rsquo; until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.\nHowever - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already. Not of all of them though. Looking into the specifics, the API itself is fairly straightforward. At his core, you will find the manifest file, which dictates which files should be cached by the browser. The API provides other useful events and methods for inspecting the status of the cache and swapping the cache for a newer version, but they are out of scope today. A useful resource to read up on the full API can be found here, and a working example implementation can be found here.\n","keywords":["code"],"articleBody":"Recently I prototyped a mobile web application using ASP.NET MVC, jQuery Mobile and some HTML5 features. One of the key goals was to find out how far you can push a web ‘application’ until the browser starts getting in the way. Working disconnected is one of these things that appear to be a major showstopper at first.\nHowever - to my surprise honestly - the HTML5 Offline Web applications API seems to be widely implemented across modern browsers already. Not of all of them though. Looking into the specifics, the API itself is fairly straightforward. At his core, you will find the manifest file, which dictates which files should be cached by the browser. The API provides other useful events and methods for inspecting the status of the cache and swapping the cache for a newer version, but they are out of scope today. A useful resource to read up on the full API can be found here, and a working example implementation can be found here.\nThe manifest file Back to the manifest file. A manifest file could look like this.\nThe first line in the file should say CACHE MANIFEST. If you want to write comments, you should prefix the lines with a number sign.\nIn the CACHE section you declare which files should be cached. An important and interesting note is that these files will be served from the cache, even if you’re online.\nIn the NETWORK section you declare which files the browser should try to download from the server, regardless of whether the user is online or offline.\nIn the last section, the FALLBACK section, you can define fallback resources to be used when the user is offline.\nServing and generating the manifest file Now that we got all this theory out of the way, let’s look at generating and serving the manifest file using ASP.NET MVC.\nI started by adding a ResourcesController with one action named Manifest.\npublic class ResourcesController : Controller { public ActionResult Manifest() { } } This action should serve a text file, using a specific cache-manifest MIME type. To accommodate this I created a new action result, which inherits from the FileResult class, and overwrites the content type.\npublic class ManifestResult : FileResult { public ManifestResult(string version) : base(\"text/cache-manifest\") { } } I also made this same class (for the sake of example) responsible for formatting and writing the manifest file to the output stream. That’s why I added a few extra properties to the manifest result, one for each section and one for versioning. Versioning the file comes in handy when you want to expire the cache, because it only expires when the manifest file changes.\npublic class ManifestResult : FileResult { public ManifestResult(string version) : base(\"text/cache-manifest\") { CacheResources = new List\u003cstring\u003e(); NetworkResources = new List\u003cstring\u003e(); FallbackResources = new Dictionary\u003cstring, string\u003e(); Version = version; } public string Version { get; set; } public IEnumerable\u003cstring\u003e CacheResources { get; set; } public IEnumerable\u003cstring\u003e NetworkResources { get; set; } public Dictionary\u003cstring, string\u003e FallbackResources { get; set; } } To write the file to the output stream, I had to override the `WriteFile` method. ```csharp protected override void WriteFile(HttpResponseBase response) { WriteManifestHeader(response); WriteCacheResources(response); WriteNetwork(response); WriteFallback(response); } private void WriteManifestHeader(HttpResponseBase response) { response.Output.WriteLine(\"CACHE MANIFEST\"); response.Output.WriteLine(\"#V\" + Version ?? string.Empty); } private void WriteCacheResources(HttpResponseBase response) { response.Output.WriteLine(\"CACHE:\"); foreach (var cacheResource in CacheResources) response.Output.WriteLine(cacheResource); } private void WriteNetwork(HttpResponseBase response) { response.Output.WriteLine(); response.Output.WriteLine(\"NETWORK:\"); foreach (var networkResource in NetworkResources) response.Output.WriteLine(networkResource); } private void WriteFallback(HttpResponseBase response) { response.Output.WriteLine(); response.Output.WriteLine(\"FALLBACK:\"); foreach (var fallbackResource in FallbackResources) response.Output.WriteLine(fallbackResource.Key + \" \" + fallbackResource.Value); } In the CACHE section I wanted to include all my static resources, meaning the contents of the Scripts and Content folder. To do this in a simple and low-maintenance fashion I introduced the GetRelativePathsToRoot method. This method takes the path of a virtual folder, recursively scans its content and returns a list of relative paths for each file.\nprivate IEnumerable\u003cstring\u003e GetRelativePathsToRoot(string virtualPath) { var physicalPath = Server.MapPath(virtualPath); var absolutePaths = Directory.GetFiles(physicalPath, \"*.*\", SearchOption.AllDirectories); return absolutePaths.Select( x =\u003e Url.Content(virtualPath + x.Replace(physicalPath, \"\")) ); } For the Content folder, the result could look something like this.\nTo add pages to the CACHE section, I used the Url.Action method.\nFor the NETWORK resources, I added an asterisk, which basically means that the cache shouldn’t be used when the user is online. I didn’t specify any fallback resources in this example.\npublic ActionResult Manifest() { var pages = new List\u003cstring\u003e(); pages.Add(Url.Action(\"SomeAction\", \"ControllerName\")); var scriptsPaths = GetRelativePathsToRoot(\"~/Scripts/\"); var contentPaths = GetRelativePathsToRoot(\"~/Content/\"); var cacheResources = new List\u003cstring\u003e(); cacheResources.AddRange(pages); cacheResources.AddRange(contentPaths); cacheResources.AddRange(scriptsPaths); var manifestResult = new ManifestResult(\"1.0\") { NetworkResources = new string[] { \"*\" }, CacheResources = cacheResources }; return manifestResult; } Setting up a route and including the manifest Now that we are able to generate and serve a manifest file, we should set up a specific route for the manifest file; some browsers aren’t very forgiving and expect it to have a specific name and location: /cache.manifest.\nroutes.MapRoute(\"cache.manifest\", \"cache.manifest\", new { controller = \"Resources\", action = \"Manifest\" }); The last step I had to take was include a reference to the manifest file in the html element.\n\u003chtml manifest=\"@Url.RouteUrl(\"cache.manifest\")\")/\u003e Poor man’s testing To verify if all of this works, you can look at the console of the Chrome developer tools. You should see something like this.\nThat console logging has proven to be extremely useful when debugging the manifest file.\nYou could also just browse to the manifest file to inspect its content. Don’t mind this screenshot too much, obviously there’s plenty of cleaning up to do in my Scripts folder.\nSummary In this post I showed you a technique I came up with to take advantage of ASP.NET MVC to easily generate, maintain and serve an HTML5 Offline Webappliction manifest file:\nCreate a controller and action that can serve the file Create a new action result, which returns the correct MIME type and formats the file Set up a specific route Include a reference to the manifest in the html tag Remember, this is a proof of concept, it’s not perfect. I look forward to any feedback you might have!\n","wordCount":"1017","inLanguage":"en","datePublished":"2012-03-14T15:39:00+01:00","dateModified":"2012-03-14T15:39:00+01:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2012/03/html5-offline-web-applications-as.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">HTML5 Offline Web applications as an afterthought in ASP.NET MVC</h1><div class=post-meta><span title='2012-03-14 15:39:00 +0100 CET'>March 14, 2012</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Recently I prototyped a mobile web application using ASP.NET MVC,
+<a href=http://jquerymobile.com/>jQuery Mobile</a> and some HTML5 features. One
+of the key goals was to find out how far you can push a web
+&lsquo;application&rsquo; until the browser starts getting in the way. Working
+disconnected is one of these things that appear to be a major
+showstopper at first.</p><p>However - to my surprise honestly - the <a href=http://dev.w3.org/html5/spec/offline.html>HTML5 Offline Web applications
 API</a> seems to be <a href="http://caniuse.com/#search=offline">widely
 implemented</a> across modern browsers
 already. <a href="https://picasaweb.google.com/lh/photo/lVnWvGLepGsFhIc2Z4SKdcdrvCRMWyke7-RbgGXMEiI?feat=directlink">Not of all of them
@@ -101,207 +40,144 @@ should be cached by the browser. The API provides other useful events
 and methods for inspecting the status of the cache and swapping the
 cache for a newer version, but they are out of scope today. A useful
 resource to read up on the full API can be found
-<a href="http://dev.opera.com/articles/view/offline-applications-html5-appcache/">here</a>,
+<a href=http://dev.opera.com/articles/view/offline-applications-html5-appcache/>here</a>,
 and a working example implementation can be found
-<a href="http://html5demos.com/offlineapp">here</a>.</p>
-<h3 id="the-manifest-file">The manifest file</h3>
-<p>Back to the manifest file. A manifest file could look like this.</p>
-<p><a href="/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestFile.PNG"><img src="/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestFile.PNG" alt=""></a></p>
-<p>The first line in the file should say <code>CACHE MANIFEST</code>. If you want to
-write comments, you should prefix the lines with a number sign.</p>
-<p>In the <code>CACHE</code> section you declare which files should be cached. An
+<a href=http://html5demos.com/offlineapp>here</a>.</p><h3 id=the-manifest-file>The manifest file<a hidden class=anchor aria-hidden=true href=#the-manifest-file>#</a></h3><p>Back to the manifest file. A manifest file could look like this.</p><p><a href=/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestFile.PNG><img loading=lazy src=/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestFile.PNG></a></p><p>The first line in the file should say <code>CACHE MANIFEST</code>. If you want to
+write comments, you should prefix the lines with a number sign.</p><p>In the <code>CACHE</code> section you declare which files should be cached. An
 important and interesting note is that these files will be served from
-the cache, even if you&rsquo;re online.</p>
-<p>In the <code>NETWORK</code> section you declare which files the browser should try to
+the cache, even if you&rsquo;re online.</p><p>In the <code>NETWORK</code> section you declare which files the browser should try to
 download from the server, regardless of whether the user is online or
-offline.</p>
-<p>In the last section, the <code>FALLBACK</code> section, you can define fallback
-resources to be used when the user is offline.</p>
-<h3 id="serving-and-generating-the-manifest-file">Serving and generating the manifest file</h3>
-<p>Now that we got all this theory out of the way, let&rsquo;s look at generating
-and serving the manifest file using ASP.NET MVC.</p>
-<p>I started by adding a ResourcesController with one action named
-Manifest.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">ResourcesController</span> : <span style="color:#268bd2">Controller</span>
-{             
-    <span style="color:#859900">public</span> <span style="color:#268bd2">ActionResult</span> <span style="color:#268bd2">Manifest</span>() { }
-}
-</code></pre></div><p>This action should serve a text file, using a specific cache-manifest
+offline.</p><p>In the last section, the <code>FALLBACK</code> section, you can define fallback
+resources to be used when the user is offline.</p><h3 id=serving-and-generating-the-manifest-file>Serving and generating the manifest file<a hidden class=anchor aria-hidden=true href=#serving-and-generating-the-manifest-file>#</a></h3><p>Now that we got all this theory out of the way, let&rsquo;s look at generating
+and serving the manifest file using ASP.NET MVC.</p><p>I started by adding a ResourcesController with one action named
+Manifest.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ResourcesController</span> : Controller
+</span></span><span style=display:flex><span>{             
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> ActionResult Manifest() { }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This action should serve a text file, using a specific cache-manifest
 MIME type. To accommodate this I created a new action result, which
-inherits from the <a href="http://msdn.microsoft.com/en-us/library/system.web.mvc.fileresult.aspx">FileResult</a> class, and overwrites the content type.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">ManifestResult</span> : <span style="color:#268bd2">FileResult</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">ManifestResult</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">version</span>)
-        : <span style="color:#859900">base</span>(<span style="color:#2aa198">&#34;text/cache-manifest&#34;</span>) { }    
-}
-</code></pre></div><p>I also made this same class (for the sake of example) responsible for
+inherits from the <a href=http://msdn.microsoft.com/en-us/library/system.web.mvc.fileresult.aspx>FileResult</a> class, and overwrites the content type.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ManifestResult</span> : FileResult
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> ManifestResult(<span style=color:#66d9ef>string</span> version)
+</span></span><span style=display:flex><span>        : <span style=color:#66d9ef>base</span>(<span style=color:#e6db74>&#34;text/cache-manifest&#34;</span>) { }    
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>I also made this same class (for the sake of example) responsible for
 formatting and writing the manifest file to the output stream. That&rsquo;s
 why I added a few extra properties to the manifest result, one for each
 section and one for versioning. Versioning the file comes in handy when
 you want to expire the cache, because it only expires when the manifest
-file changes.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">ManifestResult</span> : <span style="color:#268bd2">FileResult</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">ManifestResult</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">version</span>)
-        : <span style="color:#859900">base</span>(<span style="color:#2aa198">&#34;text/cache-manifest&#34;</span>)
-    {
-        <span style="color:#268bd2">CacheResources</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt;();
-        <span style="color:#268bd2">NetworkResources</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt;();
-        <span style="color:#268bd2">FallbackResources</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Dictionary</span>&lt;<span style="color:#859900;font-weight:bold">string</span>, <span style="color:#859900;font-weight:bold">string</span>&gt;();
-        <span style="color:#268bd2">Version</span> = <span style="color:#268bd2">version</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Version</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">public</span> <span style="color:#268bd2">IEnumerable</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt; <span style="color:#268bd2">CacheResources</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">public</span> <span style="color:#268bd2">IEnumerable</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt; <span style="color:#268bd2">NetworkResources</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }       
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Dictionary</span>&lt;<span style="color:#859900;font-weight:bold">string</span>, <span style="color:#859900;font-weight:bold">string</span>&gt; <span style="color:#268bd2">FallbackResources</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }        
-}
-
-<span style="color:#268bd2">To</span> <span style="color:#268bd2">write</span> <span style="color:#268bd2">the</span> <span style="color:#268bd2">file</span> <span style="color:#268bd2">to</span> <span style="color:#268bd2">the</span> <span style="color:#268bd2">output</span> <span style="color:#268bd2">stream</span>, <span style="color:#268bd2">I</span> <span style="color:#268bd2">had</span> <span style="color:#268bd2">to</span> <span style="color:#859900">override</span> <span style="color:#268bd2">the</span> `<span style="color:#268bd2">WriteFile</span>`
-<span style="color:#268bd2">method</span>.  
-
-```<span style="color:#268bd2">csharp</span>
-<span style="color:#859900">protected</span> <span style="color:#859900">override</span> <span style="color:#859900">void</span> <span style="color:#268bd2">WriteFile</span>(<span style="color:#268bd2">HttpResponseBase</span> <span style="color:#268bd2">response</span>)
-{
-    <span style="color:#268bd2">WriteManifestHeader</span>(<span style="color:#268bd2">response</span>);            
-    <span style="color:#268bd2">WriteCacheResources</span>(<span style="color:#268bd2">response</span>);
-    <span style="color:#268bd2">WriteNetwork</span>(<span style="color:#268bd2">response</span>);
-    <span style="color:#268bd2">WriteFallback</span>(<span style="color:#268bd2">response</span>);
-}
-
-<span style="color:#859900">private</span> <span style="color:#859900">void</span> <span style="color:#268bd2">WriteManifestHeader</span>(<span style="color:#268bd2">HttpResponseBase</span> <span style="color:#268bd2">response</span>)
-{
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#2aa198">&#34;CACHE MANIFEST&#34;</span>);
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#2aa198">&#34;#V&#34;</span> + <span style="color:#268bd2">Version</span> ?? <span style="color:#859900;font-weight:bold">string</span>.<span style="color:#268bd2">Empty</span>);            
-}
-
-<span style="color:#859900">private</span> <span style="color:#859900">void</span> <span style="color:#268bd2">WriteCacheResources</span>(<span style="color:#268bd2">HttpResponseBase</span> <span style="color:#268bd2">response</span>)
-{
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#2aa198">&#34;CACHE:&#34;</span>);           
-    <span style="color:#859900">foreach</span> (<span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">cacheResource</span> <span style="color:#859900">in</span> <span style="color:#268bd2">CacheResources</span>)
-        <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#268bd2">cacheResource</span>);
-}
-
-<span style="color:#859900">private</span> <span style="color:#859900">void</span> <span style="color:#268bd2">WriteNetwork</span>(<span style="color:#268bd2">HttpResponseBase</span> <span style="color:#268bd2">response</span>)
-{
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>();
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#2aa198">&#34;NETWORK:&#34;</span>);            
-    <span style="color:#859900">foreach</span> (<span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">networkResource</span> <span style="color:#859900">in</span> <span style="color:#268bd2">NetworkResources</span>)
-        <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#268bd2">networkResource</span>);
-}
-
-<span style="color:#859900">private</span> <span style="color:#859900">void</span> <span style="color:#268bd2">WriteFallback</span>(<span style="color:#268bd2">HttpResponseBase</span> <span style="color:#268bd2">response</span>)
-{
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>();
-    <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#2aa198">&#34;FALLBACK:&#34;</span>);
-    <span style="color:#859900">foreach</span> (<span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">fallbackResource</span> <span style="color:#859900">in</span> <span style="color:#268bd2">FallbackResources</span>)
-        <span style="color:#268bd2">response</span>.<span style="color:#268bd2">Output</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#268bd2">fallbackResource</span>.<span style="color:#268bd2">Key</span> + <span style="color:#2aa198">&#34; &#34;</span> + <span style="color:#268bd2">fallbackResource</span>.<span style="color:#268bd2">Value</span>);
-}
-</code></pre></div><p>In the <code>CACHE</code> section I wanted to include all my static resources,
+file changes.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ManifestResult</span> : FileResult
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> ManifestResult(<span style=color:#66d9ef>string</span> version)
+</span></span><span style=display:flex><span>        : <span style=color:#66d9ef>base</span>(<span style=color:#e6db74>&#34;text/cache-manifest&#34;</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        CacheResources = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>string</span>&gt;();
+</span></span><span style=display:flex><span>        NetworkResources = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>string</span>&gt;();
+</span></span><span style=display:flex><span>        FallbackResources = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>string</span>&gt;();
+</span></span><span style=display:flex><span>        Version = version;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> Version { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> IEnumerable&lt;<span style=color:#66d9ef>string</span>&gt; CacheResources { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> IEnumerable&lt;<span style=color:#66d9ef>string</span>&gt; NetworkResources { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }       
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>string</span>&gt; FallbackResources { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }        
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>To write the file to the output stream, I had to <span style=color:#66d9ef>override</span> the <span style=color:#960050;background-color:#1e0010>`</span>WriteFile<span style=color:#960050;background-color:#1e0010>`</span>
+</span></span><span style=display:flex><span>method.  
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>```</span>csharp
+</span></span><span style=display:flex><span><span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> WriteFile(HttpResponseBase response)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    WriteManifestHeader(response);            
+</span></span><span style=display:flex><span>    WriteCacheResources(response);
+</span></span><span style=display:flex><span>    WriteNetwork(response);
+</span></span><span style=display:flex><span>    WriteFallback(response);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> WriteManifestHeader(HttpResponseBase response)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    response.Output.WriteLine(<span style=color:#e6db74>&#34;CACHE MANIFEST&#34;</span>);
+</span></span><span style=display:flex><span>    response.Output.WriteLine(<span style=color:#e6db74>&#34;#V&#34;</span> + Version ?? <span style=color:#66d9ef>string</span>.Empty);            
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> WriteCacheResources(HttpResponseBase response)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    response.Output.WriteLine(<span style=color:#e6db74>&#34;CACHE:&#34;</span>);           
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> cacheResource <span style=color:#66d9ef>in</span> CacheResources)
+</span></span><span style=display:flex><span>        response.Output.WriteLine(cacheResource);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> WriteNetwork(HttpResponseBase response)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    response.Output.WriteLine();
+</span></span><span style=display:flex><span>    response.Output.WriteLine(<span style=color:#e6db74>&#34;NETWORK:&#34;</span>);            
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> networkResource <span style=color:#66d9ef>in</span> NetworkResources)
+</span></span><span style=display:flex><span>        response.Output.WriteLine(networkResource);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> WriteFallback(HttpResponseBase response)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    response.Output.WriteLine();
+</span></span><span style=display:flex><span>    response.Output.WriteLine(<span style=color:#e6db74>&#34;FALLBACK:&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> fallbackResource <span style=color:#66d9ef>in</span> FallbackResources)
+</span></span><span style=display:flex><span>        response.Output.WriteLine(fallbackResource.Key + <span style=color:#e6db74>&#34; &#34;</span> + fallbackResource.Value);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In the <code>CACHE</code> section I wanted to include all my static resources,
 meaning the contents of the Scripts and Content folder. To do this in a
 simple and low-maintenance fashion I introduced the
 <code>GetRelativePathsToRoot</code> method. This method takes the path of a virtual
 folder, recursively scans its content and returns a list of relative
-paths for each file.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">private</span> <span style="color:#268bd2">IEnumerable</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt; <span style="color:#268bd2">GetRelativePathsToRoot</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">virtualPath</span>)
-{
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">physicalPath</span> = <span style="color:#268bd2">Server</span>.<span style="color:#268bd2">MapPath</span>(<span style="color:#268bd2">virtualPath</span>);
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">absolutePaths</span> = <span style="color:#268bd2">Directory</span>.<span style="color:#268bd2">GetFiles</span>(<span style="color:#268bd2">physicalPath</span>, <span style="color:#2aa198">&#34;*.*&#34;</span>,   <span style="color:#268bd2">SearchOption</span>.<span style="color:#268bd2">AllDirectories</span>);
-
-    <span style="color:#859900">return</span> <span style="color:#268bd2">absolutePaths</span>.<span style="color:#268bd2">Select</span>(
-        <span style="color:#268bd2">x</span> =&gt; <span style="color:#268bd2">Url</span>.<span style="color:#268bd2">Content</span>(<span style="color:#268bd2">virtualPath</span> + <span style="color:#268bd2">x</span>.<span style="color:#268bd2">Replace</span>(<span style="color:#268bd2">physicalPath</span>, <span style="color:#2aa198">&#34;&#34;</span>))
-    );
-}
-</code></pre></div><p>For the Content folder, the result could look something like this.</p>
-<p><a href="/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ContentFolder.png"><img src="/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ContentFolder.png" alt=""></a></p>
-<p>To add pages to the <code>CACHE</code> section, I used the Url.Action method.</p>
-<p>For the <code>NETWORK</code> resources, I added an asterisk, which basically means
+paths for each file.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> IEnumerable&lt;<span style=color:#66d9ef>string</span>&gt; GetRelativePathsToRoot(<span style=color:#66d9ef>string</span> virtualPath)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> physicalPath = Server.MapPath(virtualPath);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> absolutePaths = Directory.GetFiles(physicalPath, <span style=color:#e6db74>&#34;*.*&#34;</span>,   SearchOption.AllDirectories);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> absolutePaths.Select(
+</span></span><span style=display:flex><span>        x =&gt; Url.Content(virtualPath + x.Replace(physicalPath, <span style=color:#e6db74>&#34;&#34;</span>))
+</span></span><span style=display:flex><span>    );
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>For the Content folder, the result could look something like this.</p><p><a href=/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ContentFolder.png><img loading=lazy src=/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ContentFolder.png></a></p><p>To add pages to the <code>CACHE</code> section, I used the Url.Action method.</p><p>For the <code>NETWORK</code> resources, I added an asterisk, which basically means
 that the cache shouldn&rsquo;t be used when the user is online. I didn&rsquo;t
-specify any fallback resources in this example.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#268bd2">ActionResult</span> <span style="color:#268bd2">Manifest</span>()
-{
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">pages</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt;();
-    <span style="color:#268bd2">pages</span>.<span style="color:#268bd2">Add</span>(<span style="color:#268bd2">Url</span>.<span style="color:#268bd2">Action</span>(<span style="color:#2aa198">&#34;SomeAction&#34;</span>, <span style="color:#2aa198">&#34;ControllerName&#34;</span>));    
-
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">scriptsPaths</span> = <span style="color:#268bd2">GetRelativePathsToRoot</span>(<span style="color:#2aa198">&#34;~/Scripts/&#34;</span>);
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">contentPaths</span> = <span style="color:#268bd2">GetRelativePathsToRoot</span>(<span style="color:#2aa198">&#34;~/Content/&#34;</span>);
-
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">cacheResources</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt;();
-    <span style="color:#268bd2">cacheResources</span>.<span style="color:#268bd2">AddRange</span>(<span style="color:#268bd2">pages</span>);
-    <span style="color:#268bd2">cacheResources</span>.<span style="color:#268bd2">AddRange</span>(<span style="color:#268bd2">contentPaths</span>);
-    <span style="color:#268bd2">cacheResources</span>.<span style="color:#268bd2">AddRange</span>(<span style="color:#268bd2">scriptsPaths</span>);
-    
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">manifestResult</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">ManifestResult</span>(<span style="color:#2aa198">&#34;1.0&#34;</span>)
-    {
-        <span style="color:#268bd2">NetworkResources</span> = <span style="color:#859900">new</span> <span style="color:#859900;font-weight:bold">string</span>[] { <span style="color:#2aa198">&#34;*&#34;</span> },
-        <span style="color:#268bd2">CacheResources</span> = <span style="color:#268bd2">cacheResources</span>
-    };            
-
-    <span style="color:#859900">return</span> <span style="color:#268bd2">manifestResult</span>;
-}
-</code></pre></div><h3 id="setting-up-a-route-and-including-the-manifest">Setting up a route and including the manifest</h3>
-<p>Now that we are able to generate and serve a manifest file, we should
+specify any fallback resources in this example.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> ActionResult Manifest()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> pages = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>string</span>&gt;();
+</span></span><span style=display:flex><span>    pages.Add(Url.Action(<span style=color:#e6db74>&#34;SomeAction&#34;</span>, <span style=color:#e6db74>&#34;ControllerName&#34;</span>));    
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> scriptsPaths = GetRelativePathsToRoot(<span style=color:#e6db74>&#34;~/Scripts/&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> contentPaths = GetRelativePathsToRoot(<span style=color:#e6db74>&#34;~/Content/&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> cacheResources = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>string</span>&gt;();
+</span></span><span style=display:flex><span>    cacheResources.AddRange(pages);
+</span></span><span style=display:flex><span>    cacheResources.AddRange(contentPaths);
+</span></span><span style=display:flex><span>    cacheResources.AddRange(scriptsPaths);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> manifestResult = <span style=color:#66d9ef>new</span> ManifestResult(<span style=color:#e6db74>&#34;1.0&#34;</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        NetworkResources = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;*&#34;</span> },
+</span></span><span style=display:flex><span>        CacheResources = cacheResources
+</span></span><span style=display:flex><span>    };            
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> manifestResult;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=setting-up-a-route-and-including-the-manifest>Setting up a route and including the manifest<a hidden class=anchor aria-hidden=true href=#setting-up-a-route-and-including-the-manifest>#</a></h3><p>Now that we are able to generate and serve a manifest file, we should
 set up a specific route for the manifest file; some browsers aren&rsquo;t very
 forgiving and expect it to have a specific name and location:
-/cache.manifest.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#268bd2">routes</span>.<span style="color:#268bd2">MapRoute</span>(<span style="color:#2aa198">&#34;cache.manifest&#34;</span>, <span style="color:#2aa198">&#34;cache.manifest&#34;</span>, <span style="color:#859900">new</span> { <span style="color:#268bd2">controller</span> = <span style="color:#2aa198">&#34;Resources&#34;</span>, <span style="color:#268bd2">action</span> = <span style="color:#2aa198">&#34;Manifest&#34;</span> });
-</code></pre></div><p>The last step I had to take was include a reference to the manifest file
-in the html element.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">html</span> <span style="color:#268bd2">manifest</span>=<span style="color:#2aa198">&#34;@Url.RouteUrl(&#34;</span><span style="color:#268bd2">cache</span>.<span style="color:#268bd2">manifest</span>&#34;)&#34;)/&gt;
-</code></pre></div><h3 id="poor-mans-testing">Poor man&rsquo;s testing</h3>
-<p>To verify if all of this works, you can look at the console of the
-Chrome developer tools. You should see something like this.</p>
-<p><a href="/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestDownloading.PNG"><img src="/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestDownloading.PNG" alt=""></a></p>
-<p>That console logging has proven to be extremely useful when debugging
-the manifest file.</p>
-<p>You could also just browse to the manifest file to inspect its content.
+/cache.manifest.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span>routes.MapRoute(<span style=color:#e6db74>&#34;cache.manifest&#34;</span>, <span style=color:#e6db74>&#34;cache.manifest&#34;</span>, <span style=color:#66d9ef>new</span> { controller = <span style=color:#e6db74>&#34;Resources&#34;</span>, action = <span style=color:#e6db74>&#34;Manifest&#34;</span> });
+</span></span></code></pre></div><p>The last step I had to take was include a reference to the manifest file
+in the html element.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>html</span> <span style=color:#a6e22e>manifest</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;@Url.RouteUrl(&#34;</span><span style=color:#a6e22e>cache</span><span style=color:#960050;background-color:#1e0010>.</span><span style=color:#a6e22e>manifest</span><span style=color:#960050;background-color:#1e0010>&#34;)&#34;)</span>/&gt;
+</span></span></code></pre></div><h3 id=poor-mans-testing>Poor man&rsquo;s testing<a hidden class=anchor aria-hidden=true href=#poor-mans-testing>#</a></h3><p>To verify if all of this works, you can look at the console of the
+Chrome developer tools. You should see something like this.</p><p><a href=/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestDownloading.PNG><img loading=lazy src=/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-ManifestDownloading.PNG></a></p><p>That console logging has proven to be extremely useful when debugging
+the manifest file.</p><p>You could also just browse to the manifest file to inspect its content.
 Don&rsquo;t mind this screenshot too much, obviously there&rsquo;s plenty of
-cleaning up to do in my Scripts folder.</p>
-<p><a href="/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-BrowsetoManifestFile.PNG"><img src="/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-BrowsetoManifestFile.PNG" alt=""></a></p>
-<h3 id="summary">Summary</h3>
-<p>In this post I showed you a technique I came up with to take advantage
+cleaning up to do in my Scripts folder.</p><p><a href=/post/images/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-BrowsetoManifestFile.PNG><img loading=lazy src=/post/images/thumbnails/2012-03-14-html5-offline-web-applications-as-an-afterthought-in-asp-net-mvc-BrowsetoManifestFile.PNG></a></p><h3 id=summary>Summary<a hidden class=anchor aria-hidden=true href=#summary>#</a></h3><p>In this post I showed you a technique I came up with to take advantage
 of ASP.NET MVC to easily generate, maintain and serve an HTML5 Offline
-Webappliction manifest file:</p>
-<ul>
-<li>Create a controller and action that can serve the file</li>
-<li>Create a new action result, which returns the correct MIME type and formats the file</li>
-<li>Set up a specific route</li>
-<li>Include a reference to the manifest in the html tag</li>
-</ul>
-<p>Remember, this is a proof of concept, it&rsquo;s not perfect. I look forward
-to any feedback you might have!</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2012  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+Webappliction manifest file:</p><ul><li>Create a controller and action that can serve the file</li><li>Create a new action result, which returns the correct MIME type and formats the file</li><li>Set up a specific route</li><li>Include a reference to the manifest in the html tag</li></ul><p>Remember, this is a proof of concept, it&rsquo;s not perfect. I look forward
+to any feedback you might have!</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2012/03/sent-from-my-phone.html><span class=title>« Prev</span>
+<span>Sent from my phone</span>
+</a><a class=next href=https://jefclaes.be/2012/03/learning-the-hacker-way/><span class=title>Next »</span>
+<span>Learning: the Hacker Way</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

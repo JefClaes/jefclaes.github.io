@@ -1,94 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Notifications from an event log - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Notifications from an event log">
-<meta itemprop="description" content="User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.
-In the domain I&rsquo;m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website.">
-<meta itemprop="datePublished" content="2016-04-17T17:37:00&#43;02:00" />
-<meta itemprop="dateModified" content="2016-04-17T17:37:00&#43;02:00" />
-<meta itemprop="wordCount" content="653">
-
-
-
-<meta itemprop="keywords" content="code,ddd," /><meta property="og:title" content="Notifications from an event log" />
-<meta property="og:description" content="User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.
-In the domain I&rsquo;m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2016/04/notifications-from-event-log.html" />
-<meta property="article:published_time" content="2016-04-17T17:37:00+02:00" />
-<meta property="article:modified_time" content="2016-04-17T17:37:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Notifications from an event log"/>
-<meta name="twitter:description" content="User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.
-In the domain I&rsquo;m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">17</span>
-							<span class="rest">Apr 2016</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Notifications from an event log</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>User notifications are a feature that came as an afterthought, but
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Notifications from an event log | Jef Claes</title><meta name=keywords content="code,ddd"><meta name=description content="User notifications are a feature that came as an afterthought, but
 turned out to be rather easy to implement - without touching (read:
 breaking) existing functionality - thanks to having an immutable event
-log.</p>
-<p>In the domain I&rsquo;m working in at the moment, we will often give users
+log.
+In the domain I&rsquo;m working in at the moment, we will often give users
 incentives to return to the website, or to extend their stay on the
 website. These incentives were only communicated by email at first, and
 this is a decent medium when you want users to return to the website.
@@ -98,103 +12,78 @@ client. But also, as soon as they return to your website, you want to
 show them a crisp overview of all relevant calls to action. Having most
 calls to action map to a specific page, the list of notifications can
 serve as a one-click starting point, lowering the hurdle to browse to a
-relevant page.</p>
-<p>Notifying a user is one thing. Another use case we wanted to solve, is
-to dismiss notifications as soon as they are no longer relevant.</p>
-<p>Two examples of when a notification might no longer be considered
-relevant:<br>
-1.When a bonus is awarded to a user, he might ignore the notification and activate the bonus by directly browsing to the specific page.
-2.When a bonus is awarded to a user, he might not visit the website before the bonus expires.</p>
-<p>In these cases, to avoid confusion and unsatisfied customers, we want to
-dismiss the notification automatically.</p>
-<p>Let&rsquo;s say that we&rsquo;re going to implement notifications for bonuses. We
-have these type of events to work with.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">Events</span> =
-    | <span style="color:#268bd2">BonusAwarded</span> <span style="color:#859900">of</span> <span style="color:#268bd2">payload</span> : <span style="color:#268bd2">BonusAwarded</span>
-    | <span style="color:#268bd2">BonusActivated</span> <span style="color:#859900">of</span> <span style="color:#268bd2">payload</span> : <span style="color:#268bd2">BonusActivated</span>
-    | <span style="color:#268bd2">BonusExpired</span> <span style="color:#859900">of</span> <span style="color:#268bd2">payload</span> : <span style="color:#268bd2">BonusExpired</span>
-<span style="color:#859900">and</span> <span style="color:#268bd2">BonusAwarded</span> = { <span style="color:#268bd2">BonusId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">UserId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">ExpiryDate</span> : <span style="color:#268bd2">DateTime</span> }
-<span style="color:#859900">and</span> <span style="color:#268bd2">BonusActivated</span> = { <span style="color:#268bd2">BonusId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">UserId</span> : <span style="color:#268bd2">Guid</span>; }
-<span style="color:#859900">and</span> <span style="color:#268bd2">BonusExpired</span> = { <span style="color:#268bd2">BonusId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">UserId</span> : <span style="color:#268bd2">Guid</span>; }
-</code></pre></div><p>On the other hand, we have a set of commands that interact with
-notifications.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">Commands</span> =
-    | <span style="color:#268bd2">NotifyUser</span> <span style="color:#859900">of</span> <span style="color:#268bd2">payload</span> : <span style="color:#268bd2">NotifyUser</span>
-    | <span style="color:#268bd2">ReadNotification</span> <span style="color:#859900">of</span> <span style="color:#268bd2">payload</span> : <span style="color:#268bd2">ReadNotification</span>
-    | <span style="color:#268bd2">DismissNotification</span> <span style="color:#859900">of</span> <span style="color:#268bd2">payload</span> : <span style="color:#268bd2">DismissNotification</span>
-<span style="color:#859900">and</span> <span style="color:#268bd2">NotifyUser</span> = { <span style="color:#268bd2">NotificationId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">UserId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">TemplateId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">Data</span> : <span style="color:#268bd2">Map</span>&lt;<span style="color:#859900;font-weight:bold">string</span>, <span style="color:#859900;font-weight:bold">string</span>&gt; ; <span style="color:#268bd2">LinkId</span> : <span style="color:#859900;font-weight:bold">string</span> }
-<span style="color:#859900">and</span> <span style="color:#268bd2">ReadNotification</span> = { <span style="color:#268bd2">NotificationId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">UserId</span> : <span style="color:#268bd2">Guid</span> }
-<span style="color:#859900">and</span> <span style="color:#268bd2">DismissNotification</span> = { <span style="color:#268bd2">UserId</span> : <span style="color:#268bd2">Guid</span>; <span style="color:#268bd2">LinkId</span> : <span style="color:#859900;font-weight:bold">string</span> }
-</code></pre></div><p>A notification has an identifier, references a user, contains some data,
-and most importantly can be linked to <em>something</em>.</p>
-<p>Working from an immutable event log, we can project the events to
-commands (to dispatch them eventually).</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">react</span> <span style="color:#268bd2">log</span> =
-  <span style="color:#268bd2">log</span>
-  |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">map</span> (<span style="color:#859900">fun</span> <span style="color:#268bd2">e</span> -&gt;
-     <span style="color:#859900">match</span> <span style="color:#268bd2">e</span> <span style="color:#859900">with</span>
-     | <span style="color:#268bd2">BonusAwarded</span> <span style="color:#268bd2">payload</span> -&gt; <span style="color:#268bd2">NotifyUser</span> {
-         <span style="color:#268bd2">NotificationId</span> = <span style="color:#268bd2">Guid</span>.<span style="color:#268bd2">NewGuid</span><span style="color:#268bd2">()</span>
-         <span style="color:#268bd2">UserId</span> = <span style="color:#268bd2">userId</span>
-         <span style="color:#268bd2">TemplateId</span> = <span style="color:#2aa198">&#34;BonusAwarded&#34;</span>
-         <span style="color:#268bd2">Data</span> = [ (<span style="color:#2aa198">&#34;ExpiryDate&#34;</span>, <span style="color:#268bd2">payload</span>.<span style="color:#268bd2">ExpiryDate</span>.<span style="color:#268bd2">ToString</span>(<span style="color:#268bd2">CultureInfo</span>.<span style="color:#268bd2">InvariantCulture</span>) ) ] |&gt; <span style="color:#268bd2">Map</span>.<span style="color:#268bd2">ofList</span>
-         <span style="color:#268bd2">LinkId</span> = <span style="color:#2aa198">&#34;bonus/&#34;</span> + <span style="color:#268bd2">payload</span>.<span style="color:#268bd2">BonusId</span>.<span style="color:#268bd2">ToString</span>(<span style="color:#2aa198">&#34;N&#34;</span>) }
-     | <span style="color:#268bd2">BonusActivated</span> <span style="color:#268bd2">payload</span> -&gt; <span style="color:#268bd2">DismissNotification</span> {
-         <span style="color:#268bd2">UserId</span> = <span style="color:#268bd2">payload</span>.<span style="color:#268bd2">UserId</span>
-         <span style="color:#268bd2">LinkId</span> = <span style="color:#2aa198">&#34;bonus/&#34;</span> + <span style="color:#268bd2">payload</span>.<span style="color:#268bd2">BonusId</span>.<span style="color:#268bd2">ToString</span>(<span style="color:#2aa198">&#34;N&#34;</span>) }
-     | <span style="color:#268bd2">BonusExpired</span> <span style="color:#268bd2">payload</span> -&gt; <span style="color:#268bd2">DismissNotification</span> {
-         <span style="color:#268bd2">UserId</span> = <span style="color:#268bd2">payload</span>.<span style="color:#268bd2">UserId</span>
-         <span style="color:#268bd2">LinkId</span> = <span style="color:#2aa198">&#34;bonus/&#34;</span> + <span style="color:#268bd2">payload</span>.<span style="color:#268bd2">BonusId</span>.<span style="color:#268bd2">ToString</span>(<span style="color:#2aa198">&#34;N&#34;</span>) } )
-
-<span style="color:#268bd2">log</span> |&gt; <span style="color:#268bd2">react</span> |&gt; <span style="color:#268bd2">dispatch</span> |&gt; <span style="color:#268bd2">ignore</span>
-</code></pre></div><p>When a bonus is awarded to a user, we will notify the user, providing
+relevant page."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2016/04/notifications-from-event-log.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2016/04/notifications-from-event-log.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2016/04/notifications-from-event-log.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Notifications from an event log"><meta property="og:description" content="User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.
+In the domain I’m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website. However, when you want to extend their stay on the website, you want to avoid users switching contexts between your website and their mail client. But also, as soon as they return to your website, you want to show them a crisp overview of all relevant calls to action. Having most calls to action map to a specific page, the list of notifications can serve as a one-click starting point, lowering the hurdle to browse to a relevant page."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2016-04-17T17:37:00+02:00"><meta property="article:modified_time" content="2016-04-17T17:37:00+02:00"><meta property="article:tag" content="Code"><meta property="article:tag" content="Ddd"><meta name=twitter:card content="summary"><meta name=twitter:title content="Notifications from an event log"><meta name=twitter:description content="User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.
+In the domain I’m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website. However, when you want to extend their stay on the website, you want to avoid users switching contexts between your website and their mail client. But also, as soon as they return to your website, you want to show them a crisp overview of all relevant calls to action. Having most calls to action map to a specific page, the list of notifications can serve as a one-click starting point, lowering the hurdle to browse to a relevant page."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Notifications from an event log","item":"https://jefclaes.be/2016/04/notifications-from-event-log.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Notifications from an event log","name":"Notifications from an event log","description":"User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.\nIn the domain I\u0026rsquo;m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website. However, when you want to extend their stay on the website, you want to avoid users switching contexts between your website and their mail client. But also, as soon as they return to your website, you want to show them a crisp overview of all relevant calls to action. Having most calls to action map to a specific page, the list of notifications can serve as a one-click starting point, lowering the hurdle to browse to a relevant page.\n","keywords":["code","ddd"],"articleBody":"User notifications are a feature that came as an afterthought, but turned out to be rather easy to implement - without touching (read: breaking) existing functionality - thanks to having an immutable event log.\nIn the domain I’m working in at the moment, we will often give users incentives to return to the website, or to extend their stay on the website. These incentives were only communicated by email at first, and this is a decent medium when you want users to return to the website. However, when you want to extend their stay on the website, you want to avoid users switching contexts between your website and their mail client. But also, as soon as they return to your website, you want to show them a crisp overview of all relevant calls to action. Having most calls to action map to a specific page, the list of notifications can serve as a one-click starting point, lowering the hurdle to browse to a relevant page.\nNotifying a user is one thing. Another use case we wanted to solve, is to dismiss notifications as soon as they are no longer relevant.\nTwo examples of when a notification might no longer be considered relevant:\n1.When a bonus is awarded to a user, he might ignore the notification and activate the bonus by directly browsing to the specific page. 2.When a bonus is awarded to a user, he might not visit the website before the bonus expires.\nIn these cases, to avoid confusion and unsatisfied customers, we want to dismiss the notification automatically.\nLet’s say that we’re going to implement notifications for bonuses. We have these type of events to work with.\ntype Events = | BonusAwarded of payload : BonusAwarded | BonusActivated of payload : BonusActivated | BonusExpired of payload : BonusExpired and BonusAwarded = { BonusId : Guid; UserId : Guid; ExpiryDate : DateTime } and BonusActivated = { BonusId : Guid; UserId : Guid; } and BonusExpired = { BonusId : Guid; UserId : Guid; } On the other hand, we have a set of commands that interact with notifications.\ntype Commands = | NotifyUser of payload : NotifyUser | ReadNotification of payload : ReadNotification | DismissNotification of payload : DismissNotification and NotifyUser = { NotificationId : Guid; UserId : Guid; TemplateId : Guid; Data : Map\u003cstring, string\u003e ; LinkId : string } and ReadNotification = { NotificationId : Guid; UserId : Guid } and DismissNotification = { UserId : Guid; LinkId : string } A notification has an identifier, references a user, contains some data, and most importantly can be linked to something.\nWorking from an immutable event log, we can project the events to commands (to dispatch them eventually).\nlet react log = log |\u003e Seq.map (fun e -\u003e match e with | BonusAwarded payload -\u003e NotifyUser { NotificationId = Guid.NewGuid() UserId = userId TemplateId = \"BonusAwarded\" Data = [ (\"ExpiryDate\", payload.ExpiryDate.ToString(CultureInfo.InvariantCulture) ) ] |\u003e Map.ofList LinkId = \"bonus/\" + payload.BonusId.ToString(\"N\") } | BonusActivated payload -\u003e DismissNotification { UserId = payload.UserId LinkId = \"bonus/\" + payload.BonusId.ToString(\"N\") } | BonusExpired payload -\u003e DismissNotification { UserId = payload.UserId LinkId = \"bonus/\" + payload.BonusId.ToString(\"N\") } ) log |\u003e react |\u003e dispatch |\u003e ignore When a bonus is awarded to a user, we will notify the user, providing the template id and data that can be used inside of the template. In this example, the notification can be linked to a specific bonus, leveraging the bonus identifier.\nThe user might now see something like this.\nBeing aware of the events which a bonus produces over its lifetime, and their significance, we choose to dismiss the notification as soon as the bonus is activated or expired (leveraging the bonus identifier as the link again).\nNow it’s up to the UX team (if you’re lucky enough to have one) to decide on how to visualize the difference between a read and a dismissed notification (if at all).\n","wordCount":"653","inLanguage":"en","datePublished":"2016-04-17T17:37:00+02:00","dateModified":"2016-04-17T17:37:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2016/04/notifications-from-event-log.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Notifications from an event log</h1><div class=post-meta><span title='2016-04-17 17:37:00 +0200 CEST'>April 17, 2016</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>User notifications are a feature that came as an afterthought, but
+turned out to be rather easy to implement - without touching (read:
+breaking) existing functionality - thanks to having an immutable event
+log.</p><p>In the domain I&rsquo;m working in at the moment, we will often give users
+incentives to return to the website, or to extend their stay on the
+website. These incentives were only communicated by email at first, and
+this is a decent medium when you want users to return to the website.
+However, when you want to extend their stay on the website, you want to
+avoid users switching contexts between your website and their mail
+client. But also, as soon as they return to your website, you want to
+show them a crisp overview of all relevant calls to action. Having most
+calls to action map to a specific page, the list of notifications can
+serve as a one-click starting point, lowering the hurdle to browse to a
+relevant page.</p><p>Notifying a user is one thing. Another use case we wanted to solve, is
+to dismiss notifications as soon as they are no longer relevant.</p><p>Two examples of when a notification might no longer be considered
+relevant:<br>1.When a bonus is awarded to a user, he might ignore the notification and activate the bonus by directly browsing to the specific page.
+2.When a bonus is awarded to a user, he might not visit the website before the bonus expires.</p><p>In these cases, to avoid confusion and unsatisfied customers, we want to
+dismiss the notification automatically.</p><p>Let&rsquo;s say that we&rsquo;re going to implement notifications for bonuses. We
+have these type of events to work with.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Events</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> BonusAwarded <span style=color:#66d9ef>of</span> payload <span style=color:#f92672>:</span> BonusAwarded
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> BonusActivated <span style=color:#66d9ef>of</span> payload <span style=color:#f92672>:</span> BonusActivated
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> BonusExpired <span style=color:#66d9ef>of</span> payload <span style=color:#f92672>:</span> BonusExpired
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> BonusAwarded <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> BonusId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> UserId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> ExpiryDate <span style=color:#f92672>:</span> DateTime <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> BonusActivated <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> BonusId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> UserId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> BonusExpired <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> BonusId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> UserId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> <span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>On the other hand, we have a set of commands that interact with
+notifications.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Commands</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> NotifyUser <span style=color:#66d9ef>of</span> payload <span style=color:#f92672>:</span> NotifyUser
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> ReadNotification <span style=color:#66d9ef>of</span> payload <span style=color:#f92672>:</span> ReadNotification
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> DismissNotification <span style=color:#66d9ef>of</span> payload <span style=color:#f92672>:</span> DismissNotification
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> NotifyUser <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> NotificationId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> UserId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> TemplateId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> Data <span style=color:#f92672>:</span> Map<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>string</span><span style=color:#f92672>,</span> <span style=color:#66d9ef>string</span><span style=color:#f92672>&gt;</span> <span style=color:#f92672>;</span> LinkId <span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> ReadNotification <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> NotificationId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> UserId <span style=color:#f92672>:</span> Guid <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> DismissNotification <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> UserId <span style=color:#f92672>:</span> Guid<span style=color:#f92672>;</span> LinkId <span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span> <span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>A notification has an identifier, references a user, contains some data,
+and most importantly can be linked to <em>something</em>.</p><p>Working from an immutable event log, we can project the events to
+commands (to dispatch them eventually).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> react log <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  log
+</span></span><span style=display:flex><span>  <span style=color:#f92672>|&gt;</span> Seq.map <span style=color:#f92672>(</span><span style=color:#66d9ef>fun</span> e <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>     <span style=color:#66d9ef>match</span> e <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>     <span style=color:#f92672>|</span> BonusAwarded payload <span style=color:#f92672>-&gt;</span> NotifyUser <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>         NotificationId <span style=color:#f92672>=</span> Guid.NewGuid()
+</span></span><span style=display:flex><span>         UserId <span style=color:#f92672>=</span> userId
+</span></span><span style=display:flex><span>         TemplateId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;BonusAwarded&#34;</span>
+</span></span><span style=display:flex><span>         Data <span style=color:#f92672>=</span> <span style=color:#f92672>[</span> <span style=color:#f92672>(</span><span style=color:#e6db74>&#34;ExpiryDate&#34;</span><span style=color:#f92672>,</span> payload<span style=color:#f92672>.</span>ExpiryDate<span style=color:#f92672>.</span>ToString<span style=color:#f92672>(</span>CultureInfo.InvariantCulture<span style=color:#f92672>)</span> <span style=color:#f92672>)</span> <span style=color:#f92672>]</span> <span style=color:#f92672>|&gt;</span> Map.ofList
+</span></span><span style=display:flex><span>         LinkId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;bonus/&#34;</span> <span style=color:#f92672>+</span> payload<span style=color:#f92672>.</span>BonusId<span style=color:#f92672>.</span>ToString<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;N&#34;</span><span style=color:#f92672>)</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>     <span style=color:#f92672>|</span> BonusActivated payload <span style=color:#f92672>-&gt;</span> DismissNotification <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>         UserId <span style=color:#f92672>=</span> payload<span style=color:#f92672>.</span>UserId
+</span></span><span style=display:flex><span>         LinkId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;bonus/&#34;</span> <span style=color:#f92672>+</span> payload<span style=color:#f92672>.</span>BonusId<span style=color:#f92672>.</span>ToString<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;N&#34;</span><span style=color:#f92672>)</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>     <span style=color:#f92672>|</span> BonusExpired payload <span style=color:#f92672>-&gt;</span> DismissNotification <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>         UserId <span style=color:#f92672>=</span> payload<span style=color:#f92672>.</span>UserId
+</span></span><span style=display:flex><span>         LinkId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;bonus/&#34;</span> <span style=color:#f92672>+</span> payload<span style=color:#f92672>.</span>BonusId<span style=color:#f92672>.</span>ToString<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;N&#34;</span><span style=color:#f92672>)</span> <span style=color:#f92672>}</span> <span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>log <span style=color:#f92672>|&gt;</span> react <span style=color:#f92672>|&gt;</span> dispatch <span style=color:#f92672>|&gt;</span> ignore
+</span></span></code></pre></div><p>When a bonus is awarded to a user, we will notify the user, providing
 the template id and data that can be used inside of the template. In
 this example, the notification can be linked to a specific bonus,
-leveraging the bonus identifier.</p>
-<p>The user might now see something like this.</p>
-<p><a href="/post/images/2016-04-17-notifications-from-an-event-log-Notification1.PNG"><img src="/post/images/thumbnails/2016-04-17-notifications-from-an-event-log-Notification1.PNG" alt=""></a></p>
-<p>Being aware of the events which a bonus produces over its lifetime, and
+leveraging the bonus identifier.</p><p>The user might now see something like this.</p><p><a href=/post/images/2016-04-17-notifications-from-an-event-log-Notification1.PNG><img loading=lazy src=/post/images/thumbnails/2016-04-17-notifications-from-an-event-log-Notification1.PNG></a></p><p>Being aware of the events which a bonus produces over its lifetime, and
 their significance, we choose to dismiss the notification as soon as the
 bonus is activated or expired (leveraging the bonus identifier as the
-link again).</p>
-<p><a href="/post/images/2016-04-17-notifications-from-an-event-log-Notification2.PNG"><img src="/post/images/thumbnails/2016-04-17-notifications-from-an-event-log-Notification2.PNG" alt=""></a></p>
-<p>Now it&rsquo;s up to the UX team (if you&rsquo;re lucky enough to have one) to
+link again).</p><p><a href=/post/images/2016-04-17-notifications-from-an-event-log-Notification2.PNG><img loading=lazy src=/post/images/thumbnails/2016-04-17-notifications-from-an-event-log-Notification2.PNG></a></p><p>Now it&rsquo;s up to the UX team (if you&rsquo;re lucky enough to have one) to
 decide on how to visualize the difference between a read and a dismissed
-notification (if at all).</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-							<li><a href="/tags/ddd">ddd</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2016  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+notification (if at all).</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li><li><a href=https://jefclaes.be/tags/ddd/>Ddd</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2016/04/using-batch-layer-for-faster.html><span class=title>« Prev</span>
+<span>Using a batch layer for fast(er) aggregations </span></a><a class=next href=https://jefclaes.be/2016/03/functional-one-liner-for-running-totals.html><span class=title>Next »</span>
+<span>Functional one-liner for running totals in C#</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

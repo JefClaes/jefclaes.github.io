@@ -1,517 +1,379 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Designing entities: immutability first - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Designing entities: immutability first">
-<meta itemprop="description" content="The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins&rsquo; and outs&rsquo; of a proprietary UI technology.">
-<meta itemprop="datePublished" content="2013-04-07T17:35:00&#43;02:00" />
-<meta itemprop="dateModified" content="2013-04-07T17:35:00&#43;02:00" />
-<meta itemprop="wordCount" content="1517">
-
-
-
-<meta itemprop="keywords" content="code,opinion," /><meta property="og:title" content="Designing entities: immutability first" />
-<meta property="og:description" content="The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins&rsquo; and outs&rsquo; of a proprietary UI technology." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2013/04/designing-entities-immutability-first.html" />
-<meta property="article:published_time" content="2013-04-07T17:35:00+02:00" />
-<meta property="article:modified_time" content="2013-04-07T17:35:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Designing entities: immutability first"/>
-<meta name="twitter:description" content="The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins&rsquo; and outs&rsquo; of a proprietary UI technology."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">07</span>
-							<span class="rest">Apr 2013</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Designing entities: immutability first</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>The first year I wrote software for a living I spent my days mostly
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Designing entities: immutability first | Jef Claes</title><meta name=keywords content="code,opinion"><meta name=description content="The first year I wrote software for a living I spent my days mostly
 writing forms over data applications; most of my efforts were wasted
 just trying to make things work using ASP.NET and the Webforms engine.
 It was only after a year and graduating from the School of Hard Knocks
 that I learned there is a lot more to building clean and maintainable
 software than knowing the ins&rsquo; and outs&rsquo; of a proprietary UI
-technology.</p>
-<p>One of the habits I have adapted over time, is designing new entities as
+technology."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2013/04/designing-entities-immutability-first.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2013/04/designing-entities-immutability-first.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2013/04/designing-entities-immutability-first.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Designing entities: immutability first"><meta property="og:description" content="The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins’ and outs’ of a proprietary UI technology."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2013-04-07T17:35:00+02:00"><meta property="article:modified_time" content="2013-04-07T17:35:00+02:00"><meta property="article:tag" content="Code"><meta property="article:tag" content="Opinion"><meta name=twitter:card content="summary"><meta name=twitter:title content="Designing entities: immutability first"><meta name=twitter:description content="The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins’ and outs’ of a proprietary UI technology."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Designing entities: immutability first","item":"https://jefclaes.be/2013/04/designing-entities-immutability-first.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Designing entities: immutability first","name":"Designing entities: immutability first","description":"The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins\u0026rsquo; and outs\u0026rsquo; of a proprietary UI technology.\n","keywords":["code","opinion"],"articleBody":"The first year I wrote software for a living I spent my days mostly writing forms over data applications; most of my efforts were wasted just trying to make things work using ASP.NET and the Webforms engine. It was only after a year and graduating from the School of Hard Knocks that I learned there is a lot more to building clean and maintainable software than knowing the ins’ and outs’ of a proprietary UI technology.\nOne of the habits I have adapted over time, is designing new entities as immutable objects first, and to go from there. I believe this helps me to make more deliberate design decisions, leading to better designs.\nAllow me to demonstrate this using a customer entity - I know this is cliché, but I have a hard time coming up with original examples.\nA constructor This one might sound rather obvious, but you would be surprised how many classes don’t have the decency of a simple constructor, especially since C# introduced object initializers. While object initializers definitely look good, they make your code harder to maintain; classes don’t communicate what they need to get by, nor do they get the opportunity to protect their invariants as early as possible.\nLike I said, I design my classes to be immutable from the start; after initialization they can’t be modified. I’m not even exposing any state for now.\npublic class Customer { public Customer( Guid id, string firstName, string lastName, string street, string city, string country, DateTime birthdate, decimal balance) { FirstName = firstName; LastName = lastName; Street = street; City = city; Country = country; BirthDate = birthdate; Balance = balance; } public Guid Id { get; private set; } private string FirstName { get; set; } private string LastName { get; set; } private string Street { get; set; } private string City { get; set; } private string Country { get; set; } private DateTime BirthDate { get; set; } private decimal Balance { get; set; } } Comparing identities An entity is always unique within a system; it has an identity. To encapsulate comparing two entities, and to avoid repeating myself, I always override the Equals and GetHashCode methods. We’re not guided into doing this by our object’s immutability though, but by common sense.\npublic override bool Equals(object obj) { if (obj == null || GetType() != obj.GetType()) return false; var other = obj as Customer; return Id == other.Id; } public override int GetHashCode() { return this.Id.GetHashCode(); } Defaults When a new customer is created, its balance is still empty. The constructor is the perfect place to initialize this default.\npublic Customer( Guid id, string firstName, string lastName, string street, string city, string country, DateTime birthdate) { FirstName = firstName; LastName = lastName; Street = street; City = city; Country = country; BirthDate = birthdate; Balance = 0; } Protecting invariants The next thing I’ll do is use the constructor to guard for arguments that don’t satisfy my objects invariants. This way we guarantee that the object can never be initialized with an invalid state; avoiding a bunch of trouble along the way.\nWe expect a customer to have a first name, last name, street, city and country which isn’t empty. We also expect its birth date not to be in the future.\npublic Customer( Guid id, string firstName, string lastName, string street, string city, string country, DateTime birthdate) { Guard.ForNullOrEmpty(firstName, \"first name\"); Guard.ForNullOrEmpty(lastName, \"last name\"); Guard.ForNullOrEmpty(street, \"street\"); Guard.ForNullOrEmpty(city, \"city\"); Guard.ForNullOrEmpty(country, \"country\"); Guard.ForDatesInTheFuture(birthdate, \"birthdate\"); Id = id; FirstName = firstName; LastName = lastName; Street = street; City = city; Country = country; BirthDate = birthdate; Balance = 0; } public class Guard { public static void ForNullOrEmpty(string value, string desc) { if (string.IsNullOrEmpty(value)) throw new NullReferenceException(desc); } public static void ForDateInTheFuture(DateTime value, string desc) { if (value \u003e DateTimeProvider.Now()) throw new ArgumentException( string.Format(\"{0} can't be a date in the future.\", desc)) } } Composition and extracting value objects I’m fairly confident that every self-respecting programmer is annoyed by the fact that the obvious concepts name and address haven’t been extracted yet. Especially since that bloated constructor is all up in your face. Let’s go ahead and extract two value objects: name and address.\npublic class Customer { public Customer( Guid id, Name name, Address address, DateTime birthdate) { Guard.ForNull(name, \"name\"); Guard.ForNull(address, \"address\"); Guard.ForDateInTheFuture(birthdate, \"birthdate\"); Id = id; Name = name; Address = address; Balance = 0; } public Guid Id { get; private set; } private Name Name { get; set; } private Address Address { get; set; } private DateTime BirthDate { get; set; } private decimal Balance { get; set; } } public class Name { public Name(string first, string last) { Guard.ForNullOrEmpty(first, \"first name\"); Guard.ForNullOrEmpty(last, \"last name\"); First = first; Last = last; } private string First { get; set; } private string Last { get; set; } public string Full { get { return string.Format(\"{0} {1}\", First, Last); } } public override bool Equals(Object obj) { ... } public override int GetHashCode() { ... } } public class Address { public Address(string street, string city, string country) { Guard.ForNullOrEmpty(street, \"street\"); Guard.ForNullOrEmpty(city, \"city\"); Guard.ForNullOrEmpty(country, \"country\"); Street = street; City = city; Country = country; } private string Street { get; set; } private string City { get; set; } private string Country { get; set; } public override bool Equals(Object obj) { ... } public override int GetHashCode() { ... } } There, that looks better.\nTell, don’t ask In good OOP we tell objects what to do, we don’t want to query an object for its state and do something based on that; that would lead to broken encapsulation and thereby more brittle code.\nSince our immutable object isn’t exposing any state yet, we are forced to ask ourselves why we want to expose something. This way, disregarding “tell don’t ask” becomes a deliberate choice.\nLet’s say we want to decrease the balance, and throw an exception when funds are insufficient. Instead of asking the customer instance and acting on that..\nif (!customer.HasSufficientFunds()) throw new InsufficientFundsException(); It’s better to encapsulate data and behaviour, and tell it what to do instead.\npublic class Customer { public Customer( Guid id, Name name, Address address, DateTime birthdate) { Guard.ForNull(name, \"name\"); Guard.ForNull(address, \"address\"); Guard.ForDateInTheFuture(birthdate, \"birthdate\"); Id = id; Name = name; Address = address; Balance = 0; } public Guid Id { get; private set; } private Name Name { get; set; } private Address Address { get; set; } private DateTime BirthDate { get; set; } private decimal Balance { get; set; } private bool HasSufficientFunds(decimal value) { return Balance - value \u003e= 0; } public void DecreaseBalance(decimal value) { if (HasSufficientFunds(value)) throw new InsufficientFundsException(); Balance -= value; } } Making operations explicit Next thing we want to do is change the address of a customer. Since we’re not exposing the address property directly, we’re also forced to think about a useful name for the operation; I decided to name it MoveTo. With this we make things more explicit, and thus more evident for people who are new to the domain.\npublic class Customer { public Customer( Guid id, Name name, Address address, DateTime birthdate) { Guard.ForNull(name, \"name\"); Guard.ForNull(address, \"address\"); Guard.ForDateInTheFuture(birthdate, \"birthdate\"); Id = id; Name = name; Address = address; Balance = 0; } public Guid Id { get; private set; } private Name Name { get; set; } private Address Address { get; set; } private DateTime BirthDate { get; set; } private decimal Balance { get; set; } ... public void MoveTo(Address newAddress) { Guard.ForNull(newAddress, \"new address\"); Address = newAddress; } } var customer = new Customer( Guid.NewGuid(), new Name(\"Jef\", \"Claes\"), new Address(\"Ergens\", \"Antwerp\", \"Belgium\"), new DateTime(1987, 10, 18)); customer.MoveTo(new Address(\"Quelque part\", \"Brussels\", \"Belgium\")); Opening up bit by bit In the meanwhile our entity is no longer immutable, but we’re doing a good job of not exposing any state. If you’re using the same model for reads as you do for writes, you’re going to need to expose some properties eventually; for querying, but also for assertions. Make sure to only expose the getters though, and to avoid violating “Tell, don’t ask” since that became a lot easier now.\npublic class Customer { public Customer( Guid id, Name name, Address address, DateTime birthdate) { Guard.ForNull(name, \"name\"); Guard.ForNull(address, \"address\"); Guard.ForDateInTheFuture(birthdate, \"birthdate\"); Id = id; Name = name; Address = address; Balance = 0; } public Guid Id { get; private set; } public Name Name { get; private set; } public Address Address { get; private set; } public DateTime BirthDate { get; private set; } private decimal Balance { get; set; } private bool HasSufficientFunds(decimal value) { return Balance - value \u003e= 0; } public void DecreaseBalance(decimal value) { if (HasSufficientFunds(value)) throw new InsufficientFundsException(); Balance -= value; } public void MoveTo(Address newAddress) { Guard.ForNull(newAddress, \"new address\"); Address = newAddress; } } Summarized By making my entities immutable from the start I am guided into adhering to a bunch of good practices:\nA constructor Comparing identities Defaults Protecting invariants Composition and extracting value objects Tell, don’t ask Making operations explicit Opening up bit by bit ","wordCount":"1517","inLanguage":"en","datePublished":"2013-04-07T17:35:00+02:00","dateModified":"2013-04-07T17:35:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2013/04/designing-entities-immutability-first.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Designing entities: immutability first</h1><div class=post-meta><span title='2013-04-07 17:35:00 +0200 CEST'>April 7, 2013</span>&nbsp;·&nbsp;<span>8 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>The first year I wrote software for a living I spent my days mostly
+writing forms over data applications; most of my efforts were wasted
+just trying to make things work using ASP.NET and the Webforms engine.
+It was only after a year and graduating from the School of Hard Knocks
+that I learned there is a lot more to building clean and maintainable
+software than knowing the ins&rsquo; and outs&rsquo; of a proprietary UI
+technology.</p><p>One of the habits I have adapted over time, is designing new entities as
 immutable objects first, and to go from there. I believe this helps me
-to make more deliberate design decisions, leading to better designs.</p>
-<p>Allow me to demonstrate this using a customer entity - I know this is
-cliché, but I have a hard time coming up with original examples.</p>
-<h3 id="a-constructor">A constructor</h3>
-<p>This one might sound rather obvious, but you would be surprised how many
+to make more deliberate design decisions, leading to better designs.</p><p>Allow me to demonstrate this using a customer entity - I know this is
+cliché, but I have a hard time coming up with original examples.</p><h3 id=a-constructor>A constructor<a hidden class=anchor aria-hidden=true href=#a-constructor>#</a></h3><p>This one might sound rather obvious, but you would be surprised how many
 classes don&rsquo;t have the decency of a simple constructor, especially since
-C# introduced <a href="http://msdn.microsoft.com/en-us/library/vstudio/bb384062.aspx">object
+C# introduced <a href=http://msdn.microsoft.com/en-us/library/vstudio/bb384062.aspx>object
 initializers</a>.
 While object initializers definitely look good, they make your code
 harder to maintain; classes don&rsquo;t communicate what they need to get by,
 nor do they get the opportunity to protect their invariants as early as
-possible.</p>
-<p>Like I said, I design my classes to be immutable from the start; after
+possible.</p><p>Like I said, I design my classes to be immutable from the start; after
 initialization they can&rsquo;t be modified. I&rsquo;m not even exposing any state
-for now.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Customer</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-        <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-        <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">firstName</span>,
-        <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">lastName</span>,
-        <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">street</span>,
-        <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">city</span>,
-        <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">country</span>,
-        <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>,
-        <span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#268bd2">balance</span>)
-    {
-        <span style="color:#268bd2">FirstName</span> = <span style="color:#268bd2">firstName</span>;
-        <span style="color:#268bd2">LastName</span> = <span style="color:#268bd2">lastName</span>;
-        <span style="color:#268bd2">Street</span> = <span style="color:#268bd2">street</span>;
-        <span style="color:#268bd2">City</span> = <span style="color:#268bd2">city</span>;
-        <span style="color:#268bd2">Country</span> = <span style="color:#268bd2">country</span>;
-        <span style="color:#268bd2">BirthDate</span> = <span style="color:#268bd2">birthdate</span>;
-        <span style="color:#268bd2">Balance</span> = <span style="color:#268bd2">balance</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">Id</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">FirstName</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">LastName</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Street</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">City</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Country</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">BirthDate</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#268bd2">Balance</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-}
-</code></pre></div><h3 id="comparing-identities">Comparing identities</h3>
-<p>An entity is always unique within a system; it has an identity. To
+for now.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Customer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>        Guid id,
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> firstName,
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> lastName,
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> street,
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> city,
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> country,
+</span></span><span style=display:flex><span>        DateTime birthdate,
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>decimal</span> balance)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        FirstName = firstName;
+</span></span><span style=display:flex><span>        LastName = lastName;
+</span></span><span style=display:flex><span>        Street = street;
+</span></span><span style=display:flex><span>        City = city;
+</span></span><span style=display:flex><span>        Country = country;
+</span></span><span style=display:flex><span>        BirthDate = birthdate;
+</span></span><span style=display:flex><span>        Balance = balance;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Guid Id { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> FirstName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> LastName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> Street { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> City { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> Country { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> DateTime BirthDate { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>decimal</span> Balance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=comparing-identities>Comparing identities<a hidden class=anchor aria-hidden=true href=#comparing-identities>#</a></h3><p>An entity is always unique within a system; it has an identity. To
 encapsulate comparing two entities, and to avoid repeating myself, I
 always override the Equals and GetHashCode methods. We&rsquo;re not guided
 into doing this by our object&rsquo;s immutability though, but by common
-sense.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">Equals</span>(<span style="color:#859900;font-weight:bold">object</span> <span style="color:#268bd2">obj</span>)
-{
-    <span style="color:#859900">if</span> (<span style="color:#268bd2">obj</span> == <span style="color:#859900">null</span> || <span style="color:#268bd2">GetType</span>() != <span style="color:#268bd2">obj</span>.<span style="color:#268bd2">GetType</span>())
-        <span style="color:#859900">return</span> <span style="color:#859900">false</span>;            
-
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">other</span> = <span style="color:#268bd2">obj</span> <span style="color:#859900">as</span> <span style="color:#268bd2">Customer</span>;
-        
-    <span style="color:#859900">return</span> <span style="color:#268bd2">Id</span> == <span style="color:#268bd2">other</span>.<span style="color:#268bd2">Id</span>;
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">GetHashCode</span>()
-{
-    <span style="color:#859900">return</span> <span style="color:#859900">this</span>.<span style="color:#268bd2">Id</span>.<span style="color:#268bd2">GetHashCode</span>();
-}
-</code></pre></div><h3 id="defaults">Defaults</h3>
-<p>When a new customer is created, its balance is still empty. The
-constructor is the perfect place to initialize this default.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-    <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">firstName</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">lastName</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">street</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">city</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">country</span>,
-    <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>)
-{
-    <span style="color:#268bd2">FirstName</span> = <span style="color:#268bd2">firstName</span>;
-    <span style="color:#268bd2">LastName</span> = <span style="color:#268bd2">lastName</span>;
-    <span style="color:#268bd2">Street</span> = <span style="color:#268bd2">street</span>;
-    <span style="color:#268bd2">City</span> = <span style="color:#268bd2">city</span>;
-    <span style="color:#268bd2">Country</span> = <span style="color:#268bd2">country</span>;
-    <span style="color:#268bd2">BirthDate</span> = <span style="color:#268bd2">birthdate</span>;
-    <span style="color:#268bd2">Balance</span> = <span style="color:#2aa198;font-weight:bold">0</span>;
-}
-</code></pre></div><h2 id="protecting-invariants">Protecting invariants</h2>
-<p>The next thing I&rsquo;ll do is use the constructor to guard for arguments
+sense.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>bool</span> Equals(<span style=color:#66d9ef>object</span> obj)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (obj == <span style=color:#66d9ef>null</span> || GetType() != obj.GetType())
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;            
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> other = obj <span style=color:#66d9ef>as</span> Customer;
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> Id == other.Id;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>int</span> GetHashCode()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>.Id.GetHashCode();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=defaults>Defaults<a hidden class=anchor aria-hidden=true href=#defaults>#</a></h3><p>When a new customer is created, its balance is still empty. The
+constructor is the perfect place to initialize this default.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>    Guid id,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> firstName,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> lastName,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> street,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> city,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> country,
+</span></span><span style=display:flex><span>    DateTime birthdate)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    FirstName = firstName;
+</span></span><span style=display:flex><span>    LastName = lastName;
+</span></span><span style=display:flex><span>    Street = street;
+</span></span><span style=display:flex><span>    City = city;
+</span></span><span style=display:flex><span>    Country = country;
+</span></span><span style=display:flex><span>    BirthDate = birthdate;
+</span></span><span style=display:flex><span>    Balance = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=protecting-invariants>Protecting invariants<a hidden class=anchor aria-hidden=true href=#protecting-invariants>#</a></h2><p>The next thing I&rsquo;ll do is use the constructor to guard for arguments
 that don&rsquo;t satisfy my objects invariants. This way we guarantee that the
 object can never be initialized with an invalid state; avoiding a bunch
-of trouble along the way.</p>
-<p>We expect a customer to have a first name, last name, street, city and
+of trouble along the way.</p><p>We expect a customer to have a first name, last name, street, city and
 country which isn&rsquo;t empty. We also expect its birth date not to be in
-the future.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-    <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">firstName</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">lastName</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">street</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">city</span>,
-    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">country</span>,
-    <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>)
-{
-    <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">firstName</span>, <span style="color:#2aa198">&#34;first name&#34;</span>);
-    <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">lastName</span>, <span style="color:#2aa198">&#34;last name&#34;</span>);
-    <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">street</span>, <span style="color:#2aa198">&#34;street&#34;</span>);
-    <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">city</span>, <span style="color:#2aa198">&#34;city&#34;</span>);
-    <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">country</span>, <span style="color:#2aa198">&#34;country&#34;</span>);
-    <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForDatesInTheFuture</span>(<span style="color:#268bd2">birthdate</span>, <span style="color:#2aa198">&#34;birthdate&#34;</span>);
-
-    <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">id</span>;
-    <span style="color:#268bd2">FirstName</span> = <span style="color:#268bd2">firstName</span>;
-    <span style="color:#268bd2">LastName</span> = <span style="color:#268bd2">lastName</span>;
-    <span style="color:#268bd2">Street</span> = <span style="color:#268bd2">street</span>;
-    <span style="color:#268bd2">City</span> = <span style="color:#268bd2">city</span>;
-    <span style="color:#268bd2">Country</span> = <span style="color:#268bd2">country</span>;
-    <span style="color:#268bd2">BirthDate</span> = <span style="color:#268bd2">birthdate</span>;            
-    <span style="color:#268bd2">Balance</span> = <span style="color:#2aa198;font-weight:bold">0</span>;
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Guard</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#859900">static</span> <span style="color:#859900">void</span> <span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#859900">value</span>, <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">desc</span>)
-    {
-        <span style="color:#859900">if</span> (<span style="color:#859900;font-weight:bold">string</span>.<span style="color:#268bd2">IsNullOrEmpty</span>(<span style="color:#859900">value</span>))
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">NullReferenceException</span>(<span style="color:#268bd2">desc</span>);
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">static</span> <span style="color:#859900">void</span> <span style="color:#268bd2">ForDateInTheFuture</span>(<span style="color:#268bd2">DateTime</span> <span style="color:#859900">value</span>, <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">desc</span>)
-    {
-        <span style="color:#859900">if</span> (<span style="color:#859900">value</span> &gt; <span style="color:#268bd2">DateTimeProvider</span>.<span style="color:#268bd2">Now</span>())
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">ArgumentException</span>(
-                <span style="color:#859900;font-weight:bold">string</span>.<span style="color:#268bd2">Format</span>(<span style="color:#2aa198">&#34;{0} can&#39;t be a date in the future.&#34;</span>, <span style="color:#268bd2">desc</span>))
-    }
-}
-</code></pre></div><h3 id="composition-and-extracting-value-objects">Composition and extracting value objects</h3>
-<p>I&rsquo;m fairly confident that every self-respecting programmer is annoyed
+the future.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>    Guid id,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> firstName,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> lastName,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> street,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> city,
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>string</span> country,
+</span></span><span style=display:flex><span>    DateTime birthdate)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    Guard.ForNullOrEmpty(firstName, <span style=color:#e6db74>&#34;first name&#34;</span>);
+</span></span><span style=display:flex><span>    Guard.ForNullOrEmpty(lastName, <span style=color:#e6db74>&#34;last name&#34;</span>);
+</span></span><span style=display:flex><span>    Guard.ForNullOrEmpty(street, <span style=color:#e6db74>&#34;street&#34;</span>);
+</span></span><span style=display:flex><span>    Guard.ForNullOrEmpty(city, <span style=color:#e6db74>&#34;city&#34;</span>);
+</span></span><span style=display:flex><span>    Guard.ForNullOrEmpty(country, <span style=color:#e6db74>&#34;country&#34;</span>);
+</span></span><span style=display:flex><span>    Guard.ForDatesInTheFuture(birthdate, <span style=color:#e6db74>&#34;birthdate&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Id = id;
+</span></span><span style=display:flex><span>    FirstName = firstName;
+</span></span><span style=display:flex><span>    LastName = lastName;
+</span></span><span style=display:flex><span>    Street = street;
+</span></span><span style=display:flex><span>    City = city;
+</span></span><span style=display:flex><span>    Country = country;
+</span></span><span style=display:flex><span>    BirthDate = birthdate;            
+</span></span><span style=display:flex><span>    Balance = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Guard</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> ForNullOrEmpty(<span style=color:#66d9ef>string</span> <span style=color:#66d9ef>value</span>, <span style=color:#66d9ef>string</span> desc)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (<span style=color:#66d9ef>string</span>.IsNullOrEmpty(<span style=color:#66d9ef>value</span>))
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> NullReferenceException(desc);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> ForDateInTheFuture(DateTime <span style=color:#66d9ef>value</span>, <span style=color:#66d9ef>string</span> desc)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (<span style=color:#66d9ef>value</span> &gt; DateTimeProvider.Now())
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> ArgumentException(
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>string</span>.Format(<span style=color:#e6db74>&#34;{0} can&#39;t be a date in the future.&#34;</span>, desc))
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=composition-and-extracting-value-objects>Composition and extracting value objects<a hidden class=anchor aria-hidden=true href=#composition-and-extracting-value-objects>#</a></h3><p>I&rsquo;m fairly confident that every self-respecting programmer is annoyed
 by the fact that the obvious concepts name and address haven&rsquo;t been
 extracted yet. Especially since that bloated constructor is all up in
 your face. Let&rsquo;s go ahead and extract two value objects: name and
-address.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Customer</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-        <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-        <span style="color:#268bd2">Name</span> <span style="color:#268bd2">name</span>,
-        <span style="color:#268bd2">Address</span> <span style="color:#268bd2">address</span>,
-        <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">name</span>, <span style="color:#2aa198">&#34;name&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">address</span>, <span style="color:#2aa198">&#34;address&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForDateInTheFuture</span>(<span style="color:#268bd2">birthdate</span>, <span style="color:#2aa198">&#34;birthdate&#34;</span>);
-
-        <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">id</span>;
-        <span style="color:#268bd2">Name</span> = <span style="color:#268bd2">name</span>;
-        <span style="color:#268bd2">Address</span> = <span style="color:#268bd2">address</span>;
-        <span style="color:#268bd2">Balance</span> = <span style="color:#2aa198;font-weight:bold">0</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">Id</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">Name</span> <span style="color:#268bd2">Name</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">Address</span> <span style="color:#268bd2">Address</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">BirthDate</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#268bd2">Balance</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Name</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Name</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">first</span>, <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">last</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">first</span>, <span style="color:#2aa198">&#34;first name&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">last</span>, <span style="color:#2aa198">&#34;last name&#34;</span>);
-
-        <span style="color:#268bd2">First</span> = <span style="color:#268bd2">first</span>;
-        <span style="color:#268bd2">Last</span> = <span style="color:#268bd2">last</span>;
-    }
-
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">First</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Last</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-
-    <span style="color:#859900">public</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Full</span> 
-    {
-        <span style="color:#859900">get</span>
-        {
-            <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">string</span>.<span style="color:#268bd2">Format</span>(<span style="color:#2aa198">&#34;{0} {1}&#34;</span>, <span style="color:#268bd2">First</span>, <span style="color:#268bd2">Last</span>);
-        }
-    }
-    
-    <span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">Equals</span>(<span style="color:#268bd2">Object</span> <span style="color:#268bd2">obj</span>)
-    {
-        ...
-    }
-    
-    <span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">GetHashCode</span>()
-    {
-        ...
-    }
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Address</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Address</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">street</span>, <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">city</span>, <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">country</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">street</span>, <span style="color:#2aa198">&#34;street&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">city</span>, <span style="color:#2aa198">&#34;city&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNullOrEmpty</span>(<span style="color:#268bd2">country</span>, <span style="color:#2aa198">&#34;country&#34;</span>);
-
-        <span style="color:#268bd2">Street</span> = <span style="color:#268bd2">street</span>;
-        <span style="color:#268bd2">City</span> = <span style="color:#268bd2">city</span>;
-        <span style="color:#268bd2">Country</span> = <span style="color:#268bd2">country</span>;
-    }
-
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Street</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">City</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">Country</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    
-    <span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">Equals</span>(<span style="color:#268bd2">Object</span> <span style="color:#268bd2">obj</span>)
-    {
-        ...
-    }
-    
-    <span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">GetHashCode</span>()
-    {
-        ...
-    }
-}
-</code></pre></div><p>There, that looks better.</p>
-<h3 id="tell-dont-ask">Tell, don&rsquo;t ask</h3>
-<p>In good OOP we tell objects what to do, we don&rsquo;t want to query an
+address.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Customer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>        Guid id,
+</span></span><span style=display:flex><span>        Name name,
+</span></span><span style=display:flex><span>        Address address,
+</span></span><span style=display:flex><span>        DateTime birthdate)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNull(name, <span style=color:#e6db74>&#34;name&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNull(address, <span style=color:#e6db74>&#34;address&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForDateInTheFuture(birthdate, <span style=color:#e6db74>&#34;birthdate&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Id = id;
+</span></span><span style=display:flex><span>        Name = name;
+</span></span><span style=display:flex><span>        Address = address;
+</span></span><span style=display:flex><span>        Balance = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Guid Id { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Name Name { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Address Address { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> DateTime BirthDate { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>decimal</span> Balance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Name</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Name(<span style=color:#66d9ef>string</span> first, <span style=color:#66d9ef>string</span> last)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNullOrEmpty(first, <span style=color:#e6db74>&#34;first name&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNullOrEmpty(last, <span style=color:#e6db74>&#34;last name&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        First = first;
+</span></span><span style=display:flex><span>        Last = last;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> First { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> Last { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> Full 
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>get</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>string</span>.Format(<span style=color:#e6db74>&#34;{0} {1}&#34;</span>, First, Last);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>bool</span> Equals(Object obj)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        ...
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>int</span> GetHashCode()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        ...
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Address</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Address(<span style=color:#66d9ef>string</span> street, <span style=color:#66d9ef>string</span> city, <span style=color:#66d9ef>string</span> country)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNullOrEmpty(street, <span style=color:#e6db74>&#34;street&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNullOrEmpty(city, <span style=color:#e6db74>&#34;city&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNullOrEmpty(country, <span style=color:#e6db74>&#34;country&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Street = street;
+</span></span><span style=display:flex><span>        City = city;
+</span></span><span style=display:flex><span>        Country = country;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> Street { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> City { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>string</span> Country { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>bool</span> Equals(Object obj)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        ...
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>int</span> GetHashCode()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        ...
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>There, that looks better.</p><h3 id=tell-dont-ask>Tell, don&rsquo;t ask<a hidden class=anchor aria-hidden=true href=#tell-dont-ask>#</a></h3><p>In good OOP we tell objects what to do, we don&rsquo;t want to query an
 object for its state and do something based on that; that would lead to
-broken encapsulation and thereby more brittle code.</p>
-<p>Since our immutable object isn&rsquo;t exposing any state yet, we are forced
+broken encapsulation and thereby more brittle code.</p><p>Since our immutable object isn&rsquo;t exposing any state yet, we are forced
 to ask ourselves why we want to expose something. This way, disregarding
-&ldquo;tell don&rsquo;t ask&rdquo; becomes a deliberate choice.</p>
-<p>Let&rsquo;s say we want to decrease the balance, and throw an exception when
+&ldquo;tell don&rsquo;t ask&rdquo; becomes a deliberate choice.</p><p>Let&rsquo;s say we want to decrease the balance, and throw an exception when
 funds are insufficient. Instead of asking the customer instance and
-acting on that..</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">if</span> (!<span style="color:#268bd2">customer</span>.<span style="color:#268bd2">HasSufficientFunds</span>())
-    <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">InsufficientFundsException</span>();
-</code></pre></div><p>It&rsquo;s better to encapsulate data and behaviour, and tell it what to do
-instead.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Customer</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-        <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-        <span style="color:#268bd2">Name</span> <span style="color:#268bd2">name</span>,
-        <span style="color:#268bd2">Address</span> <span style="color:#268bd2">address</span>,
-        <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">name</span>, <span style="color:#2aa198">&#34;name&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">address</span>, <span style="color:#2aa198">&#34;address&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForDateInTheFuture</span>(<span style="color:#268bd2">birthdate</span>, <span style="color:#2aa198">&#34;birthdate&#34;</span>);
-
-        <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">id</span>;
-        <span style="color:#268bd2">Name</span> = <span style="color:#268bd2">name</span>;
-        <span style="color:#268bd2">Address</span> = <span style="color:#268bd2">address</span>;
-        <span style="color:#268bd2">Balance</span> = <span style="color:#2aa198;font-weight:bold">0</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">Id</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }        
-    <span style="color:#859900">private</span> <span style="color:#268bd2">Name</span> <span style="color:#268bd2">Name</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">Address</span> <span style="color:#268bd2">Address</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">BirthDate</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#268bd2">Balance</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">HasSufficientFunds</span>(<span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#859900">value</span>) 
-    {
-        <span style="color:#859900">return</span> <span style="color:#268bd2">Balance</span> - <span style="color:#859900">value</span> &gt;= <span style="color:#2aa198;font-weight:bold">0</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">DecreaseBalance</span>(<span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#859900">value</span>)
-    {
-        <span style="color:#859900">if</span> (<span style="color:#268bd2">HasSufficientFunds</span>(<span style="color:#859900">value</span>))
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">InsufficientFundsException</span>();
-
-        <span style="color:#268bd2">Balance</span> -= <span style="color:#859900">value</span>;
-    }
-}
-</code></pre></div><h3 id="making-operations-explicit">Making operations explicit</h3>
-<p>Next thing we want to do is change the address of a customer. Since
+acting on that..</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>if</span> (!customer.HasSufficientFunds())
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> InsufficientFundsException();
+</span></span></code></pre></div><p>It&rsquo;s better to encapsulate data and behaviour, and tell it what to do
+instead.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Customer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>        Guid id,
+</span></span><span style=display:flex><span>        Name name,
+</span></span><span style=display:flex><span>        Address address,
+</span></span><span style=display:flex><span>        DateTime birthdate)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNull(name, <span style=color:#e6db74>&#34;name&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNull(address, <span style=color:#e6db74>&#34;address&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForDateInTheFuture(birthdate, <span style=color:#e6db74>&#34;birthdate&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Id = id;
+</span></span><span style=display:flex><span>        Name = name;
+</span></span><span style=display:flex><span>        Address = address;
+</span></span><span style=display:flex><span>        Balance = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Guid Id { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }        
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Name Name { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Address Address { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> DateTime BirthDate { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>decimal</span> Balance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>bool</span> HasSufficientFunds(<span style=color:#66d9ef>decimal</span> <span style=color:#66d9ef>value</span>) 
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> Balance - <span style=color:#66d9ef>value</span> &gt;= <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> DecreaseBalance(<span style=color:#66d9ef>decimal</span> <span style=color:#66d9ef>value</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (HasSufficientFunds(<span style=color:#66d9ef>value</span>))
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> InsufficientFundsException();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Balance -= <span style=color:#66d9ef>value</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=making-operations-explicit>Making operations explicit<a hidden class=anchor aria-hidden=true href=#making-operations-explicit>#</a></h3><p>Next thing we want to do is change the address of a customer. Since
 we&rsquo;re not exposing the address property directly, we&rsquo;re also forced to
 think about a useful name for the operation; I decided to name it
 MoveTo. With this we make things more explicit, and thus more evident
-for people who are new to the domain.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Customer</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-        <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-        <span style="color:#268bd2">Name</span> <span style="color:#268bd2">name</span>,
-        <span style="color:#268bd2">Address</span> <span style="color:#268bd2">address</span>,
-        <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">name</span>, <span style="color:#2aa198">&#34;name&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">address</span>, <span style="color:#2aa198">&#34;address&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForDateInTheFuture</span>(<span style="color:#268bd2">birthdate</span>, <span style="color:#2aa198">&#34;birthdate&#34;</span>);
-
-        <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">id</span>;
-        <span style="color:#268bd2">Name</span> = <span style="color:#268bd2">name</span>;
-        <span style="color:#268bd2">Address</span> = <span style="color:#268bd2">address</span>;
-        <span style="color:#268bd2">Balance</span> = <span style="color:#2aa198;font-weight:bold">0</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">Id</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }    
-    <span style="color:#859900">private</span> <span style="color:#268bd2">Name</span> <span style="color:#268bd2">Name</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">Address</span> <span style="color:#268bd2">Address</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">BirthDate</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#268bd2">Balance</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-
-    ...
-
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">MoveTo</span>(<span style="color:#268bd2">Address</span> <span style="color:#268bd2">newAddress</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">newAddress</span>, <span style="color:#2aa198">&#34;new address&#34;</span>);
-
-        <span style="color:#268bd2">Address</span> = <span style="color:#268bd2">newAddress</span>;
-    }
-}
-
-<span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">customer</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Customer</span>(
-    <span style="color:#268bd2">Guid</span>.<span style="color:#268bd2">NewGuid</span>(),
-    <span style="color:#859900">new</span> <span style="color:#268bd2">Name</span>(<span style="color:#2aa198">&#34;Jef&#34;</span>, <span style="color:#2aa198">&#34;Claes&#34;</span>),
-    <span style="color:#859900">new</span> <span style="color:#268bd2">Address</span>(<span style="color:#2aa198">&#34;Ergens&#34;</span>, <span style="color:#2aa198">&#34;Antwerp&#34;</span>, <span style="color:#2aa198">&#34;Belgium&#34;</span>),
-    <span style="color:#859900">new</span> <span style="color:#268bd2">DateTime</span>(<span style="color:#2aa198;font-weight:bold">1987</span>, <span style="color:#2aa198;font-weight:bold">10</span>, <span style="color:#2aa198;font-weight:bold">18</span>));
-
-<span style="color:#268bd2">customer</span>.<span style="color:#268bd2">MoveTo</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Address</span>(<span style="color:#2aa198">&#34;Quelque part&#34;</span>, <span style="color:#2aa198">&#34;Brussels&#34;</span>, <span style="color:#2aa198">&#34;Belgium&#34;</span>));
-</code></pre></div><h3 id="opening-up-bit-by-bit">Opening up bit by bit</h3>
-<p>In the meanwhile our entity is no longer immutable, but we&rsquo;re doing a
+for people who are new to the domain.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Customer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>        Guid id,
+</span></span><span style=display:flex><span>        Name name,
+</span></span><span style=display:flex><span>        Address address,
+</span></span><span style=display:flex><span>        DateTime birthdate)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNull(name, <span style=color:#e6db74>&#34;name&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNull(address, <span style=color:#e6db74>&#34;address&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForDateInTheFuture(birthdate, <span style=color:#e6db74>&#34;birthdate&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Id = id;
+</span></span><span style=display:flex><span>        Name = name;
+</span></span><span style=display:flex><span>        Address = address;
+</span></span><span style=display:flex><span>        Balance = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Guid Id { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Name Name { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Address Address { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> DateTime BirthDate { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>decimal</span> Balance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> MoveTo(Address newAddress)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNull(newAddress, <span style=color:#e6db74>&#34;new address&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Address = newAddress;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> customer = <span style=color:#66d9ef>new</span> Customer(
+</span></span><span style=display:flex><span>    Guid.NewGuid(),
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>new</span> Name(<span style=color:#e6db74>&#34;Jef&#34;</span>, <span style=color:#e6db74>&#34;Claes&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>new</span> Address(<span style=color:#e6db74>&#34;Ergens&#34;</span>, <span style=color:#e6db74>&#34;Antwerp&#34;</span>, <span style=color:#e6db74>&#34;Belgium&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>new</span> DateTime(<span style=color:#ae81ff>1987</span>, <span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>18</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>customer.MoveTo(<span style=color:#66d9ef>new</span> Address(<span style=color:#e6db74>&#34;Quelque part&#34;</span>, <span style=color:#e6db74>&#34;Brussels&#34;</span>, <span style=color:#e6db74>&#34;Belgium&#34;</span>));
+</span></span></code></pre></div><h3 id=opening-up-bit-by-bit>Opening up bit by bit<a hidden class=anchor aria-hidden=true href=#opening-up-bit-by-bit>#</a></h3><p>In the meanwhile our entity is no longer immutable, but we&rsquo;re doing a
 good job of not exposing any state. If you&rsquo;re using the same model for
 reads as you do for writes, you&rsquo;re going to need to expose some
 properties eventually; for querying, but also for assertions. Make sure
 to only expose the getters though, and to avoid violating &ldquo;Tell, don&rsquo;t
-ask&rdquo; since that became a lot easier now.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Customer</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Customer</span>(
-        <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">id</span>,
-        <span style="color:#268bd2">Name</span> <span style="color:#268bd2">name</span>,
-        <span style="color:#268bd2">Address</span> <span style="color:#268bd2">address</span>,
-        <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">birthdate</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">name</span>, <span style="color:#2aa198">&#34;name&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">address</span>, <span style="color:#2aa198">&#34;address&#34;</span>);
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForDateInTheFuture</span>(<span style="color:#268bd2">birthdate</span>, <span style="color:#2aa198">&#34;birthdate&#34;</span>);
-
-        <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">id</span>;
-        <span style="color:#268bd2">Name</span> = <span style="color:#268bd2">name</span>;
-        <span style="color:#268bd2">Address</span> = <span style="color:#268bd2">address</span>;
-        <span style="color:#268bd2">Balance</span> = <span style="color:#2aa198;font-weight:bold">0</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Guid</span> <span style="color:#268bd2">Id</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }    
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Name</span> <span style="color:#268bd2">Name</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }
-    <span style="color:#859900">public</span> <span style="color:#268bd2">Address</span> <span style="color:#268bd2">Address</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }
-    <span style="color:#859900">public</span> <span style="color:#268bd2">DateTime</span> <span style="color:#268bd2">BirthDate</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#268bd2">Balance</span> { <span style="color:#859900">get</span>; <span style="color:#859900">set</span>; }
-
-    <span style="color:#859900">private</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">HasSufficientFunds</span>(<span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#859900">value</span>) 
-    {
-        <span style="color:#859900">return</span> <span style="color:#268bd2">Balance</span> - <span style="color:#859900">value</span> &gt;= <span style="color:#2aa198;font-weight:bold">0</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">DecreaseBalance</span>(<span style="color:#859900;font-weight:bold">decimal</span> <span style="color:#859900">value</span>)
-    {
-        <span style="color:#859900">if</span> (<span style="color:#268bd2">HasSufficientFunds</span>(<span style="color:#859900">value</span>))
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">InsufficientFundsException</span>();
-
-        <span style="color:#268bd2">Balance</span> -= <span style="color:#859900">value</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">MoveTo</span>(<span style="color:#268bd2">Address</span> <span style="color:#268bd2">newAddress</span>)
-    {
-        <span style="color:#268bd2">Guard</span>.<span style="color:#268bd2">ForNull</span>(<span style="color:#268bd2">newAddress</span>, <span style="color:#2aa198">&#34;new address&#34;</span>);
-
-        <span style="color:#268bd2">Address</span> = <span style="color:#268bd2">newAddress</span>;
-    }
-}
-</code></pre></div><h3 id="summarized">Summarized</h3>
-<p>By making my entities immutable from the start I am guided into adhering
-to a bunch of good practices:</p>
-<ul>
-<li>A constructor</li>
-<li>Comparing identities</li>
-<li>Defaults</li>
-<li>Protecting invariants</li>
-<li>Composition and extracting value objects</li>
-<li>Tell, don&rsquo;t ask </li>
-<li>Making operations explicit</li>
-<li>Opening up bit by bit</li>
-</ul>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-							<li><a href="/tags/opinion">opinion</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2013  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+ask&rdquo; since that became a lot easier now.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Customer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Customer(
+</span></span><span style=display:flex><span>        Guid id,
+</span></span><span style=display:flex><span>        Name name,
+</span></span><span style=display:flex><span>        Address address,
+</span></span><span style=display:flex><span>        DateTime birthdate)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNull(name, <span style=color:#e6db74>&#34;name&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForNull(address, <span style=color:#e6db74>&#34;address&#34;</span>);
+</span></span><span style=display:flex><span>        Guard.ForDateInTheFuture(birthdate, <span style=color:#e6db74>&#34;birthdate&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Id = id;
+</span></span><span style=display:flex><span>        Name = name;
+</span></span><span style=display:flex><span>        Address = address;
+</span></span><span style=display:flex><span>        Balance = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Guid Id { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Name Name { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> Address Address { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> DateTime BirthDate { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>decimal</span> Balance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>bool</span> HasSufficientFunds(<span style=color:#66d9ef>decimal</span> <span style=color:#66d9ef>value</span>) 
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> Balance - <span style=color:#66d9ef>value</span> &gt;= <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> DecreaseBalance(<span style=color:#66d9ef>decimal</span> <span style=color:#66d9ef>value</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (HasSufficientFunds(<span style=color:#66d9ef>value</span>))
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> InsufficientFundsException();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Balance -= <span style=color:#66d9ef>value</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> MoveTo(Address newAddress)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Guard.ForNull(newAddress, <span style=color:#e6db74>&#34;new address&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        Address = newAddress;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=summarized>Summarized<a hidden class=anchor aria-hidden=true href=#summarized>#</a></h3><p>By making my entities immutable from the start I am guided into adhering
+to a bunch of good practices:</p><ul><li>A constructor</li><li>Comparing identities</li><li>Defaults</li><li>Protecting invariants</li><li>Composition and extracting value objects</li><li>Tell, don&rsquo;t ask </li><li>Making operations explicit</li><li>Opening up bit by bit</li></ul></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li><li><a href=https://jefclaes.be/tags/opinion/>Opinion</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2013/05/iddd-tour-notes-12.html><span class=title>« Prev</span>
+<span>IDDD Tour notes (1/2)</span>
+</a><a class=next href=https://jefclaes.be/2013/03/reading-large-files-in-chunks-with.html><span class=title>Next »</span>
+<span>Reading large files in chunks with proper encapsulation</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

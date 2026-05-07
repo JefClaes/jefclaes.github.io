@@ -1,120 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Commands, queries and testing - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Commands, queries and testing">
-<meta itemprop="description" content="Also read:
- Self-contained commands with dependencies Separating command data from logic and sending it on a bus  We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.
-That being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries.">
-<meta itemprop="datePublished" content="2012-10-14T17:45:00&#43;02:00" />
-<meta itemprop="dateModified" content="2012-10-14T17:45:00&#43;02:00" />
-<meta itemprop="wordCount" content="927">
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Commands, queries and testing | Jef Claes</title><meta name=keywords content="code"><meta name=description content="Also read:
 
+Self-contained commands with dependencies
+Separating command data from logic and sending it on a bus
 
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="Commands, queries and testing" />
-<meta property="og:description" content="Also read:
- Self-contained commands with dependencies Separating command data from logic and sending it on a bus  We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.
-That being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2012/10/commands-queries-and-testing.html" />
-<meta property="article:published_time" content="2012-10-14T17:45:00+02:00" />
-<meta property="article:modified_time" content="2012-10-14T17:45:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Commands, queries and testing"/>
-<meta name="twitter:description" content="Also read:
- Self-contained commands with dependencies Separating command data from logic and sending it on a bus  We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.
-That being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">14</span>
-							<span class="rest">Oct 2012</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Commands, queries and testing</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p><em>Also read:</em></p>
-<ol>
-<li><a href="http://www.jefclaes.be/2013/01/self-contained-commands-with.html"><em>Self-contained commands with dependencies</em></a></li>
-<li><a href="http://www.jefclaes.be/2013/01/separating-command-data-from-logic-and.html"><em>Separating command data from logic and sending it on a bus</em></a></li>
-</ol>
-<p>We need abstraction, but the amount of abstraction we really need
+We need abstraction, but the amount of abstraction we really need
 depends, and should be assessed on a case-by-case basis. It seems
-advisable to grow abstractions, and to introduce them gradually.</p>
-<p>That being said, in this post I want to talk about an architecture that
-tries to limit abstractions to solely commands and queries.</p>
-<p>It all starts with two small pieces of infrastructure: a command and a
+advisable to grow abstractions, and to introduce them gradually.
+That being said, in this post I want to talk about an architecture that
+tries to limit abstractions to solely commands and queries."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2012/10/commands-queries-and-testing.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2012/10/commands-queries-and-testing.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2012/10/commands-queries-and-testing.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Commands, queries and testing"><meta property="og:description" content="Also read:
+Self-contained commands with dependencies Separating command data from logic and sending it on a bus We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.
+That being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2012-10-14T17:45:00+02:00"><meta property="article:modified_time" content="2012-10-14T17:45:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="Commands, queries and testing"><meta name=twitter:description content="Also read:
+Self-contained commands with dependencies Separating command data from logic and sending it on a bus We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.
+That being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Commands, queries and testing","item":"https://jefclaes.be/2012/10/commands-queries-and-testing.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Commands, queries and testing","name":"Commands, queries and testing","description":"Also read:\nSelf-contained commands with dependencies Separating command data from logic and sending it on a bus We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.\nThat being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries.\n","keywords":["code"],"articleBody":"Also read:\nSelf-contained commands with dependencies Separating command data from logic and sending it on a bus We need abstraction, but the amount of abstraction we really need depends, and should be assessed on a case-by-case basis. It seems advisable to grow abstractions, and to introduce them gradually.\nThat being said, in this post I want to talk about an architecture that tries to limit abstractions to solely commands and queries.\nIt all starts with two small pieces of infrastructure: a command and a query. A command performs an action, and can change state, while a query should only return data, and not alter any state; basic command and query separation.\npublic abstract class Command { public abstract void Execute(); } public abstract class Query { public abstract T Execute(); } Now imagine, we are doing something with accounts, and we want to have a command that can withdraw money from an account, and a query that returns the total amount available on an account. The assumption is that we’re only talking with a database.\npublic class WithdrawAmountCommand : Command\r{\rpublic WithdrawAmountCommand(string user, int amount)\r{\rif (string.IsNullOrEmpty(user))\rthrow new NullReferenceException(\"user\"); User = user;\rAmount = amount;\r}\rpublic string User { get; private set; }\rpublic int Amount { get; private set; }\rpublic override void Execute()\r{\r// Implementation\r}\r} We inherit from the Command class, and pass in its input arguments via the constructor. We put our actual implementation in the Execute method override. For the query, we do something very similar.\npublic class TotalAmountQuery : Query\u003cint\u003e { public TotalAmountQuery(string user) { if (string.IsNullOrEmpty(user)) throw new NullReferenceException(\"user\"); User = user; } public string User { get; private set; } public override int Execute() { return 100; // Should be an actual implementation } } Now, if we would use this in ASP.NET MVC, we would end up with clean and compact controllers. Have a look at the action Foo, which first withdraws 25 euros, to then redirect to a warning action if the balance is negative, or to redirect back to the index action when it’s positive. Very readable, right?\n[HttpPost] public ActionResult Foo(string user) { new WithdrawAmountCommand(user, 25).Execute(); var totalAmount = new TotalAmountQuery(user).Execute(); if (totalAmount \u003c 0) return RedirectToAction(\"Warning\"); return RedirectToAction(\"Index\"); } There are several advantages I experienced while applying this pattern. First, there are less layers of abstraction, while not neglecting readability nor maintainability. In a more conservative approach, I would end up with an account repository, abstracting my data access, and probably also an account service, abstracting my business logic. This repository, and service, would have multiple methods, which probably solve related, yet different problems. I would have to wade through all the methods in these classes to find the operation that is relevant for me.\nWhen you model each operation as a class on its own, you define it more explicitly. And you’re able to adhere to the Single Responsibility principle even more. Practically, it’s now also easier to locate an operation in the codebase by just looking at the solution explorer.\nOne last, but not unimportant, advantage I see, is that it gets easier to group queries and commands per functionality and context.\nWe could test the example above against the actual implementation, and I don’t see anything wrong with that per se, but it isn’t always that practical; the setup of your queries can be heavy and complex, performance of your tests might be suffering etc.. One technique would be to create an interface per query and command and inject them, but that seems cumbersome, and ceremony heavy, and that isn’t something I’m willing to do.\nSomething in between could be introducing a Command- and QueryHandler.\npublic interface ICommandHandler { void Execute(Command command); } public class CommandHandler : ICommandHandler { public void Execute(Command command) { command.Execute(); } } public interface IQueryHandler { T Execute(Query query); } public class QueryHandler : IQueryHandler { public T Execute(Query query) { return query.Execute(); } } These could be injected into the controller, and be used as an intermediary to execute queries and commands for us.\npublic class HomeController : Controller { private readonly IQueryHandler _qryHandler; private readonly ICommandHandler _cmdHandler; public HomeController() { _qryHandler = new QueryHandler(); _cmdHandler = new CommandHandler(); } public HomeController( ICommandHandler cmdHandler, IQueryHandler qryHandler) { _cmdHandler = cmdHandler; _qryHandler = qryHandler; } [HttpPost] public ActionResult Foo(string user) { _cmdHandler.Execute(new WithdrawAmountCommand(user, 25)); var totalAmount = _qryHandler.Execute\u003cint\u003e(new TotalAmountQuery(user)); if (totalAmount \u003c 0) return RedirectToAction(\"Warning\"); return RedirectToAction(\"Index\"); } } This technique would make it possible, and easy, to use stubs or mocks for queries and commands.\n[TestMethod()] public void Foo_should_withdraw_25_euros_from_the_account_of_jef_claes() { var cmdHandler = new Mock(); var qryHandler = new Mock(); var controller = new HomeController( cmdHandler.Object, qryHandler.Object); controller.Foo(\"JefClaes\"); cmdHandler.Verify( h =\u003e h.Execute(It.Is( c =\u003e c.Amount == 25 \u0026\u0026 c.User == \"JefClaes\"))); } [TestMethod()] public void Foo_should_redirect_to_a_warning_page_when_amount_negative() { var cmdHandler = new Mock(); var qryHandler = new Mock(); qryHandler .Setup(h =\u003e h.Execute\u003cint\u003e(It.IsAny())) .Returns(-1); var controller = new HomeController(cmdHandler.Object, qryHandler.Object); var result = (RedirectToRouteResult)controller.Foo(\"JefClaes\"); Assert.AreEqual(\"Warning\", result.RouteValues[\"action\"]); } I don’t think this should be introduced as an application-wide thing necessarily, but it could only be used when testing the actual implementation becomes hard or awkward.\nBut what if I need to inject dependencies into my commands or queries for testing - there is more to it than a database? I gave that some thought as well, and it seems inevitable to introduce extra abstractions, and make changes to the concepts discussed above; I’ll publish these tomorrow.\nI’ve been entertaining lots of ideas on this topic lately, and I’m curious to hear yours.\n","wordCount":"927","inLanguage":"en","datePublished":"2012-10-14T17:45:00+02:00","dateModified":"2012-10-14T17:45:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2012/10/commands-queries-and-testing.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Commands, queries and testing</h1><div class=post-meta><span title='2012-10-14 17:45:00 +0200 CEST'>October 14, 2012</span>&nbsp;·&nbsp;<span>5 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p><em>Also read:</em></p><ol><li><a href=http://www.jefclaes.be/2013/01/self-contained-commands-with.html><em>Self-contained commands with dependencies</em></a></li><li><a href=http://www.jefclaes.be/2013/01/separating-command-data-from-logic-and.html><em>Separating command data from logic and sending it on a bus</em></a></li></ol><p>We need abstraction, but the amount of abstraction we really need
+depends, and should be assessed on a case-by-case basis. It seems
+advisable to grow abstractions, and to introduce them gradually.</p><p>That being said, in this post I want to talk about an architecture that
+tries to limit abstractions to solely commands and queries.</p><p>It all starts with two small pieces of infrastructure: a command and a
 query. A command performs an action, and can change state, while a query
-should only return data, and not alter any state; <a href="http://en.wikipedia.org/wiki/Command-query_separation">basic command and
-query separation</a>.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">abstract</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Command</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#859900">abstract</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Execute</span>();
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">abstract</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">Query</span>&lt;<span style="color:#268bd2">T</span>&gt;
-{
-    <span style="color:#859900">public</span> <span style="color:#859900">abstract</span> <span style="color:#268bd2">T</span> <span style="color:#268bd2">Execute</span>();
-}
-</code></pre></div><p>Now imagine, we are doing something with accounts, and we want to have a
+should only return data, and not alter any state; <a href=http://en.wikipedia.org/wiki/Command-query_separation>basic command and
+query separation</a>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Command</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>void</span> Execute();
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Query</span>&lt;T&gt;
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> T Execute();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Now imagine, we are doing something with accounts, and we want to have a
 command that can withdraw money from an account, and a query that
 returns the total amount available on an account. The assumption is that
-we&rsquo;re only talking with a database.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">public class WithdrawAmountCommand : Command
+we&rsquo;re only talking with a database.</p><pre tabindex=0><code>public class WithdrawAmountCommand : Command
 {
     public WithdrawAmountCommand(string user, int amount)
     {
@@ -133,41 +53,39 @@ we&rsquo;re only talking with a database.</p>
         // Implementation
     }
 }
-</code></pre></div><p>We inherit from the Command class, and pass in its input arguments via
+</code></pre><p>We inherit from the Command class, and pass in its input arguments via
 the constructor. We put our actual implementation in the <code>Execute</code> method
-override. For the query, we do something very similar.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">TotalAmountQuery</span> : <span style="color:#268bd2">Query</span>&lt;<span style="color:#859900;font-weight:bold">int</span>&gt;
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">TotalAmountQuery</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">user</span>)
-    {
-        <span style="color:#859900">if</span> (<span style="color:#859900;font-weight:bold">string</span>.<span style="color:#268bd2">IsNullOrEmpty</span>(<span style="color:#268bd2">user</span>))
-            <span style="color:#859900">throw</span> <span style="color:#859900">new</span> <span style="color:#268bd2">NullReferenceException</span>(<span style="color:#2aa198">&#34;user&#34;</span>);
-    
-        <span style="color:#268bd2">User</span> = <span style="color:#268bd2">user</span>;
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">User</span> { <span style="color:#859900">get</span>; <span style="color:#859900">private</span> <span style="color:#859900">set</span>; }
-
-    <span style="color:#859900">public</span> <span style="color:#859900">override</span> <span style="color:#859900;font-weight:bold">int</span> <span style="color:#268bd2">Execute</span>()
-    {
-        <span style="color:#859900">return</span> <span style="color:#2aa198;font-weight:bold">100</span>; <span style="color:#93a1a1;font-style:italic">// Should be an actual implementation
-</span><span style="color:#93a1a1;font-style:italic"></span>    }
-}
-</code></pre></div><p>Now, if we would use this in ASP.NET MVC, we would end up with clean and
-compact controllers. Have a look at the action Foo, which first withdraws 25 euros, to then redirect to a warning action if the balance is negative, or to redirect back to the index action when it&rsquo;s positive. Very readable, right?</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#268bd2">[HttpPost]</span>
-<span style="color:#859900">public</span> <span style="color:#268bd2">ActionResult</span> <span style="color:#268bd2">Foo</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">user</span>)
-{
-    <span style="color:#859900">new</span> <span style="color:#268bd2">WithdrawAmountCommand</span>(<span style="color:#268bd2">user</span>, <span style="color:#2aa198;font-weight:bold">25</span>).<span style="color:#268bd2">Execute</span>();
-
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">totalAmount</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">TotalAmountQuery</span>(<span style="color:#268bd2">user</span>).<span style="color:#268bd2">Execute</span>();
-
-    <span style="color:#859900">if</span> (<span style="color:#268bd2">totalAmount</span> &lt; <span style="color:#2aa198;font-weight:bold">0</span>)
-        <span style="color:#859900">return</span> <span style="color:#268bd2">RedirectToAction</span>(<span style="color:#2aa198">&#34;Warning&#34;</span>);
-
-    <span style="color:#859900">return</span> <span style="color:#268bd2">RedirectToAction</span>(<span style="color:#2aa198">&#34;Index&#34;</span>);
-} 
-</code></pre></div><p>There are several advantages I experienced while applying this pattern.
+override. For the query, we do something very similar.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>TotalAmountQuery</span> : Query&lt;<span style=color:#66d9ef>int</span>&gt;
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> TotalAmountQuery(<span style=color:#66d9ef>string</span> user)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (<span style=color:#66d9ef>string</span>.IsNullOrEmpty(user))
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> NullReferenceException(<span style=color:#e6db74>&#34;user&#34;</span>);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>        User = user;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> User { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>int</span> Execute()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>100</span>; <span style=color:#75715e>// Should be an actual implementation</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Now, if we would use this in ASP.NET MVC, we would end up with clean and
+compact controllers. Have a look at the action Foo, which first withdraws 25 euros, to then redirect to a warning action if the balance is negative, or to redirect back to the index action when it&rsquo;s positive. Very readable, right?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[HttpPost]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> ActionResult Foo(<span style=color:#66d9ef>string</span> user)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>new</span> WithdrawAmountCommand(user, <span style=color:#ae81ff>25</span>).Execute();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> totalAmount = <span style=color:#66d9ef>new</span> TotalAmountQuery(user).Execute();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (totalAmount &lt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> RedirectToAction(<span style=color:#e6db74>&#34;Warning&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> RedirectToAction(<span style=color:#e6db74>&#34;Index&#34;</span>);
+</span></span><span style=display:flex><span>} 
+</span></span></code></pre></div><p>There are several advantages I experienced while applying this pattern.
 First, there are less layers of abstraction, while not neglecting
 readability nor maintainability. In a more conservative approach, I
 would end up with an account repository, abstracting my data access, and
@@ -175,152 +93,115 @@ probably also an account service, abstracting my business logic. This
 repository, and service, would have multiple methods, which probably
 solve related, yet different problems. I would have to wade through all
 the methods in these classes to find the operation that is relevant for
-me.</p>
-<p>When you model each operation as a class on its own, you define it more
+me.</p><p>When you model each operation as a class on its own, you define it more
 explicitly. And you&rsquo;re able to adhere to the Single Responsibility
 principle even more. Practically, it&rsquo;s now also easier to locate an
-operation in the codebase by just looking at the solution explorer.</p>
-<p>One last, but not unimportant, advantage I see, is that it gets easier
-to group queries and commands per functionality and context.</p>
-<p>We could test the example above against the actual implementation, and I
+operation in the codebase by just looking at the solution explorer.</p><p>One last, but not unimportant, advantage I see, is that it gets easier
+to group queries and commands per functionality and context.</p><p>We could test the example above against the actual implementation, and I
 don&rsquo;t see anything wrong with that per se, but it isn&rsquo;t always that
 practical; the setup of your queries can be heavy and complex,
 performance of your tests might be suffering etc.. One technique would
 be to create an interface per query and command and inject them, but
 that seems cumbersome, and ceremony heavy, and that isn&rsquo;t something I&rsquo;m
-willing to do.</p>
-<p>Something in between could be introducing a Command- and QueryHandler.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">interface</span> <span style="color:#268bd2">ICommandHandler</span>
-{
-    <span style="color:#859900">void</span> <span style="color:#268bd2">Execute</span>(<span style="color:#268bd2">Command</span> <span style="color:#268bd2">command</span>);
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">CommandHandler</span> : <span style="color:#268bd2">ICommandHandler</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Execute</span>(<span style="color:#268bd2">Command</span> <span style="color:#268bd2">command</span>)
-    {
-        <span style="color:#268bd2">command</span>.<span style="color:#268bd2">Execute</span>();
-    }
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">interface</span> <span style="color:#268bd2">IQueryHandler</span> 
-{
-    <span style="color:#268bd2">T</span> <span style="color:#268bd2">Execute</span>&lt;<span style="color:#268bd2">T</span>&gt;(<span style="color:#268bd2">Query</span>&lt;<span style="color:#268bd2">T</span>&gt; <span style="color:#268bd2">query</span>);
-}
-
-<span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">QueryHandler</span> : <span style="color:#268bd2">IQueryHandler</span>
-{
-    <span style="color:#859900">public</span> <span style="color:#268bd2">T</span> <span style="color:#268bd2">Execute</span>&lt;<span style="color:#268bd2">T</span>&gt;(<span style="color:#268bd2">Query</span>&lt;<span style="color:#268bd2">T</span>&gt; <span style="color:#268bd2">query</span>)
-    {
-        <span style="color:#859900">return</span> <span style="color:#268bd2">query</span>.<span style="color:#268bd2">Execute</span>();
-    }
-}
-</code></pre></div><p>These could be injected into the controller, and be used as an
-intermediary to execute queries and commands for us.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#859900">class</span> <span style="color:#cb4b16">HomeController</span> : <span style="color:#268bd2">Controller</span>
-{
-    <span style="color:#859900">private</span> <span style="color:#859900">readonly</span> <span style="color:#268bd2">IQueryHandler</span> <span style="color:#268bd2">_qryHandler</span>;
-    <span style="color:#859900">private</span> <span style="color:#859900">readonly</span> <span style="color:#268bd2">ICommandHandler</span> <span style="color:#268bd2">_cmdHandler</span>;
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">HomeController</span>()
-    {
-        <span style="color:#268bd2">_qryHandler</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">QueryHandler</span>();
-        <span style="color:#268bd2">_cmdHandler</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">CommandHandler</span>();
-    }
-
-    <span style="color:#859900">public</span> <span style="color:#268bd2">HomeController</span>(
-        <span style="color:#268bd2">ICommandHandler</span> <span style="color:#268bd2">cmdHandler</span>, <span style="color:#268bd2">IQueryHandler</span> <span style="color:#268bd2">qryHandler</span>)
-    {
-        <span style="color:#268bd2">_cmdHandler</span> = <span style="color:#268bd2">cmdHandler</span>;
-        <span style="color:#268bd2">_qryHandler</span> = <span style="color:#268bd2">qryHandler</span>;
-    }
-<span style="color:#268bd2">
-</span><span style="color:#268bd2">    [HttpPost]</span>
-    <span style="color:#859900">public</span> <span style="color:#268bd2">ActionResult</span> <span style="color:#268bd2">Foo</span>(<span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">user</span>)
-    {
-        <span style="color:#268bd2">_cmdHandler</span>.<span style="color:#268bd2">Execute</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">WithdrawAmountCommand</span>(<span style="color:#268bd2">user</span>, <span style="color:#2aa198;font-weight:bold">25</span>));
-
-        <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">totalAmount</span> = <span style="color:#268bd2">_qryHandler</span>.<span style="color:#268bd2">Execute</span>&lt;<span style="color:#859900;font-weight:bold">int</span>&gt;(<span style="color:#859900">new</span> <span style="color:#268bd2">TotalAmountQuery</span>(<span style="color:#268bd2">user</span>));
-
-        <span style="color:#859900">if</span> (<span style="color:#268bd2">totalAmount</span> &lt; <span style="color:#2aa198;font-weight:bold">0</span>)
-            <span style="color:#859900">return</span> <span style="color:#268bd2">RedirectToAction</span>(<span style="color:#2aa198">&#34;Warning&#34;</span>);
-
-        <span style="color:#859900">return</span> <span style="color:#268bd2">RedirectToAction</span>(<span style="color:#2aa198">&#34;Index&#34;</span>);
-    }
-}
-</code></pre></div><p>This technique would make it possible, and easy, to use stubs or mocks
-for queries and commands.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#268bd2">[TestMethod()]</span>
-<span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Foo_should_withdraw_25_euros_from_the_account_of_jef_claes</span>()
-{
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">cmdHandler</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Mock</span>&lt;<span style="color:#268bd2">ICommandHandler</span>&gt;();
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">qryHandler</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Mock</span>&lt;<span style="color:#268bd2">IQueryHandler</span>&gt;();
-
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">controller</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HomeController</span>(
-        <span style="color:#268bd2">cmdHandler</span>.<span style="color:#268bd2">Object</span>, <span style="color:#268bd2">qryHandler</span>.<span style="color:#268bd2">Object</span>);
-
-    <span style="color:#268bd2">controller</span>.<span style="color:#268bd2">Foo</span>(<span style="color:#2aa198">&#34;JefClaes&#34;</span>);
-
-    <span style="color:#268bd2">cmdHandler</span>.<span style="color:#268bd2">Verify</span>(
-        <span style="color:#268bd2">h</span> =&gt; <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Execute</span>(<span style="color:#268bd2">It</span>.<span style="color:#268bd2">Is</span>&lt;<span style="color:#268bd2">WithdrawAmountCommand</span>&gt;(
-            <span style="color:#268bd2">c</span> =&gt; <span style="color:#268bd2">c</span>.<span style="color:#268bd2">Amount</span> == <span style="color:#2aa198;font-weight:bold">25</span> &amp;&amp; <span style="color:#268bd2">c</span>.<span style="color:#268bd2">User</span> == <span style="color:#2aa198">&#34;JefClaes&#34;</span>)));
-}
-<span style="color:#268bd2">
-</span><span style="color:#268bd2">[TestMethod()]</span>
-<span style="color:#859900">public</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Foo_should_redirect_to_a_warning_page_when_amount_negative</span>()
-{
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">cmdHandler</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Mock</span>&lt;<span style="color:#268bd2">ICommandHandler</span>&gt;();
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">qryHandler</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Mock</span>&lt;<span style="color:#268bd2">IQueryHandler</span>&gt;();
-
-    <span style="color:#268bd2">qryHandler</span>
-        .<span style="color:#268bd2">Setup</span>(<span style="color:#268bd2">h</span> =&gt; <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Execute</span>&lt;<span style="color:#859900;font-weight:bold">int</span>&gt;(<span style="color:#268bd2">It</span>.<span style="color:#268bd2">IsAny</span>&lt;<span style="color:#268bd2">TotalAmountQuery</span>&gt;()))
-        .<span style="color:#268bd2">Returns</span>(-<span style="color:#2aa198;font-weight:bold">1</span>);
-
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">controller</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">HomeController</span>(<span style="color:#268bd2">cmdHandler</span>.<span style="color:#268bd2">Object</span>, <span style="color:#268bd2">qryHandler</span>.<span style="color:#268bd2">Object</span>);
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">result</span> = (<span style="color:#268bd2">RedirectToRouteResult</span>)<span style="color:#268bd2">controller</span>.<span style="color:#268bd2">Foo</span>(<span style="color:#2aa198">&#34;JefClaes&#34;</span>);
-
-    <span style="color:#268bd2">Assert</span>.<span style="color:#268bd2">AreEqual</span>(<span style="color:#2aa198">&#34;Warning&#34;</span>, <span style="color:#268bd2">result</span>.<span style="color:#268bd2">RouteValues</span>[<span style="color:#2aa198">&#34;action&#34;</span>]);
-}
-</code></pre></div><p>I don&rsquo;t think this should be introduced as an application-wide thing
+willing to do.</p><p>Something in between could be introducing a Command- and QueryHandler.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ICommandHandler</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> Execute(Command command);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CommandHandler</span> : ICommandHandler
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute(Command command)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        command.Execute();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IQueryHandler</span> 
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    T Execute&lt;T&gt;(Query&lt;T&gt; query);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>QueryHandler</span> : IQueryHandler
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> T Execute&lt;T&gt;(Query&lt;T&gt; query)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> query.Execute();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>These could be injected into the controller, and be used as an
+intermediary to execute queries and commands for us.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HomeController</span> : Controller
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> IQueryHandler _qryHandler;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> ICommandHandler _cmdHandler;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> HomeController()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _qryHandler = <span style=color:#66d9ef>new</span> QueryHandler();
+</span></span><span style=display:flex><span>        _cmdHandler = <span style=color:#66d9ef>new</span> CommandHandler();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> HomeController(
+</span></span><span style=display:flex><span>        ICommandHandler cmdHandler, IQueryHandler qryHandler)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _cmdHandler = cmdHandler;
+</span></span><span style=display:flex><span>        _qryHandler = qryHandler;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>    [HttpPost]</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> ActionResult Foo(<span style=color:#66d9ef>string</span> user)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _cmdHandler.Execute(<span style=color:#66d9ef>new</span> WithdrawAmountCommand(user, <span style=color:#ae81ff>25</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> totalAmount = _qryHandler.Execute&lt;<span style=color:#66d9ef>int</span>&gt;(<span style=color:#66d9ef>new</span> TotalAmountQuery(user));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (totalAmount &lt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> RedirectToAction(<span style=color:#e6db74>&#34;Warning&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> RedirectToAction(<span style=color:#e6db74>&#34;Index&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This technique would make it possible, and easy, to use stubs or mocks
+for queries and commands.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[TestMethod()]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Foo_should_withdraw_25_euros_from_the_account_of_jef_claes()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> cmdHandler = <span style=color:#66d9ef>new</span> Mock&lt;ICommandHandler&gt;();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> qryHandler = <span style=color:#66d9ef>new</span> Mock&lt;IQueryHandler&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> controller = <span style=color:#66d9ef>new</span> HomeController(
+</span></span><span style=display:flex><span>        cmdHandler.Object, qryHandler.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    controller.Foo(<span style=color:#e6db74>&#34;JefClaes&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    cmdHandler.Verify(
+</span></span><span style=display:flex><span>        h =&gt; h.Execute(It.Is&lt;WithdrawAmountCommand&gt;(
+</span></span><span style=display:flex><span>            c =&gt; c.Amount == <span style=color:#ae81ff>25</span> &amp;&amp; c.User == <span style=color:#e6db74>&#34;JefClaes&#34;</span>)));
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>[TestMethod()]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Foo_should_redirect_to_a_warning_page_when_amount_negative()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> cmdHandler = <span style=color:#66d9ef>new</span> Mock&lt;ICommandHandler&gt;();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> qryHandler = <span style=color:#66d9ef>new</span> Mock&lt;IQueryHandler&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    qryHandler
+</span></span><span style=display:flex><span>        .Setup(h =&gt; h.Execute&lt;<span style=color:#66d9ef>int</span>&gt;(It.IsAny&lt;TotalAmountQuery&gt;()))
+</span></span><span style=display:flex><span>        .Returns(-<span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> controller = <span style=color:#66d9ef>new</span> HomeController(cmdHandler.Object, qryHandler.Object);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> result = (RedirectToRouteResult)controller.Foo(<span style=color:#e6db74>&#34;JefClaes&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Assert.AreEqual(<span style=color:#e6db74>&#34;Warning&#34;</span>, result.RouteValues[<span style=color:#e6db74>&#34;action&#34;</span>]);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>I don&rsquo;t think this should be introduced as an application-wide thing
 necessarily, but it could only be used when testing the actual
-implementation becomes hard or awkward.</p>
-<p><strong>But what if I need to inject dependencies into my commands or queries
+implementation becomes hard or awkward.</p><p><strong>But what if I need to inject dependencies into my commands or queries
 for testing - there is more to it than a database?</strong> I gave that some
-thought as well, and it seems inevitable to introduce extra abstractions, and make changes to the concepts discussed above; I&rsquo;ll publish these tomorrow.</p>
-<p><em>I&rsquo;ve been entertaining lots of ideas on this topic lately, and I&rsquo;m
-curious to hear yours.</em></p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2012  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+thought as well, and it seems inevitable to introduce extra abstractions, and make changes to the concepts discussed above; I&rsquo;ll publish these tomorrow.</p><p><em>I&rsquo;ve been entertaining lots of ideas on this topic lately, and I&rsquo;m
+curious to hear yours.</em></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2012/10/commands-with-dependencies.html><span class=title>« Prev</span>
+<span>Commands with dependencies</span>
+</a><a class=next href=https://jefclaes.be/2012/10/cote-dopale.html><span class=title>Next »</span>
+<span>Côte d'Opale</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

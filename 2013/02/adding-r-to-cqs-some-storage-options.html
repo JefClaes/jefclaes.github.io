@@ -1,104 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Adding the R to CQS: some storage options - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Adding the R to CQS: some storage options">
-<meta itemprop="description" content="I&rsquo;ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.
-With CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side.">
-<meta itemprop="datePublished" content="2013-02-17T17:57:00&#43;01:00" />
-<meta itemprop="dateModified" content="2013-02-17T17:57:00&#43;01:00" />
-<meta itemprop="wordCount" content="754">
-
-
-
-<meta itemprop="keywords" content="opinion," /><meta property="og:title" content="Adding the R to CQS: some storage options" />
-<meta property="og:description" content="I&rsquo;ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.
-With CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2013/02/adding-r-to-cqs-some-storage-options.html" />
-<meta property="article:published_time" content="2013-02-17T17:57:00+01:00" />
-<meta property="article:modified_time" content="2013-02-17T17:57:00+01:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Adding the R to CQS: some storage options"/>
-<meta name="twitter:description" content="I&rsquo;ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.
-With CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">17</span>
-							<span class="rest">Feb 2013</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Adding the R to CQS: some storage options</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>I&rsquo;ve been writing <a href="http://www.jefclaes.be/2013/01/separating-command-data-from-logic-and.html">quite a
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Adding the R to CQS: some storage options | Jef Claes</title><meta name=keywords content="opinion"><meta name=description content="I&rsquo;ve been writing quite a
+bit
+about
+CQS (or
+command and query separation) lately. In my last post on using
+events,
+I already hinted towards bringing in the R; command and query
+responsibility separation.
+With CQS, commands can mutate data, while queries can only read that
+data. CQRS takes this one step further, and assigns commands and queries
+each a dedicated model; we now talk of a write side, and a read side."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2013/02/adding-r-to-cqs-some-storage-options.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2013/02/adding-r-to-cqs-some-storage-options.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2013/02/adding-r-to-cqs-some-storage-options.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Adding the R to CQS: some storage options"><meta property="og:description" content="I’ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.
+With CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2013-02-17T17:57:00+01:00"><meta property="article:modified_time" content="2013-02-17T17:57:00+01:00"><meta property="article:tag" content="Opinion"><meta name=twitter:card content="summary"><meta name=twitter:title content="Adding the R to CQS: some storage options"><meta name=twitter:description content="I’ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.
+With CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Adding the R to CQS: some storage options","item":"https://jefclaes.be/2013/02/adding-r-to-cqs-some-storage-options.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Adding the R to CQS: some storage options","name":"Adding the R to CQS: some storage options","description":"I\u0026rsquo;ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.\nWith CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side.\n","keywords":["opinion"],"articleBody":"I’ve been writing quite a bit about CQS (or command and query separation) lately. In my last post on using events, I already hinted towards bringing in the R; command and query responsibility separation.\nWith CQS, commands can mutate data, while queries can only read that data. CQRS takes this one step further, and assigns commands and queries each a dedicated model; we now talk of a write side, and a read side.\nI like Clemens Vasters definition best.\nCQRS is a simple pattern that strictly segregates the responsibility of handling command input into an autonomous system from the responsibility of handling side-effect-free query/read access on the same system. Consequently, the decoupling allows for any number of homogeneous or heterogeneous query/read modules to be paired with a command processor. This principle presents a very suitable foundation for event sourcing, eventual-consistency state replication/fan-out and, thus, high-scale read access. In simple terms, you don’t service queries via the same module of a service that you process commands through. In REST terminology, GET requests wire up to a different thing from what PUT, POST, and DELETE requests wire up to. A nice drawing also helps in understanding CQRS (from the CQRS journey material).\nAlthough scalability seems to be one of the big selling points of CQRS, there are still some valid arguments applicable to my world; the strongest one being able to avoid the discrepancy which exists while you use the same model for reading and writing. I think everyone suffers from this one regularly. A popular and realistic example is this one; an ORM is used to map our domain model to a relational database, the tables are mapped very closely to the structure of the domain model. Not long after, it becomes evident that it’s impossible to write simple and performant queries targeting this datastructure. We could optimize for reads, but this would impact the complexity and performance of writing. With CQRS, reads and writes are segregated; we can now optimize both parts independently. And this doesn’t only result in being able to show a list faster on a user’s screen, but interesting things can also be done to empower reporting and data mining; think of how often using the same database for these tasks makes it hard and expensive to change things.\nWhile I still have done very little with CQRS, I have been looking at more and more real world examples, trying to fill in the blanks. What always has been kind of vague to me, is how you go at storing your domain model, and your read models in practice. Here are a few possible techniques - these are some proven techniques, and partially my own presumptions (you hardly find any OSS brown field examples).\nThe compromise CQRS doesn’t have to be an application-wide architecture necessarily; nothing stops you from introducing it gently, and just applying it to parts of your application where the added value is over-obvious. This could mean that you use a conventional architecture; a relational database with an ORM, or a document store, not distinguishing the write side from the read side. Yet for certain scenarios, you could introduce a specialized read or write side. For example; update the statistics read model on every relevant write, update a denormalized optimized read model for searches, etc..\nNORM While the relational paradigm definitely has its place, mapping your domain to the database can get complex, and require much maintenance. If you don’t expect of your write side to be queryable, you can take advantage of less cumbersome techniques such as a key value store to store your domain model. This does force you to completely separate reads from writes though.\nEvent Sourcing When you look at most OSS CQRS implementations, Event Sourcing and CQRS go hand in hand. With Event Sourcing, you capture all application state changes as a sequence of events. I’m really fond of the theory behind this pattern, and I can imagine the added operational value of having a log of each change. Yet, I also think you could largely achieve the same result by enabling journaling and adding some interception. Storage wise, you store all the event streams in an event store, which is optimized for such a task. Your read side can again be whatever you fancy.\nThese three techniques aren’t mutually exclusive. There are a bunch of arguments to consider, and everything is highly dependent on your technical and operational requirements.\nWhat is your experience with CQRS? Which techniques have you applied in practice?\n","wordCount":"754","inLanguage":"en","datePublished":"2013-02-17T17:57:00+01:00","dateModified":"2013-02-17T17:57:00+01:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2013/02/adding-r-to-cqs-some-storage-options.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Adding the R to CQS: some storage options</h1><div class=post-meta><span title='2013-02-17 17:57:00 +0100 CET'>February 17, 2013</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>I&rsquo;ve been writing <a href=http://www.jefclaes.be/2013/01/separating-command-data-from-logic-and.html>quite a
 bit</a>
 about
-<a href="http://en.wikipedia.org/wiki/Command%E2%80%93query_separation">CQS</a> (or
-command and query separation) lately. In <a href="http://www.jefclaes.be/2013/02/raising-events-in-commandhandlers.html">my last post on using
+<a href=http://en.wikipedia.org/wiki/Command%E2%80%93query_separation>CQS</a> (or
+command and query separation) lately. In <a href=http://www.jefclaes.be/2013/02/raising-events-in-commandhandlers.html>my last post on using
 events</a>,
 I already hinted towards bringing in the R; command and query
-<strong>r</strong>esponsibility separation.</p>
-<p>With CQS, commands can mutate data, while queries can only read that
+<strong>r</strong>esponsibility separation.</p><p>With CQS, commands can mutate data, while queries can only read that
 data. CQRS takes this one step further, and assigns commands and queries
-each a dedicated model; we now talk of a write side, and a read side.</p>
-<p>I like <a href="https://twitter.com/clemensv">Clemens Vasters</a> definition
-best.</p>
-<blockquote>
-<p>CQRS is a simple pattern that strictly segregates the responsibility
+each a dedicated model; we now talk of a write side, and a read side.</p><p>I like <a href=https://twitter.com/clemensv>Clemens Vasters</a> definition
+best.</p><blockquote><p>CQRS is a simple pattern that strictly segregates the responsibility
 of handling command input into an autonomous system from the
 responsibility of handling side-effect-free query/read access on the
 same system. Consequently, the decoupling allows for any number of
@@ -108,12 +35,8 @@ for event sourcing, eventual-consistency state replication/fan-out
 and,  thus, high-scale read access. In simple terms, you don’t service
 queries via the same module of a service that you process commands
 through. In REST terminology, GET requests wire up to a different
-thing from what PUT, POST, and DELETE requests wire up to. </p>
-</blockquote>
-<p>A nice drawing also helps in understanding CQRS (from <a href="http://msdn.microsoft.com/en-us/library/jj591573">the CQRS journey
-material</a>).</p>
-<p><a href="/post/images/2013-02-17-adding-the-r-to-cqs-some-storage-options-CQRS_drawing.png"><img src="/post/images/thumbnails/2013-02-17-adding-the-r-to-cqs-some-storage-options-CQRS_drawing.png" alt=""></a></p>
-<p>Although scalability seems to be one of the big selling points of CQRS,
+thing from what PUT, POST, and DELETE requests wire up to. </p></blockquote><p>A nice drawing also helps in understanding CQRS (from <a href=http://msdn.microsoft.com/en-us/library/jj591573>the CQRS journey
+material</a>).</p><p><a href=/post/images/2013-02-17-adding-the-r-to-cqs-some-storage-options-CQRS_drawing.png><img loading=lazy src=/post/images/thumbnails/2013-02-17-adding-the-r-to-cqs-some-storage-options-CQRS_drawing.png></a></p><p>Although scalability seems to be one of the big selling points of CQRS,
 there are still some valid arguments applicable to my world; the
 strongest one being able to avoid the discrepancy which exists while you
 use the same model for reading and writing. I think everyone suffers
@@ -128,15 +51,12 @@ parts independently. And this doesn&rsquo;t only result in being able to show
 a list faster on a user&rsquo;s screen, but interesting things can also be
 done to empower reporting and data mining; think of how often using the
 same database for these tasks makes it hard and expensive to change
-things.</p>
-<p>While I still have done very little with CQRS, I have been looking at
+things.</p><p>While I still have done very little with CQRS, I have been looking at
 more and more real world examples, trying to fill in the blanks. What
 always has been kind of vague to me, is how you go at storing your
 domain model, and your read models <em>in practice</em>. Here are a few
 possible techniques - these are some proven techniques, and partially my
-own presumptions (you hardly find any OSS brown field examples).</p>
-<h3 id="the-compromise">The compromise</h3>
-<p>CQRS doesn&rsquo;t have to be an application-wide architecture necessarily;
+own presumptions (you hardly find any OSS brown field examples).</p><h3 id=the-compromise>The compromise<a hidden class=anchor aria-hidden=true href=#the-compromise>#</a></h3><p>CQRS doesn&rsquo;t have to be an application-wide architecture necessarily;
 nothing stops you from introducing it gently, and just applying it to
 parts of your application where the added value is over-obvious. This
 could mean that you use a conventional architecture; a relational
@@ -144,16 +64,12 @@ database with an ORM, or a document store, not distinguishing the write
 side from the read side. Yet for certain scenarios, you could introduce
 a specialized read or write side. For example; update the statistics
 read model on every relevant write, update a denormalized optimized read
-model for searches, etc..</p>
-<h3 id="norm">NORM</h3>
-<p>While the relational paradigm definitely has its place, mapping your
+model for searches, etc..</p><h3 id=norm>NORM<a hidden class=anchor aria-hidden=true href=#norm>#</a></h3><p>While the relational paradigm definitely has its place, mapping your
 domain to the database can get complex, and require much maintenance. If
 you don&rsquo;t expect of your write side to be queryable, you can take
 advantage of less cumbersome techniques such as a key value store to
 store your domain model. This does force you to completely separate
-reads from writes though.</p>
-<h3 id="event-sourcing">Event Sourcing</h3>
-<p>When you look at most OSS CQRS implementations, <a href="http://martinfowler.com/eaaDev/EventSourcing.html">Event
+reads from writes though.</p><h3 id=event-sourcing>Event Sourcing<a hidden class=anchor aria-hidden=true href=#event-sourcing>#</a></h3><p>When you look at most OSS CQRS implementations, <a href=http://martinfowler.com/eaaDev/EventSourcing.html>Event
 Sourcing</a> and CQRS go
 hand in hand. With Event Sourcing, you capture all application state
 changes as a sequence of events. I&rsquo;m really fond of the theory behind
@@ -162,44 +78,14 @@ log of each change. Yet, I also think you could largely achieve the same
 result by enabling journaling and adding some interception. Storage
 wise, you store all the event streams in an event store, which is
 optimized for such a task. Your read side can again be whatever you
-fancy.</p>
-<p>These three techniques aren&rsquo;t mutually exclusive. There are a bunch of
+fancy.</p><p>These three techniques aren&rsquo;t mutually exclusive. There are a bunch of
 arguments to consider, and everything is highly dependent on your
-technical and operational requirements.</p>
-<p>What is your experience with CQRS? Which techniques have you applied <em>in
-practice</em>?</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/opinion">opinion</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2013  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+technical and operational requirements.</p><p>What is your experience with CQRS? Which techniques have you applied <em>in
+practice</em>?</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/opinion/>Opinion</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2013/02/my-christmas-holiday-project-postmortem.html><span class=title>« Prev</span>
+<span>My Christmas holiday project postmortem</span>
+</a><a class=next href=https://jefclaes.be/2013/02/premature-judgment.html><span class=title>Next »</span>
+<span>Premature judgement</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

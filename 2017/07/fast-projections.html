@@ -1,323 +1,196 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Fast projections - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Fast projections">
-<meta itemprop="description" content="Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).
-type Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -&gt; unit Let&rsquo;s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched.">
-<meta itemprop="datePublished" content="2017-07-30T14:34:00&#43;02:00" />
-<meta itemprop="dateModified" content="2017-07-30T14:34:00&#43;02:00" />
-<meta itemprop="wordCount" content="1135">
-
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="Fast projections" />
-<meta property="og:description" content="Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).
-type Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -&gt; unit Let&rsquo;s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2017/07/fast-projections.html" />
-<meta property="article:published_time" content="2017-07-30T14:34:00+02:00" />
-<meta property="article:modified_time" content="2017-07-30T14:34:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Fast projections"/>
-<meta name="twitter:description" content="Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).
-type Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -&gt; unit Let&rsquo;s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">30</span>
-							<span class="rest">Jul 2017</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Fast projections</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Most EventStore client libraries allow you to subscribe to a stream by
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Fast projections | Jef Claes</title><meta name=keywords content="code"><meta name=description content="Most EventStore client libraries allow you to subscribe to a stream by
 passing in a callback which is invoked when an event occurs (either a
-live or historic event).</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">Envelope</span> = {
-  <span style="color:#268bd2">Id</span> : <span style="color:#268bd2">Int64</span>
-  <span style="color:#268bd2">Event</span> : <span style="color:#268bd2">Event</span>
-  <span style="color:#268bd2">Historic</span> : <span style="color:#859900;font-weight:bold">bool</span>
+live or historic event).
+type Envelope = {
+  Id : Int64
+  Event : Event
+  Historic : bool
 }
 
-<span style="color:#859900">type</span> <span style="color:#cb4b16">EventOccurred</span> = <span style="color:#268bd2">Envelope</span> -&gt; <span style="color:#859900;font-weight:bold">unit</span>
-</code></pre></div><p>Let&rsquo;s say we subscribe to a stream of a popular video service, and we
+type EventOccurred = Envelope -> unit
+Let&rsquo;s say we subscribe to a stream of a popular video service, and we
 want to project a read model that shows how many videos a viewer has
-watched. We don&rsquo;t care about the bookmarked videos for now.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">Event</span> =
-  | <span style="color:#268bd2">WatchedVideo</span> <span style="color:#859900">of</span> <span style="color:#268bd2">WatchedVideo</span>
-  | <span style="color:#268bd2">BookmarkedVideo</span> <span style="color:#859900">of</span> <span style="color:#268bd2">BookmarkedVideo</span>
-<span style="color:#859900">and</span> <span style="color:#268bd2">WatchedVideo</span> = { <span style="color:#268bd2">ViewerId</span> : <span style="color:#859900;font-weight:bold">string</span>; <span style="color:#268bd2">VideoId</span> : <span style="color:#859900;font-weight:bold">string</span>; <span style="color:#268bd2">At</span> : <span style="color:#268bd2">DateTime</span> }
-<span style="color:#859900">and</span> <span style="color:#268bd2">BookmarkedVideo</span> = { <span style="color:#268bd2">ViewerId</span> : <span style="color:#859900;font-weight:bold">string</span>; <span style="color:#268bd2">VideoId</span> : <span style="color:#859900;font-weight:bold">string</span>; <span style="color:#268bd2">At</span> : <span style="color:#268bd2">DateTime</span> }
-</code></pre></div><p>We&rsquo;re sitting on top of storage that can execute a single statement and
-a batch of statements.</p>
-<p>The statements supported are limited:</p>
-<ul>
-<li>Set a checkpoint</li>
-<li>Increment the view count for a viewer</li>
-</ul>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">Statement</span> =
-  | <span style="color:#268bd2">Checkpoint</span> <span style="color:#859900">of</span> <span style="color:#268bd2">Int64</span>
-  | <span style="color:#268bd2">IncrementViewCount</span> <span style="color:#859900">of</span> <span style="color:#859900;font-weight:bold">string</span> * <span style="color:#268bd2">int</span>
-
-<span style="color:#859900">type</span> <span style="color:#cb4b16">Batch</span> = <span style="color:#268bd2">Statement</span> <span style="color:#268bd2">seq</span>
-
-<span style="color:#859900">type</span> <span style="color:#cb4b16">Storage</span> = {
-  <span style="color:#268bd2">ExecuteStatement</span> : <span style="color:#268bd2">Statement</span> -&gt; <span style="color:#859900;font-weight:bold">unit</span>
-  <span style="color:#268bd2">ExecuteBatch</span> : <span style="color:#268bd2">Batch</span> -&gt; <span style="color:#859900;font-weight:bold">unit</span>
-  <span style="color:#268bd2">CalculateCost</span> : <span style="color:#859900;font-weight:bold">unit</span> -&gt; <span style="color:#859900;font-weight:bold">decimal</span>
-}
-</code></pre></div><p>The storage engine exposes a method which calculates the cost of
-executed statements:</p>
-<ul>
-<li>Executing a single statement costs 1 execution unit</li>
-<li>Executing a batch also costs 1 execution unit plus 0.1 execution unit per statement in the batch</li>
-</ul>
-<h3 id="the-stream">The stream</h3>
-<p>For this exercise the stream contains 3500 historic views, 50 historic
-bookmarks and 100 live views.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">stream</span> = <span style="color:#268bd2">seq</span> {
-  <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#268bd2">1L</span> .. <span style="color:#268bd2">3500L</span> <span style="color:#859900">do</span>
-    <span style="color:#859900">yield</span> { <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">i</span>; <span style="color:#268bd2">Event</span> = <span style="color:#268bd2">WatchedVideo</span> { <span style="color:#268bd2">ViewerId</span> = <span style="color:#2aa198">&#34;1&#34;</span>; <span style="color:#268bd2">VideoId</span> = <span style="color:#2aa198">&#34;1&#34;</span>; <span style="color:#268bd2">At</span> = <span style="color:#268bd2">DateTime</span>.<span style="color:#268bd2">UtcNow</span> }; <span style="color:#268bd2">Historic</span> = <span style="color:#859900">true</span> }
-  <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#268bd2">3551L</span> .. <span style="color:#268bd2">3650L</span> <span style="color:#859900">do</span>
-    <span style="color:#859900">yield</span> { <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">i</span>; <span style="color:#268bd2">Event</span> = <span style="color:#268bd2">WatchedVideo</span> { <span style="color:#268bd2">ViewerId</span> = <span style="color:#2aa198">&#34;2&#34;</span>; <span style="color:#268bd2">VideoId</span> = <span style="color:#2aa198">&#34;1&#34;</span>; <span style="color:#268bd2">At</span> = <span style="color:#268bd2">DateTime</span>.<span style="color:#268bd2">UtcNow</span> }; <span style="color:#268bd2">Historic</span> = <span style="color:#859900">false</span> }
-  <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#268bd2">3501L</span> .. <span style="color:#268bd2">3550L</span> <span style="color:#859900">do</span> 
-    <span style="color:#859900">yield</span> { <span style="color:#268bd2">Id</span> = <span style="color:#268bd2">i</span>; <span style="color:#268bd2">Event</span> = <span style="color:#268bd2">BookmarkedVideo</span> { <span style="color:#268bd2">ViewerId</span> = <span style="color:#2aa198">&#34;1&#34;</span>; <span style="color:#268bd2">VideoId</span> = <span style="color:#2aa198">&#34;1&#34;</span>; <span style="color:#268bd2">At</span> = <span style="color:#268bd2">DateTime</span>.<span style="color:#268bd2">UtcNow</span> }; <span style="color:#268bd2">Historic</span> = <span style="color:#859900">true</span> }
-}
-</code></pre></div><h3 id="first-attempt">First attempt</h3>
-<p>The first attempt at projecting the stream to state, executes a
+watched. We don&rsquo;t care about the bookmarked videos for now."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2017/07/fast-projections.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2017/07/fast-projections.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2017/07/fast-projections.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Fast projections"><meta property="og:description" content="Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).
+type Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -> unit Let’s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched. We don’t care about the bookmarked videos for now."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-07-30T14:34:00+02:00"><meta property="article:modified_time" content="2017-07-30T14:34:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="Fast projections"><meta name=twitter:description content="Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).
+type Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -> unit Let’s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched. We don’t care about the bookmarked videos for now."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Fast projections","item":"https://jefclaes.be/2017/07/fast-projections.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Fast projections","name":"Fast projections","description":"Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).\ntype Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -\u0026gt; unit Let\u0026rsquo;s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched. We don\u0026rsquo;t care about the bookmarked videos for now.\n","keywords":["code"],"articleBody":"Most EventStore client libraries allow you to subscribe to a stream by passing in a callback which is invoked when an event occurs (either a live or historic event).\ntype Envelope = { Id : Int64 Event : Event Historic : bool } type EventOccurred = Envelope -\u003e unit Let’s say we subscribe to a stream of a popular video service, and we want to project a read model that shows how many videos a viewer has watched. We don’t care about the bookmarked videos for now.\ntype Event = | WatchedVideo of WatchedVideo | BookmarkedVideo of BookmarkedVideo and WatchedVideo = { ViewerId : string; VideoId : string; At : DateTime } and BookmarkedVideo = { ViewerId : string; VideoId : string; At : DateTime } We’re sitting on top of storage that can execute a single statement and a batch of statements.\nThe statements supported are limited:\nSet a checkpoint Increment the view count for a viewer type Statement = | Checkpoint of Int64 | IncrementViewCount of string * int type Batch = Statement seq type Storage = { ExecuteStatement : Statement -\u003e unit ExecuteBatch : Batch -\u003e unit CalculateCost : unit -\u003e decimal } The storage engine exposes a method which calculates the cost of executed statements:\nExecuting a single statement costs 1 execution unit Executing a batch also costs 1 execution unit plus 0.1 execution unit per statement in the batch The stream For this exercise the stream contains 3500 historic views, 50 historic bookmarks and 100 live views.\nlet stream = seq { for i in 1L .. 3500L do yield { Id = i; Event = WatchedVideo { ViewerId = \"1\"; VideoId = \"1\"; At = DateTime.UtcNow }; Historic = true } for i in 3551L .. 3650L do yield { Id = i; Event = WatchedVideo { ViewerId = \"2\"; VideoId = \"1\"; At = DateTime.UtcNow }; Historic = false } for i in 3501L .. 3550L do yield { Id = i; Event = BookmarkedVideo { ViewerId = \"1\"; VideoId = \"1\"; At = DateTime.UtcNow }; Historic = true } } First attempt The first attempt at projecting the stream to state, executes a statement for each event we’re interested in and checkpoints after each event (even the ones we’re not interested in).\nlet ``First try`` (storage : Storage) : EventOccurred = fun envelope -\u003e match envelope.Event with | WatchedVideo x -\u003e IncrementViewCount (x.ViewerId, 1) |\u003e storage.ExecuteStatement | _ -\u003e () Checkpoint envelope.Id |\u003e storage.ExecuteStatement // ## First try ## // ----------------------------------------- // - Viewcount: seq [[1, 3500]; [2, 100]] // - Checkpoint: 3650L // ----------------------------------------- // = Cost: 7250.0M The cost of this projection is high: 7250 execution units - even though there are only 3600 events we’re interested in. We execute a statement for each event we handled and checkpoint immediately after, even for the events we didn’t handle.\nLess checkpointing It’s not hard to get rid of some of the checkpointing though.\nlet ``Less checkpointing`` (storage : Storage) : EventOccurred = fun envelope -\u003e match envelope.Event with | WatchedVideo x -\u003e IncrementViewCount (x.ViewerId, 1) |\u003e storage.ExecuteStatement Checkpoint envelope.Id |\u003e storage.ExecuteStatement | _ -\u003e () // ## Less checkpointing ## // ----------------------------------------- // - Viewcount: seq [[1, 3500]; [2, 100]] // - Checkpoint: 3650L // ----------------------------------------- // = Cost: 7200.0M The cost has improved, but only marginally. We saved 50 execution units by avoiding checkpointing after events we do not handle. Time for a bigger improvement..\nBatching Instead of handling each event individually, we will buffer them as soon as they come in. When we’re catching up and seeing historic events, we only flush the buffer every 100 events. When we’re caught up, we flush on each event. We want to always make a best attempt at showing fresh data.\nWhen the buffer gets flushed, events are mapped into a sequence of statements, which are sent in batch to the storage engine. The checkpoint is appended to the tail of the batch.\nlet ``Batching`` (storage : Storage) : EventOccurred = fun envelope -\u003e let flushOn = if envelope.Historic then 100 else 1 let flush () = let batch = buffer |\u003e Seq.map (fun env -\u003e match env.Event with | WatchedVideo x -\u003e IncrementViewCount (x.ViewerId, 1) |\u003e Some | _ -\u003e None ) |\u003e Seq.choose id if not (batch |\u003e Seq.isEmpty) then [ Checkpoint envelope.Id ] |\u003e Seq.append batch |\u003e storage.ExecuteBatch buffer.Clear() match envelope.Event with | WatchedVideo _ -\u003e buffer.Add envelope | _ -\u003e () if buffer.Count \u003e= flushOn then flush() // ## Batching ## // ----------------------------------------- // - Viewcount: seq [[1, 3500]; [2, 100]] // - Checkpoint: 3650L // ----------------------------------------- // = Cost: 508.5M This approach makes a significant difference. Execution cost has reduced by 93%! Batching of historic events makes replays much faster, but with some extra effort we can take this optimization even further.\nBatching with transformation It always pays off to understand the guarantees and intricacies of the storage you’re using. Looking closely at the storage interface, we find that we can increment the view count by any number. If we use a local data structure to aggregate the view count up front, we can reduce the number of statements even further.\nIn practice, we filter the for events we’re interested in, group by the viewer id, count the values and map that into a single statement per viewer.\nlet ``Batching with transformation`` (storage : Storage) : EventOccurred = fun envelope -\u003e let flushOn = if envelope.Historic then 100 else 1 let flush () = let batch = buffer |\u003e Seq.map (fun env -\u003e match env.Event with | WatchedVideo x -\u003e Some x | _ -\u003e None ) |\u003e Seq.choose id |\u003e Seq.groupBy (fun e -\u003e e.ViewerId) |\u003e Seq.map (fun (viewerId, e) -\u003e (viewerId, e |\u003e Seq.length)) |\u003e Seq.map (fun (viewerId, length) -\u003e IncrementViewCount (viewerId, length)) if not (batch |\u003e Seq.isEmpty) then [ Checkpoint envelope.Id ] |\u003e Seq.append batch |\u003e storage.ExecuteBatch buffer.Clear() match envelope.Event with | WatchedVideo _ -\u003e buffer.Add envelope | _ -\u003e () if buffer.Count \u003e= flushOn then flush() // ## Batching with transformation ## // ----------------------------------------- // - Viewcount: seq [[1, 3500]; [2, 100]] // - Checkpoint: 3650L // ----------------------------------------- // = Cost: 162.0M This further reduces costs by more than 2/3th. The optimization makes the code a bit more elaborate, but not necessarily that more complex - it’s still a local optimization.\nConclusion In three steps, we brought cost down from 7250 execution units to only 162 units. That makes me a 44x engineer, right?\nIn general, storage is one of the slowest components of your system. Making your system faster often involves making it do less work. Avoiding waste by batching and some more work up front, can make a big impact when you want to make your projection faster.\nYou can find the complete F# script here.\n","wordCount":"1135","inLanguage":"en","datePublished":"2017-07-30T14:34:00+02:00","dateModified":"2017-07-30T14:34:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2017/07/fast-projections.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Fast projections</h1><div class=post-meta><span title='2017-07-30 14:34:00 +0200 CEST'>July 30, 2017</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Most EventStore client libraries allow you to subscribe to a stream by
+passing in a callback which is invoked when an event occurs (either a
+live or historic event).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Envelope</span> <span style=color:#f92672>=</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  Id <span style=color:#f92672>:</span> Int64
+</span></span><span style=display:flex><span>  Event <span style=color:#f92672>:</span> Event
+</span></span><span style=display:flex><span>  Historic <span style=color:#f92672>:</span> <span style=color:#66d9ef>bool</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>EventOccurred</span> <span style=color:#f92672>=</span> Envelope <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>unit</span>
+</span></span></code></pre></div><p>Let&rsquo;s say we subscribe to a stream of a popular video service, and we
+want to project a read model that shows how many videos a viewer has
+watched. We don&rsquo;t care about the bookmarked videos for now.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Event</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>|</span> WatchedVideo <span style=color:#66d9ef>of</span> WatchedVideo
+</span></span><span style=display:flex><span>  <span style=color:#f92672>|</span> BookmarkedVideo <span style=color:#66d9ef>of</span> BookmarkedVideo
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> WatchedVideo <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> ViewerId <span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span><span style=color:#f92672>;</span> VideoId <span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span><span style=color:#f92672>;</span> At <span style=color:#f92672>:</span> DateTime <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>and</span> BookmarkedVideo <span style=color:#f92672>=</span> <span style=color:#f92672>{</span> ViewerId <span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span><span style=color:#f92672>;</span> VideoId <span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span><span style=color:#f92672>;</span> At <span style=color:#f92672>:</span> DateTime <span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>We&rsquo;re sitting on top of storage that can execute a single statement and
+a batch of statements.</p><p>The statements supported are limited:</p><ul><li>Set a checkpoint</li><li>Increment the view count for a viewer</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Statement</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>|</span> Checkpoint <span style=color:#66d9ef>of</span> Int64
+</span></span><span style=display:flex><span>  <span style=color:#f92672>|</span> IncrementViewCount <span style=color:#66d9ef>of</span> <span style=color:#66d9ef>string</span> <span style=color:#f92672>*</span> int
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Batch</span> <span style=color:#f92672>=</span> Statement seq
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Storage</span> <span style=color:#f92672>=</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  ExecuteStatement <span style=color:#f92672>:</span> Statement <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>unit</span>
+</span></span><span style=display:flex><span>  ExecuteBatch <span style=color:#f92672>:</span> Batch <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>unit</span>
+</span></span><span style=display:flex><span>  CalculateCost <span style=color:#f92672>:</span> <span style=color:#66d9ef>unit</span> <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>decimal</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>The storage engine exposes a method which calculates the cost of
+executed statements:</p><ul><li>Executing a single statement costs 1 execution unit</li><li>Executing a batch also costs 1 execution unit plus 0.1 execution unit per statement in the batch</li></ul><h3 id=the-stream>The stream<a hidden class=anchor aria-hidden=true href=#the-stream>#</a></h3><p>For this exercise the stream contains 3500 historic views, 50 historic
+bookmarks and 100 live views.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> stream <span style=color:#f92672>=</span> seq <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> 1L <span style=color:#f92672>..</span> 3500L <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>yield</span> <span style=color:#f92672>{</span> Id <span style=color:#f92672>=</span> i<span style=color:#f92672>;</span> Event <span style=color:#f92672>=</span> WatchedVideo <span style=color:#f92672>{</span> ViewerId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span><span style=color:#f92672>;</span> VideoId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span><span style=color:#f92672>;</span> At <span style=color:#f92672>=</span> DateTime.UtcNow <span style=color:#f92672>};</span> Historic <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> 3551L <span style=color:#f92672>..</span> 3650L <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>yield</span> <span style=color:#f92672>{</span> Id <span style=color:#f92672>=</span> i<span style=color:#f92672>;</span> Event <span style=color:#f92672>=</span> WatchedVideo <span style=color:#f92672>{</span> ViewerId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;2&#34;</span><span style=color:#f92672>;</span> VideoId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span><span style=color:#f92672>;</span> At <span style=color:#f92672>=</span> DateTime.UtcNow <span style=color:#f92672>};</span> Historic <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> 3501L <span style=color:#f92672>..</span> 3550L <span style=color:#66d9ef>do</span> 
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>yield</span> <span style=color:#f92672>{</span> Id <span style=color:#f92672>=</span> i<span style=color:#f92672>;</span> Event <span style=color:#f92672>=</span> BookmarkedVideo <span style=color:#f92672>{</span> ViewerId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span><span style=color:#f92672>;</span> VideoId <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span><span style=color:#f92672>;</span> At <span style=color:#f92672>=</span> DateTime.UtcNow <span style=color:#f92672>};</span> Historic <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span> <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><h3 id=first-attempt>First attempt<a hidden class=anchor aria-hidden=true href=#first-attempt>#</a></h3><p>The first attempt at projecting the stream to state, executes a
 statement for each event we&rsquo;re interested in and checkpoints after each
-event (even the ones we&rsquo;re not interested in).</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">``First try``</span> (<span style="color:#268bd2">storage</span> : <span style="color:#268bd2">Storage</span>) : <span style="color:#268bd2">EventOccurred</span> =
-  <span style="color:#859900">fun</span> <span style="color:#268bd2">envelope</span> -&gt;
-
-      <span style="color:#859900">match</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Event</span> <span style="color:#859900">with</span>
-      | <span style="color:#268bd2">WatchedVideo</span> <span style="color:#268bd2">x</span> -&gt; <span style="color:#268bd2">IncrementViewCount</span> (<span style="color:#268bd2">x</span>.<span style="color:#268bd2">ViewerId</span>, <span style="color:#268bd2">1</span>) |&gt; <span style="color:#268bd2">storage</span>.<span style="color:#268bd2">ExecuteStatement</span>
-      | _ -&gt; <span style="color:#268bd2">()</span>
-
-      <span style="color:#268bd2">Checkpoint</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Id</span> |&gt; <span style="color:#268bd2">storage</span>.<span style="color:#268bd2">ExecuteStatement</span>
-
-<span style="color:#93a1a1;font-style:italic">// ## First try ##
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// - Viewcount: seq [[1, 3500]; [2, 100]]
-</span><span style="color:#93a1a1;font-style:italic">// - Checkpoint: 3650L
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// = Cost: 7250.0M
-</span></code></pre></div><p>The cost of this projection is high: 7250 execution units - even though
+event (even the ones we&rsquo;re not interested in).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> ``First try`` <span style=color:#f92672>(</span>storage <span style=color:#f92672>:</span> Storage<span style=color:#f92672>)</span> <span style=color:#f92672>:</span> EventOccurred <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fun</span> envelope <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>match</span> envelope<span style=color:#f92672>.</span>Event <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>|</span> WatchedVideo x <span style=color:#f92672>-&gt;</span> IncrementViewCount <span style=color:#f92672>(</span>x<span style=color:#f92672>.</span>ViewerId<span style=color:#f92672>,</span> 1<span style=color:#f92672>)</span> <span style=color:#f92672>|&gt;</span> storage<span style=color:#f92672>.</span>ExecuteStatement
+</span></span><span style=display:flex><span>      <span style=color:#f92672>|</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> ()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      Checkpoint envelope<span style=color:#f92672>.</span>Id <span style=color:#f92672>|&gt;</span> storage<span style=color:#f92672>.</span>ExecuteStatement
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ## First try ##
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Viewcount: seq [[1, 3500]; [2, 100]]
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Checkpoint: 3650L
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// = Cost: 7250.0M
+</span></span></span></code></pre></div><p>The cost of this projection is high: 7250 execution units - even though
 there are only 3600 events we&rsquo;re interested in. We execute a statement
 for each event we handled and checkpoint immediately after, even for the
-events we didn&rsquo;t handle.</p>
-<h3 id="less-checkpointing">Less checkpointing</h3>
-<p>It&rsquo;s not hard to get rid of some of the checkpointing though.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">``Less checkpointing``</span> (<span style="color:#268bd2">storage</span> : <span style="color:#268bd2">Storage</span>) : <span style="color:#268bd2">EventOccurred</span> =
-  <span style="color:#859900">fun</span> <span style="color:#268bd2">envelope</span> -&gt;
-
-    <span style="color:#859900">match</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Event</span> <span style="color:#859900">with</span>
-    | <span style="color:#268bd2">WatchedVideo</span> <span style="color:#268bd2">x</span> -&gt;
-      <span style="color:#268bd2">IncrementViewCount</span> (<span style="color:#268bd2">x</span>.<span style="color:#268bd2">ViewerId</span>, <span style="color:#268bd2">1</span>) |&gt; <span style="color:#268bd2">storage</span>.<span style="color:#268bd2">ExecuteStatement</span>
-      <span style="color:#268bd2">Checkpoint</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Id</span> |&gt; <span style="color:#268bd2">storage</span>.<span style="color:#268bd2">ExecuteStatement</span>
-    | _ -&gt; <span style="color:#268bd2">()</span>
-
-<span style="color:#93a1a1;font-style:italic">// ## Less checkpointing ##
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// - Viewcount: seq [[1, 3500]; [2, 100]]
-</span><span style="color:#93a1a1;font-style:italic">// - Checkpoint: 3650L
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// = Cost: 7200.0M
-</span></code></pre></div><p>The cost has improved, but only marginally. We saved 50 execution units
+events we didn&rsquo;t handle.</p><h3 id=less-checkpointing>Less checkpointing<a hidden class=anchor aria-hidden=true href=#less-checkpointing>#</a></h3><p>It&rsquo;s not hard to get rid of some of the checkpointing though.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> ``Less checkpointing`` <span style=color:#f92672>(</span>storage <span style=color:#f92672>:</span> Storage<span style=color:#f92672>)</span> <span style=color:#f92672>:</span> EventOccurred <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fun</span> envelope <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>match</span> envelope<span style=color:#f92672>.</span>Event <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> WatchedVideo x <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>      IncrementViewCount <span style=color:#f92672>(</span>x<span style=color:#f92672>.</span>ViewerId<span style=color:#f92672>,</span> 1<span style=color:#f92672>)</span> <span style=color:#f92672>|&gt;</span> storage<span style=color:#f92672>.</span>ExecuteStatement
+</span></span><span style=display:flex><span>      Checkpoint envelope<span style=color:#f92672>.</span>Id <span style=color:#f92672>|&gt;</span> storage<span style=color:#f92672>.</span>ExecuteStatement
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> ()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ## Less checkpointing ##
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Viewcount: seq [[1, 3500]; [2, 100]]
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Checkpoint: 3650L
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// = Cost: 7200.0M
+</span></span></span></code></pre></div><p>The cost has improved, but only marginally. We saved 50 execution units
 by avoiding checkpointing after events we do not handle. Time for a
-bigger improvement..</p>
-<h3 id="batching">Batching</h3>
-<p>Instead of handling each event individually, we will buffer them as
+bigger improvement..</p><h3 id=batching>Batching<a hidden class=anchor aria-hidden=true href=#batching>#</a></h3><p>Instead of handling each event individually, we will buffer them as
 soon as they come in. When we&rsquo;re catching up and seeing historic events,
 we only flush the buffer every 100 events. When we&rsquo;re caught up, we
 flush on each event. We want to always make a best attempt at showing
-fresh data.</p>
-<p>When the buffer gets flushed, events are mapped into a sequence of
+fresh data.</p><p>When the buffer gets flushed, events are mapped into a sequence of
 statements, which are sent in batch to the storage engine. The
-checkpoint is appended to the tail of the batch.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">``Batching``</span> (<span style="color:#268bd2">storage</span> : <span style="color:#268bd2">Storage</span>) : <span style="color:#268bd2">EventOccurred</span> =
-  <span style="color:#859900">fun</span> <span style="color:#268bd2">envelope</span> -&gt;
-
-    <span style="color:#859900">let</span> <span style="color:#268bd2">flushOn</span> = <span style="color:#859900">if</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Historic</span> <span style="color:#859900">then</span> <span style="color:#268bd2">100</span> <span style="color:#859900">else</span> <span style="color:#268bd2">1</span>
-
-    <span style="color:#859900">let</span> <span style="color:#268bd2">flush</span> <span style="color:#268bd2">()</span> =
-      <span style="color:#859900">let</span> <span style="color:#268bd2">batch</span> =
-        <span style="color:#268bd2">buffer</span>
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">map</span> (<span style="color:#859900">fun</span> <span style="color:#268bd2">env</span> -&gt;
-          <span style="color:#859900">match</span> <span style="color:#268bd2">env</span>.<span style="color:#268bd2">Event</span> <span style="color:#859900">with</span>
-          | <span style="color:#268bd2">WatchedVideo</span> <span style="color:#268bd2">x</span> -&gt; <span style="color:#268bd2">IncrementViewCount</span> (<span style="color:#268bd2">x</span>.<span style="color:#268bd2">ViewerId</span>, <span style="color:#268bd2">1</span>) |&gt; <span style="color:#268bd2">Some</span>
-          | _ -&gt; <span style="color:#268bd2">None</span>
-        )
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">choose</span> <span style="color:#268bd2">id</span>
-
-      <span style="color:#859900">if</span> <span style="color:#859900">not</span> (<span style="color:#268bd2">batch</span> |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">isEmpty</span>) <span style="color:#859900">then</span>
-        [ <span style="color:#268bd2">Checkpoint</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Id</span> ]
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">append</span> <span style="color:#268bd2">batch</span>
-        |&gt; <span style="color:#268bd2">storage</span>.<span style="color:#268bd2">ExecuteBatch</span>
-
-      <span style="color:#268bd2">buffer</span>.<span style="color:#268bd2">Clear</span><span style="color:#268bd2">()</span>
-
-    <span style="color:#859900">match</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Event</span> <span style="color:#859900">with</span>
-    | <span style="color:#268bd2">WatchedVideo</span> _ -&gt; <span style="color:#268bd2">buffer</span>.<span style="color:#268bd2">Add</span> <span style="color:#268bd2">envelope</span>
-    | _ -&gt; <span style="color:#268bd2">()</span>
-
-    <span style="color:#859900">if</span> <span style="color:#268bd2">buffer</span>.<span style="color:#268bd2">Count</span> &gt;= <span style="color:#268bd2">flushOn</span> <span style="color:#859900">then</span>
-      <span style="color:#268bd2">flush</span><span style="color:#268bd2">()</span>
-      
-<span style="color:#93a1a1;font-style:italic">// ## Batching ##
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// - Viewcount: seq [[1, 3500]; [2, 100]]
-</span><span style="color:#93a1a1;font-style:italic">// - Checkpoint: 3650L
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// = Cost: 508.5M
-</span></code></pre></div><p>This approach makes a significant difference. Execution cost has reduced
+checkpoint is appended to the tail of the batch.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> ``Batching`` <span style=color:#f92672>(</span>storage <span style=color:#f92672>:</span> Storage<span style=color:#f92672>)</span> <span style=color:#f92672>:</span> EventOccurred <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fun</span> envelope <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> flushOn <span style=color:#f92672>=</span> <span style=color:#66d9ef>if</span> envelope<span style=color:#f92672>.</span>Historic <span style=color:#66d9ef>then</span> 100 <span style=color:#66d9ef>else</span> 1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> flush () <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>let</span> batch <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>        buffer
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.map <span style=color:#f92672>(</span><span style=color:#66d9ef>fun</span> env <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>          <span style=color:#66d9ef>match</span> env<span style=color:#f92672>.</span>Event <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>|</span> WatchedVideo x <span style=color:#f92672>-&gt;</span> IncrementViewCount <span style=color:#f92672>(</span>x<span style=color:#f92672>.</span>ViewerId<span style=color:#f92672>,</span> 1<span style=color:#f92672>)</span> <span style=color:#f92672>|&gt;</span> Some
+</span></span><span style=display:flex><span>          <span style=color:#f92672>|</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> None
+</span></span><span style=display:flex><span>        <span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.choose id
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> <span style=color:#f92672>(</span>batch <span style=color:#f92672>|&gt;</span> Seq.isEmpty<span style=color:#f92672>)</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>[</span> Checkpoint envelope<span style=color:#f92672>.</span>Id <span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.append batch
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> storage<span style=color:#f92672>.</span>ExecuteBatch
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      buffer<span style=color:#f92672>.</span>Clear()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>match</span> envelope<span style=color:#f92672>.</span>Event <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> WatchedVideo <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> buffer<span style=color:#f92672>.</span>Add envelope
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> ()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> buffer<span style=color:#f92672>.</span>Count <span style=color:#f92672>&gt;=</span> flushOn <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>      flush()
+</span></span><span style=display:flex><span>      
+</span></span><span style=display:flex><span><span style=color:#75715e>// ## Batching ##
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Viewcount: seq [[1, 3500]; [2, 100]]
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Checkpoint: 3650L
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// = Cost: 508.5M
+</span></span></span></code></pre></div><p>This approach makes a significant difference. Execution cost has reduced
 by 93%! Batching of historic events makes replays much faster, but with
-some extra effort we can take this optimization even further.</p>
-<h3 id="batching-with-transformation">Batching with transformation</h3>
-<p>It always pays off to understand the guarantees and intricacies of the
+some extra effort we can take this optimization even further.</p><h3 id=batching-with-transformation>Batching with transformation<a hidden class=anchor aria-hidden=true href=#batching-with-transformation>#</a></h3><p>It always pays off to understand the guarantees and intricacies of the
 storage you&rsquo;re using. Looking closely at the storage interface, we find
 that we can increment the view count by any number. If we use a local
 data structure to aggregate the view count up front, we can reduce the
-number of statements even further.</p>
-<p>In practice, we filter the for events we&rsquo;re interested in, group by the
+number of statements even further.</p><p>In practice, we filter the for events we&rsquo;re interested in, group by the
 viewer id, count the values and map that into a single statement per
-viewer.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">``Batching with transformation``</span> (<span style="color:#268bd2">storage</span> : <span style="color:#268bd2">Storage</span>) : <span style="color:#268bd2">EventOccurred</span> =
-  <span style="color:#859900">fun</span> <span style="color:#268bd2">envelope</span> -&gt;
-
-    <span style="color:#859900">let</span> <span style="color:#268bd2">flushOn</span> = <span style="color:#859900">if</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Historic</span> <span style="color:#859900">then</span> <span style="color:#268bd2">100</span> <span style="color:#859900">else</span> <span style="color:#268bd2">1</span>
-
-    <span style="color:#859900">let</span> <span style="color:#268bd2">flush</span> <span style="color:#268bd2">()</span> =
-      <span style="color:#859900">let</span> <span style="color:#268bd2">batch</span> =
-        <span style="color:#268bd2">buffer</span>
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">map</span> (<span style="color:#859900">fun</span> <span style="color:#268bd2">env</span> -&gt; 
-          <span style="color:#859900">match</span> <span style="color:#268bd2">env</span>.<span style="color:#268bd2">Event</span> <span style="color:#859900">with</span> 
-          | <span style="color:#268bd2">WatchedVideo</span> <span style="color:#268bd2">x</span> -&gt; <span style="color:#268bd2">Some</span> <span style="color:#268bd2">x</span> 
-          | _ -&gt; <span style="color:#268bd2">None</span>
-        )
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">choose</span> <span style="color:#268bd2">id</span>
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">groupBy</span> (<span style="color:#859900">fun</span> <span style="color:#268bd2">e</span> -&gt; <span style="color:#268bd2">e</span>.<span style="color:#268bd2">ViewerId</span>)
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">map</span> (<span style="color:#859900">fun</span> (<span style="color:#268bd2">viewerId</span>, <span style="color:#268bd2">e</span>) -&gt; (<span style="color:#268bd2">viewerId</span>, <span style="color:#268bd2">e</span> |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">length</span>))
-        |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">map</span> (<span style="color:#859900">fun</span> (<span style="color:#268bd2">viewerId</span>, <span style="color:#268bd2">length</span>) -&gt; <span style="color:#268bd2">IncrementViewCount</span> (<span style="color:#268bd2">viewerId</span>, <span style="color:#268bd2">length</span>))
-
-      <span style="color:#859900">if</span> <span style="color:#859900">not</span> (<span style="color:#268bd2">batch</span> |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">isEmpty</span>) <span style="color:#859900">then</span>
-          [ <span style="color:#268bd2">Checkpoint</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Id</span> ]
-          |&gt; <span style="color:#268bd2">Seq</span>.<span style="color:#268bd2">append</span> <span style="color:#268bd2">batch</span>
-          |&gt; <span style="color:#268bd2">storage</span>.<span style="color:#268bd2">ExecuteBatch</span>
-
-      <span style="color:#268bd2">buffer</span>.<span style="color:#268bd2">Clear</span><span style="color:#268bd2">()</span>
-
-    <span style="color:#859900">match</span> <span style="color:#268bd2">envelope</span>.<span style="color:#268bd2">Event</span> <span style="color:#859900">with</span>
-    | <span style="color:#268bd2">WatchedVideo</span> _ -&gt; <span style="color:#268bd2">buffer</span>.<span style="color:#268bd2">Add</span> <span style="color:#268bd2">envelope</span>
-    | _ -&gt; <span style="color:#268bd2">()</span>
-
-    <span style="color:#859900">if</span> <span style="color:#268bd2">buffer</span>.<span style="color:#268bd2">Count</span> &gt;= <span style="color:#268bd2">flushOn</span> <span style="color:#859900">then</span>
-      <span style="color:#268bd2">flush</span><span style="color:#268bd2">()</span>
- 
-<span style="color:#93a1a1;font-style:italic">// ## Batching with transformation ##
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// - Viewcount: seq [[1, 3500]; [2, 100]]
-</span><span style="color:#93a1a1;font-style:italic">// - Checkpoint: 3650L
-</span><span style="color:#93a1a1;font-style:italic">// -----------------------------------------
-</span><span style="color:#93a1a1;font-style:italic">// = Cost: 162.0M
-</span></code></pre></div><p>This further reduces costs by more than 2/3th. The optimization makes
+viewer.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> ``Batching with transformation`` <span style=color:#f92672>(</span>storage <span style=color:#f92672>:</span> Storage<span style=color:#f92672>)</span> <span style=color:#f92672>:</span> EventOccurred <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>fun</span> envelope <span style=color:#f92672>-&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> flushOn <span style=color:#f92672>=</span> <span style=color:#66d9ef>if</span> envelope<span style=color:#f92672>.</span>Historic <span style=color:#66d9ef>then</span> 100 <span style=color:#66d9ef>else</span> 1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> flush () <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>let</span> batch <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>        buffer
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.map <span style=color:#f92672>(</span><span style=color:#66d9ef>fun</span> env <span style=color:#f92672>-&gt;</span> 
+</span></span><span style=display:flex><span>          <span style=color:#66d9ef>match</span> env<span style=color:#f92672>.</span>Event <span style=color:#66d9ef>with</span> 
+</span></span><span style=display:flex><span>          <span style=color:#f92672>|</span> WatchedVideo x <span style=color:#f92672>-&gt;</span> Some x 
+</span></span><span style=display:flex><span>          <span style=color:#f92672>|</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> None
+</span></span><span style=display:flex><span>        <span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.choose id
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.groupBy <span style=color:#f92672>(</span><span style=color:#66d9ef>fun</span> e <span style=color:#f92672>-&gt;</span> e<span style=color:#f92672>.</span>ViewerId<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.map <span style=color:#f92672>(</span><span style=color:#66d9ef>fun</span> <span style=color:#f92672>(</span>viewerId<span style=color:#f92672>,</span> e<span style=color:#f92672>)</span> <span style=color:#f92672>-&gt;</span> <span style=color:#f92672>(</span>viewerId<span style=color:#f92672>,</span> e <span style=color:#f92672>|&gt;</span> Seq.length<span style=color:#f92672>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>|&gt;</span> Seq.map <span style=color:#f92672>(</span><span style=color:#66d9ef>fun</span> <span style=color:#f92672>(</span>viewerId<span style=color:#f92672>,</span> length<span style=color:#f92672>)</span> <span style=color:#f92672>-&gt;</span> IncrementViewCount <span style=color:#f92672>(</span>viewerId<span style=color:#f92672>,</span> length<span style=color:#f92672>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> <span style=color:#f92672>(</span>batch <span style=color:#f92672>|&gt;</span> Seq.isEmpty<span style=color:#f92672>)</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>[</span> Checkpoint envelope<span style=color:#f92672>.</span>Id <span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>|&gt;</span> Seq.append batch
+</span></span><span style=display:flex><span>          <span style=color:#f92672>|&gt;</span> storage<span style=color:#f92672>.</span>ExecuteBatch
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      buffer<span style=color:#f92672>.</span>Clear()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>match</span> envelope<span style=color:#f92672>.</span>Event <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> WatchedVideo <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> buffer<span style=color:#f92672>.</span>Add envelope
+</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> ()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> buffer<span style=color:#f92672>.</span>Count <span style=color:#f92672>&gt;=</span> flushOn <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>      flush()
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#75715e>// ## Batching with transformation ##
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Viewcount: seq [[1, 3500]; [2, 100]]
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// - Checkpoint: 3650L
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// -----------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// = Cost: 162.0M
+</span></span></span></code></pre></div><p>This further reduces costs by more than 2/3th. The optimization makes
 the code a bit more elaborate, but not necessarily that more complex -
-it&rsquo;s still a local optimization.</p>
-<h2 id="conclusion">Conclusion</h2>
-<p>In three steps, we brought cost down from 7250 execution units to only
-162 units. That makes me a 44x engineer, right?</p>
-<p>In general, storage is one of the slowest components of your system.
+it&rsquo;s still a local optimization.</p><h2 id=conclusion>Conclusion<a hidden class=anchor aria-hidden=true href=#conclusion>#</a></h2><p>In three steps, we brought cost down from 7250 execution units to only
+162 units. That makes me a 44x engineer, right?</p><p>In general, storage is one of the slowest components of your system.
 Making your system faster often involves making it do less work.
 Avoiding waste by batching and some more work up front, can make a big
-impact when you want to make your projection faster.</p>
-<p>You can find the complete F# script
-<a href="https://gist.github.com/JefClaes/215d202fcdf9aa58968b92a129241292">here</a>.</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2017  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+impact when you want to make your projection faster.</p><p>You can find the complete F# script
+<a href=https://gist.github.com/JefClaes/215d202fcdf9aa58968b92a129241292>here</a>.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2017/12/passing-aws-certified-solutions.html><span class=title>« Prev</span>
+<span>Passing the AWS Certified Solutions Architect exam</span>
+</a><a class=next href=https://jefclaes.be/2017/07/from-human-decisions-to-suggestions-to.html><span class=title>Next »</span>
+<span>From human decisions, to suggestions to automated decisions</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

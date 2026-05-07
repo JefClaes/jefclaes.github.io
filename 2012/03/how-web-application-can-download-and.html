@@ -1,175 +1,82 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>How a web application can download and store over 2GB without you even knowing it - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="How a web application can download and store over 2GB without you even knowing it">
-<meta itemprop="description" content="I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.
-One of these experiments was testing the cache quota.
-Two weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.
-I reused that code to add hundreds of 7MB PDF files to the cache.">
-<meta itemprop="datePublished" content="2012-03-25T13:11:00&#43;02:00" />
-<meta itemprop="dateModified" content="2012-03-25T13:11:00&#43;02:00" />
-<meta itemprop="wordCount" content="366">
-
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="How a web application can download and store over 2GB without you even knowing it" />
-<meta property="og:description" content="I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.
-One of these experiments was testing the cache quota.
-Two weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.
-I reused that code to add hundreds of 7MB PDF files to the cache." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2012/03/how-web-application-can-download-and.html" />
-<meta property="article:published_time" content="2012-03-25T13:11:00+02:00" />
-<meta property="article:modified_time" content="2012-03-25T13:11:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="How a web application can download and store over 2GB without you even knowing it"/>
-<meta name="twitter:description" content="I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.
-One of these experiments was testing the cache quota.
-Two weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.
-I reused that code to add hundreds of 7MB PDF files to the cache."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">25</span>
-							<span class="rest">Mar 2012</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">How a web application can download and store over 2GB without you even knowing it</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>I have been experimenting with the <a href="http://www.w3.org/TR/html5/offline.html">HTML5 offline application
-cache</a> some more over the last
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>How a web application can download and store over 2GB without you even knowing it | Jef Claes</title><meta name=keywords content="code"><meta name=description content='I have been experimenting with the HTML5 offline application
+cache some more over the last
 few days, doing boundary tests in an attempt to learn more about browser
-behaviour in edge cases.</p>
-<p>One of these experiments was testing the cache quota.</p>
-<p>Two weeks ago, I blogged about <a href="http://jclaes.blogspot.com/2012/03/html5-offline-web-applications-as.html">generating and serving an offline
-application manifest using ASP.NET MVC</a>.</p>
-<p>I reused that code to add hundreds of 7MB PDF files to the cache.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">public</span> <span style="color:#268bd2">ActionResult</span> <span style="color:#268bd2">Manifest</span>()
+behaviour in edge cases.
+One of these experiments was testing the cache quota.
+Two weeks ago, I blogged about generating and serving an offline
+application manifest using ASP.NET MVC.
+I reused that code to add hundreds of 7MB PDF files to the cache.
+public ActionResult Manifest()
 {     
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">cacheResources</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">List</span>&lt;<span style="color:#859900;font-weight:bold">string</span>&gt;();
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">n</span> = <span style="color:#2aa198;font-weight:bold">300</span>; <span style="color:#93a1a1;font-style:italic">// Play with this number
-</span><span style="color:#93a1a1;font-style:italic"></span>
-    <span style="color:#859900">for</span> (<span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">i</span> = <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">n</span>; <span style="color:#268bd2">i</span>++)
-        <span style="color:#268bd2">cacheResources</span>.<span style="color:#268bd2">Add</span>(<span style="color:#2aa198">&#34;Content/&#34;</span> + <span style="color:#268bd2">Url</span>.<span style="color:#268bd2">Content</span>(<span style="color:#2aa198">&#34;book.pdf?&#34;</span> + <span style="color:#268bd2">i</span>));
+    var cacheResources = new List<string>();
+    var n = 300; // Play with this number
 
-    <span style="color:#859900;font-weight:bold">var</span> <span style="color:#268bd2">manifestResult</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">ManifestResult</span>(<span style="color:#2aa198">&#34;1&#34;</span>)
+    for (var i = 0; i < n; i++)
+        cacheResources.Add("Content/" + Url.Content("book.pdf?" + i));
+
+    var manifestResult = new ManifestResult("1")
     {
-        <span style="color:#268bd2">NetworkResources</span> = <span style="color:#859900">new</span> <span style="color:#859900;font-weight:bold">string</span>[] { <span style="color:#2aa198">&#34;*&#34;</span> },
-        <span style="color:#268bd2">CacheResources</span> = <span style="color:#268bd2">cacheResources</span>
+        NetworkResources = new string[] { "*" },
+        CacheResources = cacheResources
     };
 
-    <span style="color:#859900">return</span> <span style="color:#268bd2">manifestResult</span>;
+    return manifestResult;
 }
-</code></pre></div><p>I initially tried adding 1000 PDF files to the cache, but this threw an
-error: <code>Chrome failed to commit the new cache to the storage, because the quota would be exceeded.</code></p>
-<p>After lowering the number of files several times, I hit the sweet spot.
-I could add 300 PDF files to the cache without breaking it.</p>
-<p>Looking into <code>chrome://appcache-internals/</code>, I can see the size of the
-cache being a whopping <strong>2.2GB</strong> now for one single web application.</p>
-<p><a href="/post/images/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-appcache-internals.PNG"><img src="/post/images/thumbnails/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-appcache-internals.PNG" alt=""></a></p>
-<p>As a user, I had no idea that the website I&rsquo;m browsing is downloading a
+I initially tried adding 1000 PDF files to the cache, but this threw an
+error: Chrome failed to commit the new cache to the storage, because the quota would be exceeded.'><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2012/03/how-web-application-can-download-and.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2012/03/how-web-application-can-download-and.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2012/03/how-web-application-can-download-and.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="How a web application can download and store over 2GB without you even knowing it"><meta property="og:description" content='I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.
+One of these experiments was testing the cache quota.
+Two weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.
+I reused that code to add hundreds of 7MB PDF files to the cache.
+public ActionResult Manifest() { var cacheResources = new List<string>(); var n = 300; // Play with this number for (var i = 0; i < n; i++) cacheResources.Add("Content/" + Url.Content("book.pdf?" + i)); var manifestResult = new ManifestResult("1") { NetworkResources = new string[] { "*" }, CacheResources = cacheResources }; return manifestResult; } I initially tried adding 1000 PDF files to the cache, but this threw an error: Chrome failed to commit the new cache to the storage, because thequota would be exceeded.'><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2012-03-25T13:11:00+02:00"><meta property="article:modified_time" content="2012-03-25T13:11:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="How a web application can download and store over 2GB without you even knowing it"><meta name=twitter:description content='I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.
+One of these experiments was testing the cache quota.
+Two weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.
+I reused that code to add hundreds of 7MB PDF files to the cache.
+public ActionResult Manifest() { var cacheResources = new List<string>(); var n = 300; // Play with this number for (var i = 0; i < n; i++) cacheResources.Add("Content/" + Url.Content("book.pdf?" + i)); var manifestResult = new ManifestResult("1") { NetworkResources = new string[] { "*" }, CacheResources = cacheResources }; return manifestResult; } I initially tried adding 1000 PDF files to the cache, but this threw an error: Chrome failed to commit the new cache to the storage, because thequota would be exceeded.'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"How a web application can download and store over 2GB without you even knowing it","item":"https://jefclaes.be/2012/03/how-web-application-can-download-and.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"How a web application can download and store over 2GB without you even knowing it","name":"How a web application can download and store over 2GB without you even knowing it","description":"I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.\nOne of these experiments was testing the cache quota.\nTwo weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.\nI reused that code to add hundreds of 7MB PDF files to the cache.\npublic ActionResult Manifest() { var cacheResources = new List\u0026lt;string\u0026gt;(); var n = 300; // Play with this number for (var i = 0; i \u0026lt; n; i++) cacheResources.Add(\u0026#34;Content/\u0026#34; + Url.Content(\u0026#34;book.pdf?\u0026#34; + i)); var manifestResult = new ManifestResult(\u0026#34;1\u0026#34;) { NetworkResources = new string[] { \u0026#34;*\u0026#34; }, CacheResources = cacheResources }; return manifestResult; } I initially tried adding 1000 PDF files to the cache, but this threw an error: Chrome failed to commit the new cache to the storage, because the\rquota would be exceeded.\n","keywords":["code"],"articleBody":"I have been experimenting with the HTML5 offline application cache some more over the last few days, doing boundary tests in an attempt to learn more about browser behaviour in edge cases.\nOne of these experiments was testing the cache quota.\nTwo weeks ago, I blogged about generating and serving an offline application manifest using ASP.NET MVC.\nI reused that code to add hundreds of 7MB PDF files to the cache.\npublic ActionResult Manifest() { var cacheResources = new List\u003cstring\u003e(); var n = 300; // Play with this number for (var i = 0; i \u003c n; i++) cacheResources.Add(\"Content/\" + Url.Content(\"book.pdf?\" + i)); var manifestResult = new ManifestResult(\"1\") { NetworkResources = new string[] { \"*\" }, CacheResources = cacheResources }; return manifestResult; } I initially tried adding 1000 PDF files to the cache, but this threw an error: Chrome failed to commit the new cache to the storage, because the\rquota would be exceeded.\nAfter lowering the number of files several times, I hit the sweet spot. I could add 300 PDF files to the cache without breaking it.\nLooking into chrome://appcache-internals/, I can see the size of the cache being a whopping 2.2GB now for one single web application.\nAs a user, I had no idea that the website I’m browsing is downloading a suspicious amount of data in the background. Chrome (17.0.963.83), nor any other desktop browser that I know of, warns me. I would expect the browser to ask for my permission when a website wants to download and store such an excessive amount of data on my machine.\nSomething else I noticed, is that other sites now fail to commit anything to the application cache due to the browser-wide quota being exceeded. I’m pretty sure this ‘first browsed, first reserved’ approach will be a source of frustration in the future.\nTo handle this scenario we could use the applicationCache API to listen for quota errors, and inform the user to browse to chrome://appcache-internals/ and remove other caches in favor of the new one. This feels sketchy though; shouldn’t the browser intervene in a more elegant way here?\nWhat are your thoughts? What would you want your browser to do in these scenarios?\n","wordCount":"366","inLanguage":"en","datePublished":"2012-03-25T13:11:00+02:00","dateModified":"2012-03-25T13:11:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2012/03/how-web-application-can-download-and.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">How a web application can download and store over 2GB without you even knowing it</h1><div class=post-meta><span title='2012-03-25 13:11:00 +0200 CEST'>March 25, 2012</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>I have been experimenting with the <a href=http://www.w3.org/TR/html5/offline.html>HTML5 offline application
+cache</a> some more over the last
+few days, doing boundary tests in an attempt to learn more about browser
+behaviour in edge cases.</p><p>One of these experiments was testing the cache quota.</p><p>Two weeks ago, I blogged about <a href=http://jclaes.blogspot.com/2012/03/html5-offline-web-applications-as.html>generating and serving an offline
+application manifest using ASP.NET MVC</a>.</p><p>I reused that code to add hundreds of 7MB PDF files to the cache.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>public</span> ActionResult Manifest()
+</span></span><span style=display:flex><span>{     
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> cacheResources = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>string</span>&gt;();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> n = <span style=color:#ae81ff>300</span>; <span style=color:#75715e>// Play with this number</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>var</span> i = <span style=color:#ae81ff>0</span>; i &lt; n; i++)
+</span></span><span style=display:flex><span>        cacheResources.Add(<span style=color:#e6db74>&#34;Content/&#34;</span> + Url.Content(<span style=color:#e6db74>&#34;book.pdf?&#34;</span> + i));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> manifestResult = <span style=color:#66d9ef>new</span> ManifestResult(<span style=color:#e6db74>&#34;1&#34;</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        NetworkResources = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>string</span>[] { <span style=color:#e6db74>&#34;*&#34;</span> },
+</span></span><span style=display:flex><span>        CacheResources = cacheResources
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> manifestResult;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>I initially tried adding 1000 PDF files to the cache, but this threw an
+error: <code>Chrome failed to commit the new cache to the storage, because the
+quota would be exceeded.</code></p><p>After lowering the number of files several times, I hit the sweet spot.
+I could add 300 PDF files to the cache without breaking it.</p><p>Looking into <code>chrome://appcache-internals/</code>, I can see the size of the
+cache being a whopping <strong>2.2GB</strong> now for one single web application.</p><p><a href=/post/images/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-appcache-internals.PNG><img loading=lazy src=/post/images/thumbnails/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-appcache-internals.PNG></a></p><p>As a user, I had no idea that the website I&rsquo;m browsing is downloading a
 suspicious amount of data in the background. Chrome (17.0.963.83), nor
 any other desktop browser that I know of, warns me. I would expect the
 browser to ask for my permission when a website wants to download and
-store such an excessive amount of data on my machine.</p>
-<p>Something else I noticed, is that other sites now fail to commit
+store such an excessive amount of data on my machine.</p><p>Something else I noticed, is that other sites now fail to commit
 anything to the application cache due to the browser-wide quota being
 exceeded. I&rsquo;m pretty sure this &lsquo;first browsed, first reserved&rsquo; approach
-will be a source of frustration in the future.<br>
-To handle this scenario we could use the applicationCache API to listen
+will be a source of frustration in the future.<br>To handle this scenario we could use the applicationCache API to listen
 for quota errors, and inform the user to browse to
 <code>chrome://appcache-internals/</code> and remove other caches in favor of the
 new one. This feels sketchy though; shouldn&rsquo;t the browser intervene in a
-more elegant way here?</p>
-<p><a href="/post/images/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-exceedquote.PNG"><img src="/post/images/thumbnails/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-exceedquote.PNG" alt=""></a></p>
-<p><strong>What are your thoughts? What would you want your browser to do in
-these scenarios?</strong></p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2012  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+more elegant way here?</p><p><a href=/post/images/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-exceedquote.PNG><img loading=lazy src=/post/images/thumbnails/2012-03-25-how-a-web-application-can-download-and-store-over-2gb-without-you-even-knowing-it-exceedquote.PNG></a></p><p><strong>What are your thoughts? What would you want your browser to do in
+these scenarios?</strong></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2012/04/add-images-to-github-readme.html><span class=title>« Prev</span>
+<span>Add images to a GitHub readme</span>
+</a><a class=next href=https://jefclaes.be/2012/03/sent-from-my-phone.html><span class=title>Next »</span>
+<span>Sent from my phone</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

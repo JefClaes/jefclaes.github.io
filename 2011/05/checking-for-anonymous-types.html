@@ -1,150 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Checking for anonymous types - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Checking for anonymous types">
-<meta itemprop="description" content="Because I blogged about anonymous types last month, I thought following method would also make an interesting post.
-private static bool IsAnonymousType(Type type) { Debug.Assert(type != null, &#34;Type should not be null&#34;); // HACK: The only way to detect anonymous types right now.  return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) &amp;&amp; type.IsGenericType &amp;&amp; type.Name.Contains(&#34;AnonymousType&#34;) &amp;&amp; (type.Name.StartsWith(&#34;&lt;&gt;&#34;, StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith(&#34;VB$&#34;, StringComparison.OrdinalIgnoreCase)) &amp;&amp; (type.Attributes &amp; TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:">
-<meta itemprop="datePublished" content="2011-05-21T18:00:00&#43;02:00" />
-<meta itemprop="dateModified" content="2011-05-21T18:00:00&#43;02:00" />
-<meta itemprop="wordCount" content="195">
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Checking for anonymous types | Jef Claes</title><meta name=keywords content="code"><meta name=description content='Because I blogged about anonymous types last
+month, I thought following method would also make an interesting post.
+private static bool IsAnonymousType(Type type) {
+    Debug.Assert(type != null, "Type should not be null");
 
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="Checking for anonymous types" />
-<meta property="og:description" content="Because I blogged about anonymous types last month, I thought following method would also make an interesting post.
-private static bool IsAnonymousType(Type type) { Debug.Assert(type != null, &#34;Type should not be null&#34;); // HACK: The only way to detect anonymous types right now.  return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) &amp;&amp; type.IsGenericType &amp;&amp; type.Name.Contains(&#34;AnonymousType&#34;) &amp;&amp; (type.Name.StartsWith(&#34;&lt;&gt;&#34;, StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith(&#34;VB$&#34;, StringComparison.OrdinalIgnoreCase)) &amp;&amp; (type.Attributes &amp; TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2011/05/checking-for-anonymous-types.html" />
-<meta property="article:published_time" content="2011-05-21T18:00:00+02:00" />
-<meta property="article:modified_time" content="2011-05-21T18:00:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Checking for anonymous types"/>
-<meta name="twitter:description" content="Because I blogged about anonymous types last month, I thought following method would also make an interesting post.
-private static bool IsAnonymousType(Type type) { Debug.Assert(type != null, &#34;Type should not be null&#34;); // HACK: The only way to detect anonymous types right now.  return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) &amp;&amp; type.IsGenericType &amp;&amp; type.Name.Contains(&#34;AnonymousType&#34;) &amp;&amp; (type.Name.StartsWith(&#34;&lt;&gt;&#34;, StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith(&#34;VB$&#34;, StringComparison.OrdinalIgnoreCase)) &amp;&amp; (type.Attributes &amp; TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:"/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">21</span>
-							<span class="rest">May 2011</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Checking for anonymous types</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Because I blogged about anonymous types <a href="https://jefclaes.be/2011/04/anonymous-type-equality-follow-up.html">last
-month</a>, I thought following method would also make an interesting post.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">private</span> <span style="color:#859900">static</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">IsAnonymousType</span>(<span style="color:#268bd2">Type</span> <span style="color:#268bd2">type</span>) {
-    <span style="color:#268bd2">Debug</span>.<span style="color:#268bd2">Assert</span>(<span style="color:#268bd2">type</span> != <span style="color:#859900">null</span>, <span style="color:#2aa198">&#34;Type should not be null&#34;</span>);
-
-    <span style="color:#93a1a1;font-style:italic">// HACK: The only way to detect anonymous types right now.
-</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">return</span> <span style="color:#268bd2">Attribute</span>.<span style="color:#268bd2">IsDefined</span>(<span style="color:#268bd2">type</span>, <span style="color:#859900">typeof</span>(<span style="color:#268bd2">CompilerGeneratedAttribute</span>), <span style="color:#859900">false</span>)
-            &amp;&amp; <span style="color:#268bd2">type</span>.<span style="color:#268bd2">IsGenericType</span> 
-            &amp;&amp; <span style="color:#268bd2">type</span>.<span style="color:#268bd2">Name</span>.<span style="color:#268bd2">Contains</span>(<span style="color:#2aa198">&#34;AnonymousType&#34;</span>)
-            &amp;&amp; (<span style="color:#268bd2">type</span>.<span style="color:#268bd2">Name</span>.<span style="color:#268bd2">StartsWith</span>(<span style="color:#2aa198">&#34;&lt;&gt;&#34;</span>, <span style="color:#268bd2">StringComparison</span>.<span style="color:#268bd2">OrdinalIgnoreCase</span>) ||
-                <span style="color:#268bd2">type</span>.<span style="color:#268bd2">Name</span>.<span style="color:#268bd2">StartsWith</span>(<span style="color:#2aa198">&#34;VB$&#34;</span>, <span style="color:#268bd2">StringComparison</span>.<span style="color:#268bd2">OrdinalIgnoreCase</span>))
-            &amp;&amp; (<span style="color:#268bd2">type</span>.<span style="color:#268bd2">Attributes</span> &amp; <span style="color:#268bd2">TypeAttributes</span>.<span style="color:#268bd2">NotPublic</span>) == <span style="color:#268bd2">TypeAttributes</span>.<span style="color:#268bd2">NotPublic</span>;
+    // HACK: The only way to detect anonymous types right now.
+    return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
+            && type.IsGenericType 
+            && type.Name.Contains("AnonymousType")
+            && (type.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase) ||
+                type.Name.StartsWith("VB$", StringComparison.OrdinalIgnoreCase))
+            && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
 }
-</code></pre></div><p>For a type to be anonymous:</p>
-<ul>
-<li>It should be marked with the <a href="http://msdn.microsoft.com/en-us/library/system.runtime.compilerservices.compilergeneratedattribute.aspx">CompilerGenerated</a> attribute</li>
-<li>It should be a generic type</li>
-<li>Its name should contain &ldquo;AnonymousType&rdquo;</li>
-<li>Its name should start with &ldquo;&lt;&gt;&rdquo; or &ldquo;VB$&rdquo;</li>
-<li>It shouldn&rsquo;t be publicly accessible</li>
-</ul>
-<p>A little fun fact is that the VB and C# compiler generate different
-type names. The C# compiler makes the type name start with &ldquo;&lt;&gt;&rdquo;
+For a type to be anonymous:'><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2011/05/checking-for-anonymous-types.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2011/05/checking-for-anonymous-types.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2011/05/checking-for-anonymous-types.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Checking for anonymous types"><meta property="og:description" content='Because I blogged about anonymous types last month, I thought following method would also make an interesting post.
+private static bool IsAnonymousType(Type type) { Debug.Assert(type != null, "Type should not be null"); // HACK: The only way to detect anonymous types right now. return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) && type.IsGenericType && type.Name.Contains("AnonymousType") && (type.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith("VB$", StringComparison.OrdinalIgnoreCase)) && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:'><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2011-05-21T18:00:00+02:00"><meta property="article:modified_time" content="2011-05-21T18:00:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="Checking for anonymous types"><meta name=twitter:description content='Because I blogged about anonymous types last month, I thought following method would also make an interesting post.
+private static bool IsAnonymousType(Type type) { Debug.Assert(type != null, "Type should not be null"); // HACK: The only way to detect anonymous types right now. return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) && type.IsGenericType && type.Name.Contains("AnonymousType") && (type.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith("VB$", StringComparison.OrdinalIgnoreCase)) && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Checking for anonymous types","item":"https://jefclaes.be/2011/05/checking-for-anonymous-types.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Checking for anonymous types","name":"Checking for anonymous types","description":"Because I blogged about anonymous types last month, I thought following method would also make an interesting post.\nprivate static bool IsAnonymousType(Type type) { Debug.Assert(type != null, \u0026#34;Type should not be null\u0026#34;); // HACK: The only way to detect anonymous types right now. return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) \u0026amp;\u0026amp; type.IsGenericType \u0026amp;\u0026amp; type.Name.Contains(\u0026#34;AnonymousType\u0026#34;) \u0026amp;\u0026amp; (type.Name.StartsWith(\u0026#34;\u0026lt;\u0026gt;\u0026#34;, StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith(\u0026#34;VB$\u0026#34;, StringComparison.OrdinalIgnoreCase)) \u0026amp;\u0026amp; (type.Attributes \u0026amp; TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:\n","keywords":["code"],"articleBody":"Because I blogged about anonymous types last month, I thought following method would also make an interesting post.\nprivate static bool IsAnonymousType(Type type) { Debug.Assert(type != null, \"Type should not be null\"); // HACK: The only way to detect anonymous types right now. return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false) \u0026\u0026 type.IsGenericType \u0026\u0026 type.Name.Contains(\"AnonymousType\") \u0026\u0026 (type.Name.StartsWith(\"\u003c\u003e\", StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith(\"VB$\", StringComparison.OrdinalIgnoreCase)) \u0026\u0026 (type.Attributes \u0026 TypeAttributes.NotPublic) == TypeAttributes.NotPublic; } For a type to be anonymous:\nIt should be marked with the CompilerGenerated attribute It should be a generic type Its name should contain “AnonymousType” Its name should start with “\u003c\u003e” or “VB$” It shouldn’t be publicly accessible A little fun fact is that the VB and C# compiler generate different type names. The C# compiler makes the type name start with “\u003c\u003e” and the VB compiler uses “VB$”. Both smart safeguards, because the compiler doesn’t allow us to use “\u003c\u003e” or “$” while defining type names. I find the C# way a tad more elegant though.\nI stumbled upon this beauty while browsing the [ASP.NET MVC source] (http://aspnet.codeplex.com/) (System.Web.Helpers.ObjectVisitor). Because there is no direct way to detect anonymous types yet, I’m pretty sure this is the best implementation out there.\n","wordCount":"195","inLanguage":"en","datePublished":"2011-05-21T18:00:00+02:00","dateModified":"2011-05-21T18:00:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2011/05/checking-for-anonymous-types.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Checking for anonymous types</h1><div class=post-meta><span title='2011-05-21 18:00:00 +0200 CEST'>May 21, 2011</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Because I blogged about anonymous types <a href=https://jefclaes.be/2011/04/anonymous-type-equality-follow-up.html>last
+month</a>, I thought following method would also make an interesting post.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>bool</span> IsAnonymousType(Type type) {
+</span></span><span style=display:flex><span>    Debug.Assert(type != <span style=color:#66d9ef>null</span>, <span style=color:#e6db74>&#34;Type should not be null&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// HACK: The only way to detect anonymous types right now.</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> Attribute.IsDefined(type, <span style=color:#66d9ef>typeof</span>(CompilerGeneratedAttribute), <span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>            &amp;&amp; type.IsGenericType 
+</span></span><span style=display:flex><span>            &amp;&amp; type.Name.Contains(<span style=color:#e6db74>&#34;AnonymousType&#34;</span>)
+</span></span><span style=display:flex><span>            &amp;&amp; (type.Name.StartsWith(<span style=color:#e6db74>&#34;&lt;&gt;&#34;</span>, StringComparison.OrdinalIgnoreCase) ||
+</span></span><span style=display:flex><span>                type.Name.StartsWith(<span style=color:#e6db74>&#34;VB$&#34;</span>, StringComparison.OrdinalIgnoreCase))
+</span></span><span style=display:flex><span>            &amp;&amp; (type.Attributes &amp; TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>For a type to be anonymous:</p><ul><li>It should be marked with the <a href=http://msdn.microsoft.com/en-us/library/system.runtime.compilerservices.compilergeneratedattribute.aspx>CompilerGenerated</a> attribute</li><li>It should be a generic type</li><li>Its name should contain &ldquo;AnonymousType&rdquo;</li><li>Its name should start with &ldquo;&lt;>&rdquo; or &ldquo;VB$&rdquo;</li><li>It shouldn&rsquo;t be publicly accessible</li></ul><p>A little fun fact is that the VB and C# compiler generate different
+type names. The C# compiler makes the type name start with &ldquo;&lt;>&rdquo;
 and the VB compiler uses &ldquo;VB$&rdquo;. Both smart safeguards, because the
-compiler doesn&rsquo;t allow us to use &ldquo;&lt;&gt;&rdquo; or &ldquo;$&rdquo; while defining type
-names. I find the C# way a tad more elegant though.</p>
-<p>I stumbled upon this beauty while browsing the [ASP.NET MVC source] (<a href="http://aspnet.codeplex.com/">http://aspnet.codeplex.com/</a>) (System.Web.Helpers.ObjectVisitor).
+compiler doesn&rsquo;t allow us to use &ldquo;&lt;>&rdquo; or &ldquo;$&rdquo; while defining type
+names. I find the C# way a tad more elegant though.</p><p>I stumbled upon this beauty while browsing the [ASP.NET MVC source] (<a href=http://aspnet.codeplex.com/>http://aspnet.codeplex.com/</a>) (System.Web.Helpers.ObjectVisitor).
 Because there is no direct way to detect anonymous types yet, I&rsquo;m pretty
-sure this is the best implementation out there.</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2011  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+sure this is the best implementation out there.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2011/06/book-review-more-joel-on-software.html><span class=title>« Prev</span>
+<span>Book review: More Joel on Software</span>
+</a><a class=next href=https://jefclaes.be/2011/05/my-thoughts-on-webmatrix/><span class=title>Next »</span>
+<span>My thoughts on WebMatrix</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

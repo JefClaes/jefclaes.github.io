@@ -1,178 +1,79 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Event source all the things? - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Event source all the things?">
-<meta itemprop="description" content="Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I&rsquo;ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table.">
-<meta itemprop="datePublished" content="2013-11-03T18:45:00&#43;01:00" />
-<meta itemprop="dateModified" content="2013-11-03T18:45:00&#43;01:00" />
-<meta itemprop="wordCount" content="1146">
-
-
-
-<meta itemprop="keywords" content="opinion," /><meta property="og:title" content="Event source all the things?" />
-<meta property="og:description" content="Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I&rsquo;ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2013/11/event-source-all-things.html" />
-<meta property="article:published_time" content="2013-11-03T18:45:00+01:00" />
-<meta property="article:modified_time" content="2013-11-03T18:45:00+01:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Event source all the things?"/>
-<meta name="twitter:description" content="Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I&rsquo;ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">03</span>
-							<span class="rest">Nov 2013</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Event source all the things?</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Having covered
-<a href="http://www.jefclaes.be/2013/10/event-projections.html">projections</a>
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Event source all the things? | Jef Claes</title><meta name=keywords content="opinion"><meta name=description content="Having covered
+projections
 last week, I think I have come full circle in these posts that turned
 out to be a small preliminary series on event sourcing. Even though
 there are still a vast amount of nuances to discover, I think I&rsquo;ve
 captured the gist of it. Even without running an event sourced system in
 production - I feel as if I somewhat have an idea of what event sourcing
-can bring to the table.</p>
-<p>Event sourcing gives you a complete history of events that caused an
+can bring to the table."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2013/11/event-source-all-things.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2013/11/event-source-all-things.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2013/11/event-source-all-things.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Event source all the things?"><meta property="og:description" content="Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I’ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2013-11-03T18:45:00+01:00"><meta property="article:modified_time" content="2013-11-03T18:45:00+01:00"><meta property="article:tag" content="Opinion"><meta name=twitter:card content="summary"><meta name=twitter:title content="Event source all the things?"><meta name=twitter:description content="Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I’ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Event source all the things?","item":"https://jefclaes.be/2013/11/event-source-all-things.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Event source all the things?","name":"Event source all the things?","description":"Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I\u0026rsquo;ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table.\n","keywords":["opinion"],"articleBody":"Having covered projections last week, I think I have come full circle in these posts that turned out to be a small preliminary series on event sourcing. Even though there are still a vast amount of nuances to discover, I think I’ve captured the gist of it. Even without running an event sourced system in production - I feel as if I somewhat have an idea of what event sourcing can bring to the table.\nEvent sourcing gives you a complete history of events that caused an aggregate to be in its current state. In some scenarios this will add an enormous amount of value, in other scenarios it will give you nothing - it might even steal time and effort.\nThe first thing you do - before even considering implementing event sourcing - is talking to your business. Do they feel as if events are a natural way to represent what’s going on in their domain? Event sourcing is a lot more than just a technical implementation detail, discovering and understanding all of what goes on in a domain is a big investment - from both sides. Is it worth the trouble?\nIn my first job I worked on software for fire departments. I just now realize in how many bits of our solution event sourcing could have helped us:\nthe life cycle of a vehicle assigned to an emergency: vehicle dispatched, vehicle left the station, vehicle en route, vehicle arrived on the scene, vehicle back in the station… a person’s career: person was promoted, person was detached to another station, person learned a new skill… a shift’s schedule: person attached to unit, person returned to person pool, unit dispatched… This data had to be made available in a set of diverse read models. Getting the data out was complex at times, often even impossible. A lot of these changes had to be propagated to external systems; there was no way to get that info out in real-time, and external systems had no notion of what happened.\nIn one of the functionalities of a system I’m currently working on, users also wanted to know what happened in the past, but for completely different reasons. Being in a financial context, they wanted to know who was responsible for changing system settings. Here it’s not an event log they need, but a simple audit trail.\nIf it is just a passive log your business wants, you can get away with cheaper alternatives; a command journal, an audit trail and so on.\nBenefits Event sourcing goes hand-in-hand with Domain Driven Design. Events are a great tool to go from a structural model to a behavioural model, helping you to capture the true essence of a domain model.\nBuilding and maintaining an event store should be doable. It’s an append-only data model, storing serialized DTO’s with some meta data. This makes - compared to ORM’s and relational databases - tooling easier as well.\nIn traditional systems, you have to keep a lot of things in your head at once; how do I write my data, but also how do I query my data, and more importantly how do I get my data out in all these different use cases without making things too hard. In event sourced systems, separating writes from reads makes for more granular bits, easing the cognitive load.\nEvents can be projected into anything: a relational database, a document store, memory, files… This allows you to build a read model for each separate use case, while also giving you a lot of freedom in how you’re going to persist them.\nYou can replay projections, rebuilding a read model from scratch. Forget about difficult data migrations.\nTesting feels consistent and very complete. A test will assert if all the expected events were raised, but will also implicitly assert that unexpected events were not raised. Testing projections is also straight-forward.\nEvents provide a natural way of integrating with other systems. Committed events can be published to external subscribers.\nTroubleshooting becomes easier since a developer can copy an event stream from production, and replay it locally - reproducing the exact issue without jumping through hoops getting the system in a specific state.\nInstead of patching corrupted production data directly, you can send a compensating event or fix the projection and replay everything. This way nothing gets lost, and consistency between code and outcome is guaranteed.\nDownsides Defining events is hard. Defining good events takes a lot of practice and insight. If you’re forcing a structural model into a behavioural one, it might even be impossible. So don’t even consider turning CRUD into an event sourced model.\nThere are a few places you need to be on the look out for performance bottlenecks. Event streams of long lived aggregates might grow very big. Loading a giant event stream from a data store might take a while - snapshots can help here. Projecting giant event streams might get you into trouble too - how long will it take to rebuild your read model, will it even fit into memory? Making projections immediate consistent might become a problem if you do a lot of them. Parallelization or giving up on immediate consistency might bring solace.\nEvents don’t change, versioning might get awkward. Are you going to create a new event type for each change, or will you relax deserialization? Or maybe you want to implement event migrations?\nSince you’re persisting multiple models; events and one or more read models, you’re going to consume more storage, which will cost you.\nAdaptation in the wild Although there are - from a a business and engineering perspective - some good arguments to be made for event sourcing, those arguments only apply to a modest percentage of projects. Even when there’s a strong case to be made for event sourcing, there are very few people with actual experience implementing an event sourced system and prescriptive frameworks that you can just drop into a project and feel good about, are lacking. Most won’t even care about event sourcing to start with, but even if they do, it’s a fight upstream; it introduces a risk most might not be comfortable with.\nHaving said that, there are some really good projects out there that are steadily gaining popularity and maturity. Pioneers in the field are sharing and documenting their experiences, lowering the barriers for others. Things are moving for sure.\nAs always, event sourcing is not a paradigm to blindly apply to each and every scenario, but definitely one worth considering.\nSince I’m not running any of it in production, tell me what I’m missing, there must be more things that turn out to be harder than they sound at first right? If you’re not running it in production, but thinking about it, what are some of your concerns? What are your predictions for the future of event sourcing?\n","wordCount":"1146","inLanguage":"en","datePublished":"2013-11-03T18:45:00+01:00","dateModified":"2013-11-03T18:45:00+01:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2013/11/event-source-all-things.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Event source all the things?</h1><div class=post-meta><span title='2013-11-03 18:45:00 +0100 CET'>November 3, 2013</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Having covered
+<a href=http://www.jefclaes.be/2013/10/event-projections.html>projections</a>
+last week, I think I have come full circle in these posts that turned
+out to be a small preliminary series on event sourcing. Even though
+there are still a vast amount of nuances to discover, I think I&rsquo;ve
+captured the gist of it. Even without running an event sourced system in
+production - I feel as if I somewhat have an idea of what event sourcing
+can bring to the table.</p><p>Event sourcing gives you a complete history of events that caused an
 aggregate to be in its current state. In some scenarios this will add an
 enormous amount of value, in other scenarios it will give you nothing -
-it might even steal time and effort.</p>
-<p>The first thing you do - before even considering implementing event
+it might even steal time and effort.</p><p>The first thing you do - before even considering implementing event
 sourcing - is talking to your business. Do they feel as if events are a
 natural way to represent what&rsquo;s going on in their domain? Event sourcing
 is a lot more than just a technical implementation detail, discovering
 and understanding all of what goes on in a domain is a big investment -
-from both sides. Is it worth the trouble?</p>
-<p>In my first job I worked on software for fire departments. I just now
+from both sides. Is it worth the trouble?</p><p>In my first job I worked on software for fire departments. I just now
 realize in how many bits of our solution event sourcing could have
-helped us:</p>
-<ul>
-<li>the life cycle of a vehicle assigned to an emergency: vehicle dispatched, vehicle left the station, vehicle en route, vehicle arrived on the scene, vehicle back in the station&hellip;</li>
-<li>a person&rsquo;s career: person was promoted, person was detached to another station, person learned a new skill&hellip;</li>
-<li>a shift&rsquo;s schedule: person attached to unit, person returned to person pool, unit dispatched&hellip;</li>
-</ul>
-<p>This data had to be made available in a set of diverse read models.
+helped us:</p><ul><li>the life cycle of a vehicle assigned to an emergency: vehicle dispatched, vehicle left the station, vehicle en route, vehicle arrived on the scene, vehicle back in the station&mldr;</li><li>a person&rsquo;s career: person was promoted, person was detached to another station, person learned a new skill&mldr;</li><li>a shift&rsquo;s schedule: person attached to unit, person returned to person pool, unit dispatched&mldr;</li></ul><p>This data had to be made available in a set of diverse read models.
 Getting the data out was complex at times, often even impossible. A lot
 of these changes had to be propagated to external systems; there was no
 way to get that info out in real-time, and external systems had no
-notion of <em>what</em> happened.</p>
-<p>In one of the functionalities of a system I&rsquo;m currently working on,
+notion of <em>what</em> happened.</p><p>In one of the functionalities of a system I&rsquo;m currently working on,
 users also wanted to know what happened in the past, but for completely
 different reasons. Being in a financial context, they wanted to know who
 was responsible for changing system settings. Here it&rsquo;s not an event log
-they need, but a simple audit trail.</p>
-<p>If it is just a passive log your business wants, you can get away with
-cheaper alternatives; a command journal, an audit trail and so on.</p>
-<h3 id="benefits">Benefits</h3>
-<p>Event sourcing goes hand-in-hand with Domain Driven Design. Events are
+they need, but a simple audit trail.</p><p>If it is just a passive log your business wants, you can get away with
+cheaper alternatives; a command journal, an audit trail and so on.</p><h3 id=benefits>Benefits<a hidden class=anchor aria-hidden=true href=#benefits>#</a></h3><p>Event sourcing goes hand-in-hand with Domain Driven Design. Events are
 a great tool to go from a structural model to a behavioural model,
-helping you to capture the true essence of a domain model.</p>
-<p>Building and maintaining an event store should be doable. It&rsquo;s an
+helping you to capture the true essence of a domain model.</p><p>Building and maintaining an event store should be doable. It&rsquo;s an
 append-only data model, storing serialized DTO&rsquo;s with some meta data.
 This makes - compared to ORM&rsquo;s and relational databases - tooling easier
-as well.</p>
-<p>In traditional systems, you have to keep a lot of things in your head at
+as well.</p><p>In traditional systems, you have to keep a lot of things in your head at
 once; how do I write my data, but also how do I query my data, and more
 importantly how do I get my data out in all these different use cases
 without making things too hard. In event sourced systems, separating
 writes from reads makes for more granular bits, easing the cognitive
-load.</p>
-<p>Events can be projected into anything: a relational database, a document
-store, memory, files&hellip; This allows you to build a read model for each
+load.</p><p>Events can be projected into anything: a relational database, a document
+store, memory, files&mldr; This allows you to build a read model for each
 separate use case, while also giving you a lot of freedom in how you&rsquo;re
-going to persist them.</p>
-<p>You can replay projections, rebuilding a read model from scratch. Forget
-about difficult data migrations.</p>
-<p>Testing feels consistent and very complete. A test will assert if all
+going to persist them.</p><p>You can replay projections, rebuilding a read model from scratch. Forget
+about difficult data migrations.</p><p>Testing feels consistent and very complete. A test will assert if all
 the expected events were raised, but will also implicitly assert that
 unexpected events were <em>not</em> raised. Testing projections is also
-straight-forward.</p>
-<p>Events provide a natural way of integrating with other systems.
-Committed events can be published to external subscribers.</p>
-<p>Troubleshooting becomes easier since a developer can copy an event
+straight-forward.</p><p>Events provide a natural way of integrating with other systems.
+Committed events can be published to external subscribers.</p><p>Troubleshooting becomes easier since a developer can copy an event
 stream from production, and replay it locally - reproducing the exact
 issue without jumping through hoops getting the system in a specific
-state.</p>
-<p>Instead of patching corrupted production data directly, you can send a
+state.</p><p>Instead of patching corrupted production data directly, you can send a
 compensating event or fix the projection and replay everything. This way
 nothing gets lost, and consistency between code and outcome is
-guaranteed.</p>
-<h3 id="downsides">Downsides</h3>
-<p>Defining events is hard. Defining good events takes a lot of practice
+guaranteed.</p><h3 id=downsides>Downsides<a hidden class=anchor aria-hidden=true href=#downsides>#</a></h3><p>Defining events is hard. Defining good events takes a lot of practice
 and insight. If you&rsquo;re forcing a structural model into a behavioural
 one, it might even be impossible. So don&rsquo;t even consider turning CRUD
-into an event sourced model.</p>
-<p>There are a few places you need to be on the look out for performance
+into an event sourced model.</p><p>There are a few places you need to be on the look out for performance
 bottlenecks. Event streams of long lived aggregates might grow very big.
 Loading a giant event stream from a data store might take a while -
 snapshots can help here. Projecting giant event streams might get you
 into trouble too - how long will it take to rebuild your read model,
 will it even fit into memory? Making projections immediate consistent
 might become a problem if you do a lot of them. Parallelization or
-giving up on immediate consistency might bring solace.</p>
-<p>Events don&rsquo;t change, versioning might get awkward. Are you going to
+giving up on immediate consistency might bring solace.</p><p>Events don&rsquo;t change, versioning might get awkward. Are you going to
 create a new event type for each change, or will you relax
-deserialization? Or maybe you want to implement event migrations?</p>
-<p>Since you&rsquo;re persisting multiple models; events and one or more read
-models, you&rsquo;re going to consume more storage, which will cost you.</p>
-<h3 id="adaptation-in-the-wild">Adaptation in the wild</h3>
-<p>Although there are - from a a business and engineering perspective -
+deserialization? Or maybe you want to implement event migrations?</p><p>Since you&rsquo;re persisting multiple models; events and one or more read
+models, you&rsquo;re going to consume more storage, which will cost you.</p><h3 id=adaptation-in-the-wild>Adaptation in the wild<a hidden class=anchor aria-hidden=true href=#adaptation-in-the-wild>#</a></h3><p>Although there are - from a a business and engineering perspective -
 some good arguments to be made for event sourcing, those arguments only
 apply to a modest percentage of projects. Even when there&rsquo;s a strong
 case to be made for event sourcing, there are very few people with
@@ -180,50 +81,19 @@ actual experience implementing an event sourced system and prescriptive
 frameworks that you can just drop into a project and feel good about,
 are lacking. Most won&rsquo;t even care about event sourcing to start with,
 but even if they do, it&rsquo;s a fight upstream; it introduces a risk most
-might not be comfortable with.</p>
-<p>Having said that, there are some really good projects out there that are
+might not be comfortable with.</p><p>Having said that, there are some really good projects out there that are
 steadily gaining popularity and maturity. Pioneers in the field are
 sharing and documenting their experiences, lowering the barriers for
-others. Things are moving for sure.</p>
-<p>As always, event sourcing is not a paradigm to blindly apply to each and
-every scenario, but definitely one worth considering.</p>
-<p><em>Since I&rsquo;m not running any of it in production, tell me what I&rsquo;m
+others. Things are moving for sure.</p><p>As always, event sourcing is not a paradigm to blindly apply to each and
+every scenario, but definitely one worth considering.</p><p><em>Since I&rsquo;m not running any of it in production, tell me what I&rsquo;m
 missing, there must be more things that turn out to be harder than they
 sound at first right? If you&rsquo;re not running it in production, but
 thinking about it, what are some of your concerns? What are your
-predictions for the future of event sourcing?</em></p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/opinion">opinion</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2013  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+predictions for the future of event sourcing?</em></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/opinion/>Opinion</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2013/11/an-event-store-with-optimistic.html><span class=title>« Prev</span>
+<span>An event store with optimistic concurrency</span>
+</a><a class=next href=https://jefclaes.be/2013/10/event-projections.html><span class=title>Next »</span>
+<span>Event projections</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

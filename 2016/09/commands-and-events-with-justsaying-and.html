@@ -1,189 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Commands and events with JustSaying and AWS - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Commands and events with JustSaying and AWS">
-<meta itemprop="description" content="I&rsquo;ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.
-Making the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS.">
-<meta itemprop="datePublished" content="2016-09-18T20:52:00&#43;02:00" />
-<meta itemprop="dateModified" content="2016-09-18T20:52:00&#43;02:00" />
-<meta itemprop="wordCount" content="801">
-
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="Commands and events with JustSaying and AWS" />
-<meta property="og:description" content="I&rsquo;ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.
-Making the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2016/09/commands-and-events-with-justsaying-and.html" />
-<meta property="article:published_time" content="2016-09-18T20:52:00+02:00" />
-<meta property="article:modified_time" content="2016-09-18T20:52:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Commands and events with JustSaying and AWS"/>
-<meta name="twitter:description" content="I&rsquo;ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.
-Making the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">18</span>
-							<span class="rest">Sep 2016</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Commands and events with JustSaying and AWS</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>I&rsquo;ve been looking into handing a bit of our messaging infrastructure
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Commands and events with JustSaying and AWS | Jef Claes</title><meta name=keywords content="code"><meta name=description content="I&rsquo;ve been looking into handing a bit of our messaging infrastructure
 over to a managed alternative. Managing your own messaging
 infrastructure that should be highly available is not always an
 investment you want to make in this day and age. Going through the
 documentation and relying on experiences from some people I trust, I
 ended up looking at AWS and
-<a href="https://aws.amazon.com/sns/">SNS</a>/<a href="https://aws.amazon.com/sqs/">SQS</a>.</p>
-<p>Making the Github repository rounds, looking for inspiration, I stumbled
-on <a href="https://github.com/justeat/JustSaying">JustSaying</a>: a library by the
-people from JustEat implementing a message bus on top of AWS.</p>
-<p>I wanted to find two messaging patterns in this library:</p>
-<ol>
-<li>Command queuing. A common pattern in our components is to react to an event by making an HTTP request to an external partner. To improve reliability and throughput, we generally don&rsquo;t make that HTTP request in the projection itself, but rather drop a command onto a queue which will then be processed in parallel using a bounded amount of retries. When things do go wrong, we either retry  the messages by moving them from the error queue back to the input queue or we change the reaction and reset the projection checkpoint, sending the commands again.</li>
-<li>Pub-sub. Another pattern used when there is a certain level of
+SNS/SQS.
+Making the Github repository rounds, looking for inspiration, I stumbled
+on JustSaying: a library by the
+people from JustEat implementing a message bus on top of AWS."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2016/09/commands-and-events-with-justsaying-and.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2016/09/commands-and-events-with-justsaying-and.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2016/09/commands-and-events-with-justsaying-and.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Commands and events with JustSaying and AWS"><meta property="og:description" content="I’ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.
+Making the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2016-09-18T20:52:00+02:00"><meta property="article:modified_time" content="2016-09-18T20:52:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="Commands and events with JustSaying and AWS"><meta name=twitter:description content="I’ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.
+Making the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Commands and events with JustSaying and AWS","item":"https://jefclaes.be/2016/09/commands-and-events-with-justsaying-and.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Commands and events with JustSaying and AWS","name":"Commands and events with JustSaying and AWS","description":"I\u0026rsquo;ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.\nMaking the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS.\n","keywords":["code"],"articleBody":"I’ve been looking into handing a bit of our messaging infrastructure over to a managed alternative. Managing your own messaging infrastructure that should be highly available is not always an investment you want to make in this day and age. Going through the documentation and relying on experiences from some people I trust, I ended up looking at AWS and SNS/SQS.\nMaking the Github repository rounds, looking for inspiration, I stumbled on JustSaying: a library by the people from JustEat implementing a message bus on top of AWS.\nI wanted to find two messaging patterns in this library:\nCommand queuing. A common pattern in our components is to react to an event by making an HTTP request to an external partner. To improve reliability and throughput, we generally don’t make that HTTP request in the projection itself, but rather drop a command onto a queue which will then be processed in parallel using a bounded amount of retries. When things do go wrong, we either retry the messages by moving them from the error queue back to the input queue or we change the reaction and reset the projection checkpoint, sending the commands again. Pub-sub. Another pattern used when there is a certain level of familiarity between components, is to have a component publish events. Other components can subscribe to these messages and have them delivered to their own queues.` Both these styles are supported by JustSaying.\nIn this example, I have two commands: BookFlight and CancelBooking, with two related events: FlightWasBooked and BookingWasCancelled.\nSince JustSaying requires messages to inherit from a base class, these message definitions live on the outside, far from the domain. This allows to decouple the domain from the outside contracts and to make sure the events go out to the world in the format I want them to be.\ntype BookFlight() = inherit Message() type CancelBooking() = inherit Message() type FlightWasBooked() = inherit Message() type BookingWasCancelled() = inherit Message() To handle these messages, JustSaying requires you to implement the IHandler interface.\ntype HandleBookFlight() = interface IHandler\u003cBookFlight\u003e with member this.Handle msg = printfn \"Book flight\"; true type HandleCancelBooking() = interface IHandler\u003cCancelBooking\u003e with member this.Handle msg = printfn \"Cancel booking\"; true type HandleFlightWasBooked() = interface IHandler\u003cFlightWasBooked\u003e with member this.Handle msg = printfn \"Flight was booked\"; true type HandleBookingWasCancelled() = interface IHandler\u003cBookingWasCancelled\u003e with member this.Handle msg = printfn \"Booking was cancelled\"; true Having this out of the way, we need to configure the bus (publishers and subscribers).\nFirst of all, Amazon needs to know who we are and what we’re allowed to do.\nlet bus = CreateMeABus.DefaultClientFactory \u003c- new Func\u003cIAwsClientFactory\u003e( fun () -\u003e new DefaultAwsClientFactory(credentials) :\u003e IAwsClientFactory) We should define which region our infrastructure lives in.\nCreateMeABus.InRegion(\"eu-west-1\") Now we can configure our command queue. Commands should be published using an SQS publisher, directly dropping messages into the “Commands” queue. A point-to-point subscriber will directly pull messages from the “Commands” queue and hand them over to the command handlers.\n.WithSqsMessagePublisher\u003cBookFlight\u003e(new Action\u003cSqsWriteConfiguration\u003e(fun x -\u003e x.QueueName \u003c- \"Commands\")) .WithSqsMessagePublisher\u003cCancelBooking\u003e(new Action\u003cSqsWriteConfiguration\u003e(fun x -\u003e x.QueueName \u003c- \"Commands\")) .WithSqsPointToPointSubscriber() .IntoQueue(\"Commands\") .WithMessageHandler(new HandleBookFlight()) .WithMessageHandler(new HandleCancelBooking()) Events are not directly dropped to an SQS queue, but will be created as an SNS topic. We can use SQS to subscribe to these topics and have them delivered to an “Events” queue.\n.WithSnsMessagePublisher\u003cFlightWasBooked\u003e() .WithSnsMessagePublisher\u003cBookingWasCancelled\u003e() .WithSqsTopicSubscriber() .IntoQueue(\"Events\") .WithMessageHandler(new HandleFlightWasBooked()) .WithMessageHandler(new HandleBookingWasCancelled()) Once the bus has been created, we can start listening and publishing messages.\nbus.StartListening() bus.Publish(new BookFlight()) bus.Publish(new FlightWasBooked()) JustSaying will create two SNS topics and four SQS queues: two input queues and two error queues.\nThose topic and queue names are not that descriptive once you introduce multiple components and might cause names to collide. JustSaying allows you to define a custom naming strategy. I’ve settled on a strategy that is based on the message type and prefixed with the component name. This has the added advantage that each message type now goes into its own queue.\ntype ComponentNamingStrategy () = interface INamingStrategy with member this.GetQueueName (sqsConfig, messageType) = \"component_\" + messageType.ToLower() member this.GetTopicName (topicName, messageType) = \"component_\" + messageType.ToLower() .WithNamingStrategy(new Func\u003cINamingStrategy\u003e(fun _ -\u003e new ComponentNamingStrategy() :\u003e INamingStrategy)) This whole experiment has had a scary low learning curve (maybe a bit too low). While I’m still in the assess-phase, I’m fairly optimistic that running on top of SNS/SQS might take away some of our operational burden. Going over the JustSaying API and code base, it’s quite opinionated and there are things I might have approached differently. Some features I’d like to see, like the library providing a message envelope as a first-class citizen (a base message class is something I’ve regretted in the past) is being worked on, so I’m keeping my eye on those. Since I’m only using command queuing at the moment, I should be pretty safe from future breaking changes to the message format and such.\n","wordCount":"801","inLanguage":"en","datePublished":"2016-09-18T20:52:00+02:00","dateModified":"2016-09-18T20:52:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2016/09/commands-and-events-with-justsaying-and.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Commands and events with JustSaying and AWS</h1><div class=post-meta><span title='2016-09-18 20:52:00 +0200 CEST'>September 18, 2016</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>I&rsquo;ve been looking into handing a bit of our messaging infrastructure
+over to a managed alternative. Managing your own messaging
+infrastructure that should be highly available is not always an
+investment you want to make in this day and age. Going through the
+documentation and relying on experiences from some people I trust, I
+ended up looking at AWS and
+<a href=https://aws.amazon.com/sns/>SNS</a>/<a href=https://aws.amazon.com/sqs/>SQS</a>.</p><p>Making the Github repository rounds, looking for inspiration, I stumbled
+on <a href=https://github.com/justeat/JustSaying>JustSaying</a>: a library by the
+people from JustEat implementing a message bus on top of AWS.</p><p>I wanted to find two messaging patterns in this library:</p><ol><li>Command queuing. A common pattern in our components is to react to an event by making an HTTP request to an external partner. To improve reliability and throughput, we generally don&rsquo;t make that HTTP request in the projection itself, but rather drop a command onto a queue which will then be processed in parallel using a bounded amount of retries. When things do go wrong, we either retry the messages by moving them from the error queue back to the input queue or we change the reaction and reset the projection checkpoint, sending the commands again.</li><li>Pub-sub. Another pattern used when there is a certain level of
 familiarity between components, is to have a component publish
 events. Other components can subscribe to these messages and have
-them delivered to their own queues.`</li>
-</ol>
-<p>Both these styles are supported by JustSaying.</p>
-<p>In this example, I have two commands: BookFlight and CancelBooking, with
-two related events: FlightWasBooked and BookingWasCancelled.</p>
-<p>Since JustSaying requires messages to inherit from a base class, these
+them delivered to their own queues.`</li></ol><p>Both these styles are supported by JustSaying.</p><p>In this example, I have two commands: BookFlight and CancelBooking, with
+two related events: FlightWasBooked and BookingWasCancelled.</p><p>Since JustSaying requires messages to inherit from a base class, these
 message definitions live on the outside, far from the domain. This
 allows to decouple the domain from the outside contracts and to make
-sure the events go out to the world in the format I want them to be.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">BookFlight</span><span style="color:#268bd2">()</span> = <span style="color:#859900">inherit</span> <span style="color:#268bd2">Message</span><span style="color:#268bd2">()</span>
-<span style="color:#859900">type</span> <span style="color:#cb4b16">CancelBooking</span><span style="color:#268bd2">()</span> = <span style="color:#859900">inherit</span> <span style="color:#268bd2">Message</span><span style="color:#268bd2">()</span>
-<span style="color:#859900">type</span> <span style="color:#cb4b16">FlightWasBooked</span><span style="color:#268bd2">()</span> = <span style="color:#859900">inherit</span> <span style="color:#268bd2">Message</span><span style="color:#268bd2">()</span>
-<span style="color:#859900">type</span> <span style="color:#cb4b16">BookingWasCancelled</span><span style="color:#268bd2">()</span> = <span style="color:#859900">inherit</span> <span style="color:#268bd2">Message</span><span style="color:#268bd2">()</span>
-</code></pre></div><p>To handle these messages, JustSaying requires you to implement the
-IHandler interface.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">HandleBookFlight</span><span style="color:#268bd2">()</span> =
-  <span style="color:#859900">interface</span> <span style="color:#268bd2">IHandler</span>&lt;<span style="color:#268bd2">BookFlight</span>&gt; <span style="color:#859900">with</span>
-      <span style="color:#859900">member</span> <span style="color:#268bd2">this</span>.<span style="color:#268bd2">Handle</span> <span style="color:#268bd2">msg</span> = <span style="color:#268bd2">printfn</span> <span style="color:#2aa198">&#34;Book flight&#34;</span>; <span style="color:#859900">true</span>
-
-<span style="color:#859900">type</span> <span style="color:#cb4b16">HandleCancelBooking</span><span style="color:#268bd2">()</span> =
-  <span style="color:#859900">interface</span> <span style="color:#268bd2">IHandler</span>&lt;<span style="color:#268bd2">CancelBooking</span>&gt; <span style="color:#859900">with</span>
-      <span style="color:#859900">member</span> <span style="color:#268bd2">this</span>.<span style="color:#268bd2">Handle</span> <span style="color:#268bd2">msg</span> = <span style="color:#268bd2">printfn</span> <span style="color:#2aa198">&#34;Cancel booking&#34;</span>; <span style="color:#859900">true</span>
-
-<span style="color:#859900">type</span> <span style="color:#cb4b16">HandleFlightWasBooked</span><span style="color:#268bd2">()</span> =
-  <span style="color:#859900">interface</span> <span style="color:#268bd2">IHandler</span>&lt;<span style="color:#268bd2">FlightWasBooked</span>&gt; <span style="color:#859900">with</span>
-      <span style="color:#859900">member</span> <span style="color:#268bd2">this</span>.<span style="color:#268bd2">Handle</span> <span style="color:#268bd2">msg</span> = <span style="color:#268bd2">printfn</span> <span style="color:#2aa198">&#34;Flight was booked&#34;</span>; <span style="color:#859900">true</span>
-
-<span style="color:#859900">type</span> <span style="color:#cb4b16">HandleBookingWasCancelled</span><span style="color:#268bd2">()</span> =
-  <span style="color:#859900">interface</span> <span style="color:#268bd2">IHandler</span>&lt;<span style="color:#268bd2">BookingWasCancelled</span>&gt; <span style="color:#859900">with</span>
-      <span style="color:#859900">member</span> <span style="color:#268bd2">this</span>.<span style="color:#268bd2">Handle</span> <span style="color:#268bd2">msg</span> = <span style="color:#268bd2">printfn</span> <span style="color:#2aa198">&#34;Booking was cancelled&#34;</span>; <span style="color:#859900">true</span>
-</code></pre></div><p>Having this out of the way, we need to configure the bus (publishers and
-subscribers).</p>
-<p>First of all, Amazon needs to know who we are and what we&rsquo;re allowed to
-do.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">let</span> <span style="color:#268bd2">bus</span> =
-  <span style="color:#268bd2">CreateMeABus</span>.<span style="color:#268bd2">DefaultClientFactory</span> &lt;- <span style="color:#859900">new</span> <span style="color:#268bd2">Func</span>&lt;<span style="color:#268bd2">IAwsClientFactory</span>&gt;(
-    <span style="color:#859900">fun</span> <span style="color:#268bd2">()</span> -&gt; <span style="color:#859900">new</span> <span style="color:#268bd2">DefaultAwsClientFactory</span>(<span style="color:#268bd2">credentials</span>) :&gt; <span style="color:#268bd2">IAwsClientFactory</span>)
-</code></pre></div><p>We should define which region our infrastructure lives in.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#268bd2">CreateMeABus</span>.<span style="color:#268bd2">InRegion</span>(<span style="color:#2aa198">&#34;eu-west-1&#34;</span>)
-</code></pre></div><p>Now we can configure our command queue. Commands should be published
+sure the events go out to the world in the format I want them to be.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>BookFlight</span>() <span style=color:#f92672>=</span> <span style=color:#66d9ef>inherit</span> Message()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>CancelBooking</span>() <span style=color:#f92672>=</span> <span style=color:#66d9ef>inherit</span> Message()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>FlightWasBooked</span>() <span style=color:#f92672>=</span> <span style=color:#66d9ef>inherit</span> Message()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>BookingWasCancelled</span>() <span style=color:#f92672>=</span> <span style=color:#66d9ef>inherit</span> Message()
+</span></span></code></pre></div><p>To handle these messages, JustSaying requires you to implement the
+IHandler interface.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>HandleBookFlight</span>() <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>interface</span> IHandler<span style=color:#f92672>&lt;</span>BookFlight<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>member</span> this.<span style=color:#a6e22e>Handle</span> msg <span style=color:#f92672>=</span> printfn <span style=color:#e6db74>&#34;Book flight&#34;</span><span style=color:#f92672>;</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>HandleCancelBooking</span>() <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>interface</span> IHandler<span style=color:#f92672>&lt;</span>CancelBooking<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>member</span> this.<span style=color:#a6e22e>Handle</span> msg <span style=color:#f92672>=</span> printfn <span style=color:#e6db74>&#34;Cancel booking&#34;</span><span style=color:#f92672>;</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>HandleFlightWasBooked</span>() <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>interface</span> IHandler<span style=color:#f92672>&lt;</span>FlightWasBooked<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>member</span> this.<span style=color:#a6e22e>Handle</span> msg <span style=color:#f92672>=</span> printfn <span style=color:#e6db74>&#34;Flight was booked&#34;</span><span style=color:#f92672>;</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>HandleBookingWasCancelled</span>() <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>interface</span> IHandler<span style=color:#f92672>&lt;</span>BookingWasCancelled<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>member</span> this.<span style=color:#a6e22e>Handle</span> msg <span style=color:#f92672>=</span> printfn <span style=color:#e6db74>&#34;Booking was cancelled&#34;</span><span style=color:#f92672>;</span> <span style=color:#66d9ef>true</span>
+</span></span></code></pre></div><p>Having this out of the way, we need to configure the bus (publishers and
+subscribers).</p><p>First of all, Amazon needs to know who we are and what we&rsquo;re allowed to
+do.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>let</span> bus <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  CreateMeABus.DefaultClientFactory <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>new</span> Func<span style=color:#f92672>&lt;</span>IAwsClientFactory<span style=color:#f92672>&gt;(</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fun</span> () <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>new</span> DefaultAwsClientFactory<span style=color:#f92672>(</span>credentials<span style=color:#f92672>)</span> <span style=color:#f92672>:&gt;</span> IAwsClientFactory<span style=color:#f92672>)</span>
+</span></span></code></pre></div><p>We should define which region our infrastructure lives in.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span>CreateMeABus.InRegion<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;eu-west-1&#34;</span><span style=color:#f92672>)</span>
+</span></span></code></pre></div><p>Now we can configure our command queue. Commands should be published
 using an SQS publisher, directly dropping messages into the &ldquo;Commands&rdquo;
 queue. A point-to-point subscriber will directly pull messages from the
-&ldquo;Commands&rdquo; queue and hand them over to the command handlers.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">.<span style="color:#268bd2">WithSqsMessagePublisher</span>&lt;<span style="color:#268bd2">BookFlight</span>&gt;(<span style="color:#859900">new</span> <span style="color:#268bd2">Action</span>&lt;<span style="color:#268bd2">SqsWriteConfiguration</span>&gt;(<span style="color:#859900">fun</span> <span style="color:#268bd2">x</span> -&gt; <span style="color:#268bd2">x</span>.<span style="color:#268bd2">QueueName</span> &lt;- <span style="color:#2aa198">&#34;Commands&#34;</span>))
-.<span style="color:#268bd2">WithSqsMessagePublisher</span>&lt;<span style="color:#268bd2">CancelBooking</span>&gt;(<span style="color:#859900">new</span> <span style="color:#268bd2">Action</span>&lt;<span style="color:#268bd2">SqsWriteConfiguration</span>&gt;(<span style="color:#859900">fun</span> <span style="color:#268bd2">x</span> -&gt; <span style="color:#268bd2">x</span>.<span style="color:#268bd2">QueueName</span> &lt;- <span style="color:#2aa198">&#34;Commands&#34;</span>))
-.<span style="color:#268bd2">WithSqsPointToPointSubscriber</span><span style="color:#268bd2">()</span>
-.<span style="color:#268bd2">IntoQueue</span>(<span style="color:#2aa198">&#34;Commands&#34;</span>)
-.<span style="color:#268bd2">WithMessageHandler</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">HandleBookFlight</span><span style="color:#268bd2">()</span>)
-.<span style="color:#268bd2">WithMessageHandler</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">HandleCancelBooking</span><span style="color:#268bd2">()</span>)
-</code></pre></div><p>Events are not directly dropped to an SQS queue, but will be created as
+&ldquo;Commands&rdquo; queue and hand them over to the command handlers.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#f92672>.</span>WithSqsMessagePublisher<span style=color:#f92672>&lt;</span>BookFlight<span style=color:#f92672>&gt;(</span><span style=color:#66d9ef>new</span> Action<span style=color:#f92672>&lt;</span>SqsWriteConfiguration<span style=color:#f92672>&gt;(</span><span style=color:#66d9ef>fun</span> x <span style=color:#f92672>-&gt;</span> x<span style=color:#f92672>.</span>QueueName <span style=color:#f92672>&lt;-</span> <span style=color:#e6db74>&#34;Commands&#34;</span><span style=color:#f92672>))</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithSqsMessagePublisher<span style=color:#f92672>&lt;</span>CancelBooking<span style=color:#f92672>&gt;(</span><span style=color:#66d9ef>new</span> Action<span style=color:#f92672>&lt;</span>SqsWriteConfiguration<span style=color:#f92672>&gt;(</span><span style=color:#66d9ef>fun</span> x <span style=color:#f92672>-&gt;</span> x<span style=color:#f92672>.</span>QueueName <span style=color:#f92672>&lt;-</span> <span style=color:#e6db74>&#34;Commands&#34;</span><span style=color:#f92672>))</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithSqsPointToPointSubscriber()
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>IntoQueue<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;Commands&#34;</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithMessageHandler<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> HandleBookFlight()<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithMessageHandler<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> HandleCancelBooking()<span style=color:#f92672>)</span>
+</span></span></code></pre></div><p>Events are not directly dropped to an SQS queue, but will be created as
 an SNS topic. We can use SQS to subscribe to these topics and have them
-delivered to an &ldquo;Events&rdquo; queue.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp">.<span style="color:#268bd2">WithSnsMessagePublisher</span>&lt;<span style="color:#268bd2">FlightWasBooked</span>&gt;<span style="color:#268bd2">()</span>
-.<span style="color:#268bd2">WithSnsMessagePublisher</span>&lt;<span style="color:#268bd2">BookingWasCancelled</span>&gt;<span style="color:#268bd2">()</span>
-.<span style="color:#268bd2">WithSqsTopicSubscriber</span><span style="color:#268bd2">()</span>
-.<span style="color:#268bd2">IntoQueue</span>(<span style="color:#2aa198">&#34;Events&#34;</span>)
-.<span style="color:#268bd2">WithMessageHandler</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">HandleFlightWasBooked</span><span style="color:#268bd2">()</span>)
-.<span style="color:#268bd2">WithMessageHandler</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">HandleBookingWasCancelled</span><span style="color:#268bd2">()</span>)
-</code></pre></div><p>Once the bus has been created, we can start listening and publishing
-messages.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#268bd2">bus</span>.<span style="color:#268bd2">StartListening</span><span style="color:#268bd2">()</span>
-
-<span style="color:#268bd2">bus</span>.<span style="color:#268bd2">Publish</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">BookFlight</span><span style="color:#268bd2">()</span>)
-<span style="color:#268bd2">bus</span>.<span style="color:#268bd2">Publish</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">FlightWasBooked</span><span style="color:#268bd2">()</span>)
-</code></pre></div><p>JustSaying will create two SNS topics and four SQS queues: two input
-queues and two error queues.</p>
-<p><a href="/post/images/2016-09-18-commands-and-events-with-justsaying-and-aws-sns.PNG"><img src="/post/images/thumbnails/2016-09-18-commands-and-events-with-justsaying-and-aws-sns.PNG" alt=""></a></p>
-<p><a href="/post/images/2016-09-18-commands-and-events-with-justsaying-and-aws-sqs.PNG"><img src="/post/images/thumbnails/2016-09-18-commands-and-events-with-justsaying-and-aws-sqs.PNG" alt=""></a></p>
-<p>Those topic and queue names are not that descriptive once you introduce
+delivered to an &ldquo;Events&rdquo; queue.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#f92672>.</span>WithSnsMessagePublisher<span style=color:#f92672>&lt;</span>FlightWasBooked<span style=color:#f92672>&gt;</span>()
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithSnsMessagePublisher<span style=color:#f92672>&lt;</span>BookingWasCancelled<span style=color:#f92672>&gt;</span>()
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithSqsTopicSubscriber()
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>IntoQueue<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;Events&#34;</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithMessageHandler<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> HandleFlightWasBooked()<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithMessageHandler<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> HandleBookingWasCancelled()<span style=color:#f92672>)</span>
+</span></span></code></pre></div><p>Once the bus has been created, we can start listening and publishing
+messages.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span>bus<span style=color:#f92672>.</span>StartListening()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bus<span style=color:#f92672>.</span>Publish<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> BookFlight()<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>bus<span style=color:#f92672>.</span>Publish<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> FlightWasBooked()<span style=color:#f92672>)</span>
+</span></span></code></pre></div><p>JustSaying will create two SNS topics and four SQS queues: two input
+queues and two error queues.</p><p><a href=/post/images/2016-09-18-commands-and-events-with-justsaying-and-aws-sns.PNG><img loading=lazy src=/post/images/thumbnails/2016-09-18-commands-and-events-with-justsaying-and-aws-sns.PNG></a></p><p><a href=/post/images/2016-09-18-commands-and-events-with-justsaying-and-aws-sqs.PNG><img loading=lazy src=/post/images/thumbnails/2016-09-18-commands-and-events-with-justsaying-and-aws-sqs.PNG></a></p><p>Those topic and queue names are not that descriptive once you introduce
 multiple components and might cause names to collide. JustSaying allows
 you to define a custom naming strategy. I&rsquo;ve settled on a strategy that
 is based on the message type and prefixed with the component name. This
 has the added advantage that each message type now goes into its own
-queue.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fsharp" data-lang="fsharp"><span style="color:#859900">type</span> <span style="color:#cb4b16">ComponentNamingStrategy</span> <span style="color:#268bd2">()</span> =
-  <span style="color:#859900">interface</span> <span style="color:#268bd2">INamingStrategy</span> <span style="color:#859900">with</span>
-    <span style="color:#859900">member</span> <span style="color:#268bd2">this</span>.<span style="color:#268bd2">GetQueueName</span> (<span style="color:#268bd2">sqsConfig</span>, <span style="color:#268bd2">messageType</span>) =
-      <span style="color:#2aa198">&#34;component_&#34;</span> + <span style="color:#268bd2">messageType</span>.<span style="color:#268bd2">ToLower</span><span style="color:#268bd2">()</span>
-    <span style="color:#859900">member</span> <span style="color:#268bd2">this</span>.<span style="color:#268bd2">GetTopicName</span> (<span style="color:#268bd2">topicName</span>, <span style="color:#268bd2">messageType</span>) =
-      <span style="color:#2aa198">&#34;component_&#34;</span> + <span style="color:#268bd2">messageType</span>.<span style="color:#268bd2">ToLower</span><span style="color:#268bd2">()</span>
-
-.<span style="color:#268bd2">WithNamingStrategy</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Func</span>&lt;<span style="color:#268bd2">INamingStrategy</span>&gt;(<span style="color:#859900">fun</span> _ -&gt; <span style="color:#859900">new</span> <span style="color:#268bd2">ComponentNamingStrategy</span><span style="color:#268bd2">()</span> :&gt; <span style="color:#268bd2">INamingStrategy</span>))
-</code></pre></div><p><a href="/post/images/2016-09-18-commands-and-events-with-justsaying-and-aws-sqsnamingstrategy.PNG"><img src="/post/images/thumbnails/2016-09-18-commands-and-events-with-justsaying-and-aws-sqsnamingstrategy.PNG" alt=""></a></p>
-<p>This whole experiment has had a scary low learning curve (maybe a bit
+queue.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-fsharp data-lang=fsharp><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ComponentNamingStrategy</span> () <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>interface</span> INamingStrategy <span style=color:#66d9ef>with</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>member</span> this.<span style=color:#a6e22e>GetQueueName</span> <span style=color:#f92672>(</span>sqsConfig<span style=color:#f92672>,</span> messageType<span style=color:#f92672>)</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>      <span style=color:#e6db74>&#34;component_&#34;</span> <span style=color:#f92672>+</span> messageType<span style=color:#f92672>.</span>ToLower()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>member</span> this.<span style=color:#a6e22e>GetTopicName</span> <span style=color:#f92672>(</span>topicName<span style=color:#f92672>,</span> messageType<span style=color:#f92672>)</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>      <span style=color:#e6db74>&#34;component_&#34;</span> <span style=color:#f92672>+</span> messageType<span style=color:#f92672>.</span>ToLower()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>.</span>WithNamingStrategy<span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> Func<span style=color:#f92672>&lt;</span>INamingStrategy<span style=color:#f92672>&gt;(</span><span style=color:#66d9ef>fun</span> <span style=color:#f92672>_</span> <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>new</span> ComponentNamingStrategy() <span style=color:#f92672>:&gt;</span> INamingStrategy<span style=color:#f92672>))</span>
+</span></span></code></pre></div><p><a href=/post/images/2016-09-18-commands-and-events-with-justsaying-and-aws-sqsnamingstrategy.PNG><img loading=lazy src=/post/images/thumbnails/2016-09-18-commands-and-events-with-justsaying-and-aws-sqsnamingstrategy.PNG></a></p><p>This whole experiment has had a scary low learning curve (maybe a bit
 too low). While I&rsquo;m still in the assess-phase, I&rsquo;m fairly optimistic
 that running on top of SNS/SQS might take away some of our operational
 burden. Going over the JustSaying API and code base, it&rsquo;s quite
@@ -192,39 +100,11 @@ Some features I&rsquo;d like to see, like the library providing a message
 envelope as a first-class citizen (a base message class is something
 I&rsquo;ve regretted in the past) is being worked on, so I&rsquo;m keeping my eye on
 those. Since I&rsquo;m only using command queuing at the moment, I should be
-pretty safe from future breaking changes to the message format and such.</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2016  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+pretty safe from future breaking changes to the message format and such.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2016/12/consumed-in-2016.html><span class=title>« Prev</span>
+<span>Consumed in 2016</span>
+</a><a class=next href=https://jefclaes.be/2016/08/my-infoq-article-on-ddd-events-and.html><span class=title>Next »</span>
+<span>My InfoQ interview on DDD, events and legacy</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

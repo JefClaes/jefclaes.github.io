@@ -1,93 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>The &#39;everyone should learn to code&#39; dilemma - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="The &#39;everyone should learn to code&#39; dilemma">
-<meta itemprop="description" content="Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, &hellip; , even politics.">
-<meta itemprop="datePublished" content="2012-06-03T16:40:00&#43;02:00" />
-<meta itemprop="dateModified" content="2012-06-03T16:40:00&#43;02:00" />
-<meta itemprop="wordCount" content="546">
-
-
-
-<meta itemprop="keywords" content="opinion," /><meta property="og:title" content="The &#39;everyone should learn to code&#39; dilemma" />
-<meta property="og:description" content="Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, &hellip; , even politics." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2012/06/everyone-should-learn-to-code-dilemma.html" />
-<meta property="article:published_time" content="2012-06-03T16:40:00+02:00" />
-<meta property="article:modified_time" content="2012-06-03T16:40:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="The &#39;everyone should learn to code&#39; dilemma"/>
-<meta name="twitter:description" content="Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, &hellip; , even politics."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">03</span>
-							<span class="rest">Jun 2012</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">The &#39;everyone should learn to code&#39; dilemma</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Back when I was working on software for fire departments, we started
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>The 'everyone should learn to code' dilemma | Jef Claes</title><meta name=keywords content="opinion"><meta name=description content="Back when I was working on software for fire departments, we started
 thinking about reworking a critical piece of our solution: deployment
 plans. In a fire department domain, deployment plans help to make a
 suggestion to the dispatcher about which units should be dispatched to a
 location when an incident is called in. The suggested composition of
 units depends on a wide range of variables: availability, response time,
-ranks, type of incident, required tools, &hellip; , even politics.
+ranks, type of incident, required tools, &mldr; , even politics.
 Originally, people high enough in rank could compose these plans using a
 decision tree-like UI. However, as it turned out, this UI was
 insufficient; not all variables and conditions were available. Since
@@ -95,19 +12,35 @@ this was no custom built tool, we had to work around it by composing
 incomprehensible decision trees or by tricking the underlying services.
 When talking about how we could do better, we hit a wall pretty soon. We
 thought about building our own - but more extensive - UI, and damn, even
-designing a DSL crossed our minds.</p>
-<p>Along the process, I heard that <a href="http://mikehadlow.blogspot.co.uk/2012/05/configuration-complexity-clock.html">Configuration Complexity
+designing a DSL crossed our minds."><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2012/06/everyone-should-learn-to-code-dilemma.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2012/06/everyone-should-learn-to-code-dilemma.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2012/06/everyone-should-learn-to-code-dilemma.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="The 'everyone should learn to code' dilemma"><meta property="og:description" content="Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, … , even politics. Originally, people high enough in rank could compose these plans using a decision tree-like UI. However, as it turned out, this UI was insufficient; not all variables and conditions were available. Since this was no custom built tool, we had to work around it by composing incomprehensible decision trees or by tricking the underlying services. When talking about how we could do better, we hit a wall pretty soon. We thought about building our own - but more extensive - UI, and damn, even designing a DSL crossed our minds."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2012-06-03T16:40:00+02:00"><meta property="article:modified_time" content="2012-06-03T16:40:00+02:00"><meta property="article:tag" content="Opinion"><meta name=twitter:card content="summary"><meta name=twitter:title content="The 'everyone should learn to code' dilemma"><meta name=twitter:description content="Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, … , even politics. Originally, people high enough in rank could compose these plans using a decision tree-like UI. However, as it turned out, this UI was insufficient; not all variables and conditions were available. Since this was no custom built tool, we had to work around it by composing incomprehensible decision trees or by tricking the underlying services. When talking about how we could do better, we hit a wall pretty soon. We thought about building our own - but more extensive - UI, and damn, even designing a DSL crossed our minds."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"The 'everyone should learn to code' dilemma","item":"https://jefclaes.be/2012/06/everyone-should-learn-to-code-dilemma.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"The 'everyone should learn to code' dilemma","name":"The \u0027everyone should learn to code\u0027 dilemma","description":"Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, \u0026hellip; , even politics. Originally, people high enough in rank could compose these plans using a decision tree-like UI. However, as it turned out, this UI was insufficient; not all variables and conditions were available. Since this was no custom built tool, we had to work around it by composing incomprehensible decision trees or by tricking the underlying services. When talking about how we could do better, we hit a wall pretty soon. We thought about building our own - but more extensive - UI, and damn, even designing a DSL crossed our minds.\n","keywords":["opinion"],"articleBody":"Back when I was working on software for fire departments, we started thinking about reworking a critical piece of our solution: deployment plans. In a fire department domain, deployment plans help to make a suggestion to the dispatcher about which units should be dispatched to a location when an incident is called in. The suggested composition of units depends on a wide range of variables: availability, response time, ranks, type of incident, required tools, … , even politics. Originally, people high enough in rank could compose these plans using a decision tree-like UI. However, as it turned out, this UI was insufficient; not all variables and conditions were available. Since this was no custom built tool, we had to work around it by composing incomprehensible decision trees or by tricking the underlying services. When talking about how we could do better, we hit a wall pretty soon. We thought about building our own - but more extensive - UI, and damn, even designing a DSL crossed our minds.\nAlong the process, I heard that Configuration Complexity Clock ticking, and I couldn’t stop myself from thinking that if everyone knew how to code - just some boolean logic and control flow would suffice -, we wouldn’t have gotten into this mess. It seemed impossible to build something that would be intuitive, and still fulfill all the requirements; some things just seem to be best expressed in code.\nI empathize with the proponents of teaching everyone how to code. On the other hand, I’ve been watching this movement from a safe distance; there are two sides to the same coin.\nJust a few weeks ago, a peer shared one of those horror stories which originate when non-professional developers take matters into their own hands. The IT department of this big company was looking for a piece of software which could standardize the way employees make hardware and support requests. Shopping around, they found the existing products couldn’t satisfy their needs, or they would take a considerable cut out of their yearly budget. Eventually, a system administrator who knew just enough about programming to be dangerous stepped up, and rolled his own tool. For over two years, all was good with the world. Maybe the solution wasn’t very pretty, and a bit on the slow side, but overall - and most importantly - it got the job done. Now, the original developer has decided he can’t be bothered maintaining his brainchild any longer. The peer who told me this story, was also the guy chosen to take over maintenance and feature requests. They assured him that it wouldn’t be too much trouble; just a little feature here and there, and maybe the exceptional bug. What he found however, were the things nightmares are made of; a - classic - ASP.NET web application with just one web page, written in VB.NET, containing over 20k LOC, with updatepanels nested five levels deep.\nAnd this is the perfect example of how we have to be very careful with the ’everyone should learn to code’ meme. Slinging code is easy, but writing good code is hard, and takes a lot of practice. Software might be eating up the world, but maybe it’s for the best we don’t turn it into a monstrous glutton.\n","wordCount":"546","inLanguage":"en","datePublished":"2012-06-03T16:40:00+02:00","dateModified":"2012-06-03T16:40:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2012/06/everyone-should-learn-to-code-dilemma.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">The 'everyone should learn to code' dilemma</h1><div class=post-meta><span title='2012-06-03 16:40:00 +0200 CEST'>June 3, 2012</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Back when I was working on software for fire departments, we started
+thinking about reworking a critical piece of our solution: deployment
+plans. In a fire department domain, deployment plans help to make a
+suggestion to the dispatcher about which units should be dispatched to a
+location when an incident is called in. The suggested composition of
+units depends on a wide range of variables: availability, response time,
+ranks, type of incident, required tools, &mldr; , even politics.
+Originally, people high enough in rank could compose these plans using a
+decision tree-like UI. However, as it turned out, this UI was
+insufficient; not all variables and conditions were available. Since
+this was no custom built tool, we had to work around it by composing
+incomprehensible decision trees or by tricking the underlying services.
+When talking about how we could do better, we hit a wall pretty soon. We
+thought about building our own - but more extensive - UI, and damn, even
+designing a DSL crossed our minds.</p><p>Along the process, I heard that <a href=http://mikehadlow.blogspot.co.uk/2012/05/configuration-complexity-clock.html>Configuration Complexity
 Clock</a>
 ticking, and I couldn&rsquo;t stop myself from thinking that if everyone knew
 how to code - just some boolean logic and control flow would suffice -,
 we wouldn&rsquo;t have gotten into this mess. It seemed impossible to build
 something that would be intuitive, and still fulfill all the
-requirements; some things just seem to be best expressed in code.</p>
-<p>I empathize with the <a href="http://sachagreif.com/please-learn-to-code/">proponents of teaching everyone how to
+requirements; some things just seem to be best expressed in code.</p><p>I empathize with the <a href=http://sachagreif.com/please-learn-to-code/>proponents of teaching everyone how to
 code</a>. On the other hand,
 I&rsquo;ve been watching this movement from a safe distance; there are two
-sides to the same coin.</p>
-<p>Just a few weeks ago, a peer shared one of those horror stories which
+sides to the same coin.</p><p>Just a few weeks ago, a peer shared one of those horror stories which
 originate when non-professional developers take matters into their own
 hands. The IT department of this big company was looking for a piece of
 software which could standardize the way employees make hardware and
@@ -125,45 +58,16 @@ too much trouble; just a little feature here and there, and maybe the
 exceptional bug. What he found however, were the things nightmares are
 made of; a - classic - ASP.NET web application with just one web page,
 written in VB.NET, containing over 20k LOC, with updatepanels nested
-five levels deep.</p>
-<p>And this is the perfect example of how we have to be very careful with
-the &lsquo;everyone should learn to code&rsquo; meme. <strong>Slinging code is easy, but
-writing good code is hard</strong>, and takes a lot of practice. <a href="http://online.wsj.com/article/SB10001424053111903480904576512250915629460.html">Software
+five levels deep.</p><p>And this is the perfect example of how we have to be very careful with
+the &rsquo;everyone should learn to code&rsquo; meme. <strong>Slinging code is easy, but
+writing good code is hard</strong>, and takes a lot of practice. <a href=http://online.wsj.com/article/SB10001424053111903480904576512250915629460.html>Software
 might be eating up the
 world</a>,
-but maybe it&rsquo;s for the best we don&rsquo;t turn it into a monstrous glutton.</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/opinion">opinion</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2012  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+but maybe it&rsquo;s for the best we don&rsquo;t turn it into a monstrous glutton.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/opinion/>Opinion</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2012/06/book-review-art-of-agile-development.html><span class=title>« Prev</span>
+<span>Book review: The Art of Agile Development</span>
+</a><a class=next href=https://jefclaes.be/2012/05/open-plan-fallacy-testimonials.html><span class=title>Next »</span>
+<span>The open plan fallacy testimonials</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

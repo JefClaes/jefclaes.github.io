@@ -1,195 +1,86 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Handling the AggregateException - Jef Claes</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta itemprop="name" content="Handling the AggregateException">
-<meta itemprop="description" content="Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.
-Bart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.
-The Handle method As found in the MSDN documentation.
-Description
-Invokes a handler on each Exception contained by this AggregateException. Parameters
-System.Func&lt;Exception, Boolean&gt; predicate The predicate to execute for each exception.">
-<meta itemprop="datePublished" content="2010-05-23T13:10:00&#43;02:00" />
-<meta itemprop="dateModified" content="2010-05-23T13:10:00&#43;02:00" />
-<meta itemprop="wordCount" content="340">
-
-
-
-<meta itemprop="keywords" content="code," /><meta property="og:title" content="Handling the AggregateException" />
-<meta property="og:description" content="Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.
-Bart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.
-The Handle method As found in the MSDN documentation.
-Description
-Invokes a handler on each Exception contained by this AggregateException. Parameters
-System.Func&lt;Exception, Boolean&gt; predicate The predicate to execute for each exception." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jefclaes.be/2010/05/handling-aggregateexception.html" />
-<meta property="article:published_time" content="2010-05-23T13:10:00+02:00" />
-<meta property="article:modified_time" content="2010-05-23T13:10:00+02:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Handling the AggregateException"/>
-<meta name="twitter:description" content="Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.
-Bart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.
-The Handle method As found in the MSDN documentation.
-Description
-Invokes a handler on each Exception contained by this AggregateException. Parameters
-System.Func&lt;Exception, Boolean&gt; predicate The predicate to execute for each exception."/>
-<link href='https://fonts.googleapis.com/css?family=Playfair+Display:700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jefclaes.be/css/main.css" />
-
-        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://jefclaes.be/css/dark.css" />
-
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-		<script src="https://jefclaes.be/js/main.js"></script>
-</head>
-
-<body>
-	<div class="container wrapper">
-		<div class="header">
-	
-		<div class="avatar">
-			<a href="https://jefclaes.be/">
-				<img src="https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg" alt="Jef Claes" />
-			</a>
-		</div>
-	
-	<h1 class="site-title"><a href="https://jefclaes.be/">Jef Claes</a></h1>
-	<div class="site-description"><p>On software and life</p><nav class="nav social">
-			<ul class="flat"><li><a href="https://github.com/jefclaes" title="Github"><i data-feather="github"></i></a></li><li><a href="https://twitter.com/jefclaes" title="Twitter"><i data-feather="twitter"></i></a></li><li><a href="https://www.linkedin.com/in/jefclaes" title="LinkedIn"><i data-feather="linkedin"></i></a></li><li><a href="http://feed.jefclaes.be" title="RSS"><i data-feather="rss"></i></a></li></ul>
-		</nav></div>
-
-	<nav class="nav">
-		<ul class="flat">
-			
-			<li>
-				<a href="/">Home</a>
-			</li>
-			
-			<li>
-				<a href="/post">All posts</a>
-			</li>
-			
-			<li>
-				<a href="/tags">Tags</a>
-			</li>
-			
-		</ul>
-	</nav>
-</div>
-
-
-		<div class="post">
-			<div class="post-header">
-				
-					<div class="meta">
-						<div class="date">
-							<span class="day">23</span>
-							<span class="rest">May 2010</span>
-						</div>
-					</div>
-				
-				<div class="matter">
-					<h1 class="title">Handling the AggregateException</h1>
-				</div>
-			</div>
-					
-			<div class="markdown">
-				<p>Last week I showed you how you can use the <code>AggregateException</code> to apply
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Handling the AggregateException | Jef Claes</title><meta name=keywords content="code"><meta name=description content="Last week I showed you how you can use the AggregateException to apply
 consistent exception handling in batch operations. You can find that
 post
-<a href="https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html">here</a>.</p>
-<p><a href="http://bartdesmet.net/blogs/bart/">Bart De Smet</a> read that post and
+here.
+Bart De Smet read that post and
 pointed out that I should check out the Handle method of the
-AggregateException.</p>
-<h3 id="the-handle-method">The Handle method</h3>
-<p>As found in the <a href="http://msdn.microsoft.com/en-us/library/system.aggregateexception.handle.aspx">MSDN
-documentation</a>.</p>
-<p>Description</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Invokes a handler on each Exception contained by this AggregateException.
-</code></pre></div><p>Parameters</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">System.Func&lt;Exception, Boolean&gt; predicate  
+AggregateException.
+The Handle method
+As found in the MSDN
+documentation.
+Description
+Invokes a handler on each Exception contained by this AggregateException.
+Parameters
+System.Func<Exception, Boolean> predicate  
 
 The predicate to execute for each exception. The predicate accepts as an argument the Exception to be processed and returns a Boolean to indicate whether the exception was handled.
-</code></pre></div><p>Remarks</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Each invocation of the predicate returns true or false to indicate whether the Exception was handled. After all invocations, if any exceptions went unhandled, all unhandled exceptions will be put into a new AggregateException which will be thrown. Otherwise, the Handle method simply returns. If any invocations of the predicate throws an exception, it will halt the processing of any more exceptions and immediately propagate the thrown exception as-is.
-</code></pre></div><h3 id="in-practice">In practice</h3>
-<p>I refactored the example in <a href="https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html">my previous
-post</a> to make use of the <code>Handle</code> method.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">static</span> <span style="color:#859900">void</span> <span style="color:#268bd2">Main</span>(<span style="color:#859900;font-weight:bold">string</span>[] <span style="color:#268bd2">args</span>)
-{
-      <span style="color:#859900">try</span>
-      {
-            <span style="color:#268bd2">ExecuteBatch</span>();
-      }
-      <span style="color:#859900">catch</span> (<span style="color:#268bd2">AggregateException</span> <span style="color:#268bd2">aggEx</span>)
-      {
-            <span style="color:#268bd2">aggEx</span>.<span style="color:#268bd2">Handle</span>(<span style="color:#268bd2">HandleBatchExceptions</span>);
-      }
+Remarks"><meta name=author content="Jef Claes"><link rel=canonical href=https://jefclaes.be/2010/05/handling-aggregateexception.html><link crossorigin=anonymous href=/assets/css/stylesheet.84fa7cad4ac788a7a4b78f2470af93d5f01e0c73d96dfd059c570dc91f7f8d1d.css integrity="sha256-hPp8rUrHiKekt48kcK+T1fAeDHPZbf0FnFcNyR9/jR0=" rel="preload stylesheet" as=style><link rel=icon href=https://jefclaes.be/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://jefclaes.be/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://jefclaes.be/favicon-32x32.png><link rel=apple-touch-icon href=https://jefclaes.be/apple-touch-icon.png><link rel=mask-icon href=https://jefclaes.be/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://jefclaes.be/2010/05/handling-aggregateexception.html><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><meta property="og:url" content="https://jefclaes.be/2010/05/handling-aggregateexception.html"><meta property="og:site_name" content="Jef Claes"><meta property="og:title" content="Handling the AggregateException"><meta property="og:description" content="Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.
+Bart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.
+The Handle method As found in the MSDN documentation.
+Description
+Invokes a handler on each Exception contained by this AggregateException. Parameters
+System.Func<Exception, Boolean> predicate The predicate to execute for each exception. The predicate accepts as an argument the Exception to be processed and returns a Boolean to indicate whether the exception was handled. Remarks"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2010-05-23T13:10:00+02:00"><meta property="article:modified_time" content="2010-05-23T13:10:00+02:00"><meta property="article:tag" content="Code"><meta name=twitter:card content="summary"><meta name=twitter:title content="Handling the AggregateException"><meta name=twitter:description content="Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.
+Bart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.
+The Handle method As found in the MSDN documentation.
+Description
+Invokes a handler on each Exception contained by this AggregateException. Parameters
+System.Func<Exception, Boolean> predicate The predicate to execute for each exception. The predicate accepts as an argument the Exception to be processed and returns a Boolean to indicate whether the exception was handled. Remarks"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://jefclaes.be/post/"},{"@type":"ListItem","position":2,"name":"Handling the AggregateException","item":"https://jefclaes.be/2010/05/handling-aggregateexception.html"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Handling the AggregateException","name":"Handling the AggregateException","description":"Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.\nBart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.\nThe Handle method As found in the MSDN documentation.\nDescription\nInvokes a handler on each Exception contained by this AggregateException. Parameters\nSystem.Func\u0026lt;Exception, Boolean\u0026gt; predicate The predicate to execute for each exception. The predicate accepts as an argument the Exception to be processed and returns a Boolean to indicate whether the exception was handled. Remarks\n","keywords":["code"],"articleBody":"Last week I showed you how you can use the AggregateException to apply consistent exception handling in batch operations. You can find that post here.\nBart De Smet read that post and pointed out that I should check out the Handle method of the AggregateException.\nThe Handle method As found in the MSDN documentation.\nDescription\nInvokes a handler on each Exception contained by this AggregateException. Parameters\nSystem.Func predicate The predicate to execute for each exception. The predicate accepts as an argument the Exception to be processed and returns a Boolean to indicate whether the exception was handled. Remarks\nEach invocation of the predicate returns true or false to indicate whether the Exception was handled. After all invocations, if any exceptions went unhandled, all unhandled exceptions will be put into a new AggregateException which will be thrown. Otherwise, the Handle method simply returns. If any invocations of the predicate throws an exception, it will halt the processing of any more exceptions and immediately propagate the thrown exception as-is. In practice I refactored the example in my previous post to make use of the Handle method.\nstatic void Main(string[] args) { try { ExecuteBatch(); } catch (AggregateException aggEx) { aggEx.Handle(HandleBatchExceptions); } Console.ReadLine(); } I’m passing a Func delegate to the Handle method. In this delegate I decide whether I’m handling the exception or not. If I handle the exception, I return true, else I return false.\nprivate static bool HandleBatchExceptions(Exception exceptionToHandle) { if (exceptionToHandle is ArgumentNullException) { // I'm handling the ArgumentNullException. Console.WriteLine(\"Handling the ArgumentNullException.\"); // I handled this Exception return true; } else { // I'm only handling ArgumentNullExceptions. Console.WriteLine(string.Formaxt(\"I'm not handling the {0}.\", exceptionToHandle.GetType())); //I didn't handle this Exception, return false. return false; } } When we run this example a new AggregateException is thrown with the exceptions I didn’t handle.\nConclusion Make use of the Handle method to run over each InnerException and decide which exception you want to handle or not. The exceptions you didn’t handle are automatically wrapped in a new AggregateException which gets rethrown.\n","wordCount":"340","inLanguage":"en","datePublished":"2010-05-23T13:10:00+02:00","dateModified":"2010-05-23T13:10:00+02:00","author":{"@type":"Person","name":"Jef Claes"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jefclaes.be/2010/05/handling-aggregateexception.html"},"publisher":{"@type":"Organization","name":"Jef Claes","logo":{"@type":"ImageObject","url":"https://jefclaes.be/favicon.ico"}}}</script></head><body id=top><header class=header><nav class=header-nav><div class=logo><a href=https://jefclaes.be/ accesskey=h title="Jef Claes (Alt + H)">Jef Claes</a><div class=logo-switches><button id=theme-toggle class=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu class=menu><li><a href=https://jefclaes.be/ title=Home><span>Home</span></a></li><li><a href=https://jefclaes.be/post title="All posts"><span>All posts</span></a></li><li><a href=https://jefclaes.be/tags title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><nav class=breadcrumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg>
+<a href=/post/>Posts</a>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"/></svg></nav><h1 class="post-title entry-hint-parent">Handling the AggregateException</h1><div class=post-meta><span title='2010-05-23 13:10:00 +0200 CEST'>May 23, 2010</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Jef Claes</span></div></header><div class="post-content md-content"><p>Last week I showed you how you can use the <code>AggregateException</code> to apply
+consistent exception handling in batch operations. You can find that
+post
+<a href=https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html>here</a>.</p><p><a href=http://bartdesmet.net/blogs/bart/>Bart De Smet</a> read that post and
+pointed out that I should check out the Handle method of the
+AggregateException.</p><h3 id=the-handle-method>The Handle method<a hidden class=anchor aria-hidden=true href=#the-handle-method>#</a></h3><p>As found in the <a href=http://msdn.microsoft.com/en-us/library/system.aggregateexception.handle.aspx>MSDN
+documentation</a>.</p><p>Description</p><pre tabindex=0><code>Invokes a handler on each Exception contained by this AggregateException.
+</code></pre><p>Parameters</p><pre tabindex=0><code>System.Func&lt;Exception, Boolean&gt; predicate  
 
-      <span style="color:#268bd2">Console</span>.<span style="color:#268bd2">ReadLine</span>();
-}
-</code></pre></div><p>I&rsquo;m passing a <a href="http://msdn.microsoft.com/en-us/library/bb549151.aspx">Func&lt;T, TResult&gt;
+The predicate to execute for each exception. The predicate accepts as an argument the Exception to be processed and returns a Boolean to indicate whether the exception was handled.
+</code></pre><p>Remarks</p><pre tabindex=0><code>Each invocation of the predicate returns true or false to indicate whether the Exception was handled. After all invocations, if any exceptions went unhandled, all unhandled exceptions will be put into a new AggregateException which will be thrown. Otherwise, the Handle method simply returns. If any invocations of the predicate throws an exception, it will halt the processing of any more exceptions and immediately propagate the thrown exception as-is.
+</code></pre><h3 id=in-practice>In practice<a hidden class=anchor aria-hidden=true href=#in-practice>#</a></h3><p>I refactored the example in <a href=https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html>my previous
+post</a> to make use of the <code>Handle</code> method.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Main(<span style=color:#66d9ef>string</span>[] args)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>try</span>
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>            ExecuteBatch();
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>catch</span> (AggregateException aggEx)
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>            aggEx.Handle(HandleBatchExceptions);
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      Console.ReadLine();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>I&rsquo;m passing a <a href=http://msdn.microsoft.com/en-us/library/bb549151.aspx>Func&lt;T, TResult>
 delegate</a> to the
 <code>Handle</code> method. In this delegate I decide whether I&rsquo;m handling the
 exception or not. If I handle the exception, I return true, else I
-return false.</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csharp" data-lang="csharp"><span style="color:#859900">private</span> <span style="color:#859900">static</span> <span style="color:#859900;font-weight:bold">bool</span> <span style="color:#268bd2">HandleBatchExceptions</span>(<span style="color:#268bd2">Exception</span> <span style="color:#268bd2">exceptionToHandle</span>)
-{
-      <span style="color:#859900">if</span> (<span style="color:#268bd2">exceptionToHandle</span> <span style="color:#859900">is</span> <span style="color:#268bd2">ArgumentNullException</span>)
-      {
-            <span style="color:#93a1a1;font-style:italic">// I&#39;m handling the ArgumentNullException.
-</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#268bd2">Console</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#2aa198">&#34;Handling the ArgumentNullException.&#34;</span>);
-            <span style="color:#93a1a1;font-style:italic">// I handled this Exception
-</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#859900">return</span> <span style="color:#859900">true</span>;
-      }
-      <span style="color:#859900">else</span>
-      {   
-            <span style="color:#93a1a1;font-style:italic">// I&#39;m only handling ArgumentNullExceptions.
-</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#268bd2">Console</span>.<span style="color:#268bd2">WriteLine</span>(<span style="color:#859900;font-weight:bold">string</span>.<span style="color:#268bd2">Formaxt</span>(<span style="color:#2aa198">&#34;I&#39;m not handling the {0}.&#34;</span>, <span style="color:#268bd2">exceptionToHandle</span>.<span style="color:#268bd2">GetType</span>()));
-            <span style="color:#93a1a1;font-style:italic">//I didn&#39;t handle this Exception, return false.
-</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#859900">return</span> <span style="color:#859900">false</span>;
-      }          
-}
-</code></pre></div><p>When we run this example a new <code>AggregateException</code> is thrown with the
-exceptions I didn&rsquo;t handle.</p>
-<p><a href="/post/images/2010-05-23-handling-the-aggregateexception-ConsoleOut.bmp"><img src="/post/images/thumbnails/2010-05-23-handling-the-aggregateexception-ConsoleOut.bmp" alt=""></a><br>
-<a href="/post/images/2010-05-23-handling-the-aggregateexception-Rethrown.bmp"><img src="/post/images/thumbnails/2010-05-23-handling-the-aggregateexception-Rethrown.bmp" alt=""></a></p>
-<h3 id="conclusion">Conclusion</h3>
-<p>Make use of the <code>Handle</code> method to run over each <code>InnerException</code> and decide which exception you want to handle or not. The exceptions you didn&rsquo;t handle are automatically wrapped in a new <code>AggregateException</code> which gets rethrown.</p>
-
-			</div>
-
-			<div class="tags">
-				
-					
-						<ul class="flat">
-							
-							<li><a href="/tags/code">code</a></li>
-							
-						</ul>
-					
-				
-			</div></div>
-	</div>
-	<div class="footer wrapper">
-	<nav class="nav">
-		<div>2010  <a href="https://github.com/knadh/hugo-ink">Ink</a> theme on <a href="https://gohugo.io">Hugo</a></div>
-	</nav>
-</div>
-
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-6239073-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-<script>feather.replace()</script>
-</body>
-</html>
+return false.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>bool</span> HandleBatchExceptions(Exception exceptionToHandle)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (exceptionToHandle <span style=color:#66d9ef>is</span> ArgumentNullException)
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// I&#39;m handling the ArgumentNullException.</span>
+</span></span><span style=display:flex><span>            Console.WriteLine(<span style=color:#e6db74>&#34;Handling the ArgumentNullException.&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// I handled this Exception</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>      {   
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// I&#39;m only handling ArgumentNullExceptions.</span>
+</span></span><span style=display:flex><span>            Console.WriteLine(<span style=color:#66d9ef>string</span>.Formaxt(<span style=color:#e6db74>&#34;I&#39;m not handling the {0}.&#34;</span>, exceptionToHandle.GetType()));
+</span></span><span style=display:flex><span>            <span style=color:#75715e>//I didn&#39;t handle this Exception, return false.</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>      }          
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>When we run this example a new <code>AggregateException</code> is thrown with the
+exceptions I didn&rsquo;t handle.</p><p><a href=/post/images/2010-05-23-handling-the-aggregateexception-ConsoleOut.bmp><img loading=lazy src=/post/images/thumbnails/2010-05-23-handling-the-aggregateexception-ConsoleOut.bmp></a><br><a href=/post/images/2010-05-23-handling-the-aggregateexception-Rethrown.bmp><img loading=lazy src=/post/images/thumbnails/2010-05-23-handling-the-aggregateexception-Rethrown.bmp></a></p><h3 id=conclusion>Conclusion<a hidden class=anchor aria-hidden=true href=#conclusion>#</a></h3><p>Make use of the <code>Handle</code> method to run over each <code>InnerException</code> and decide which exception you want to handle or not. The exceptions you didn&rsquo;t handle are automatically wrapped in a new <code>AggregateException</code> which gets rethrown.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://jefclaes.be/tags/code/>Code</a></li></ul><nav class=paginav><a class=prev href=https://jefclaes.be/2010/07/switching-with-non-constant-cases-in-c.html><span class=title>« Prev</span>
+<span>Switching with non-constant cases in C#</span>
+</a><a class=next href=https://jefclaes.be/2010/05/exception-handling-in-batch-operations.html><span class=title>Next »</span>
+<span>Exception handling in batch operations with the AggregateException</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://jefclaes.be/>Jef Claes</a></span> ·
+<span>Powered by
+<a href="https://gohugo.io/?utm_source=papermod" rel=noopener target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top id=top-link class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey=g><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+</a><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var toplink=document.getElementById("top-link");window.onscroll=function(){const e=window.innerHeight;document.body.scrollTop>e||document.documentElement.scrollTop>e?toplink.classList.remove("hidden"):toplink.classList.add("hidden")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
