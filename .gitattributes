@@ -1,0 +1,7 @@
+# Treat compiled assets as binary so git never mangles line endings.
+# Hugo fingerprints these files and embeds the hash in HTML integrity attributes —
+# any byte change after the build breaks the SRI check and blocks CSS/JS loading.
+*.css  binary
+*.js   binary
+*.html binary
+*.xml  binary
