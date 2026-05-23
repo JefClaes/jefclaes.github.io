@@ -7,8 +7,41 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     
-    <lastBuildDate>Sun, 12 Aug 2018 14:58:00 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 22 May 2026 09:00:00 +0200</lastBuildDate>
     <atom:link href="https://jefclaes.be/feeds/posts/default" rel="self" type="application/rss" />
+    
+    <item>
+      <title>Into the middlegame</title>
+      <link>https://jefclaes.be/2026/05/into-the-middlegame.html</link>
+      <pubDate>Fri, 22 May 2026 09:00:00 +0200</pubDate>
+      <guid>https://jefclaes.be/2026/05/into-the-middlegame.html</guid>
+      <description>&lt;p&gt;Early 2025, my oldest daughter came home from school and had learned to play chess. She was so excited about the game that she even asked a board as her birthday gift. I, on the other hand, had never played chess and didn&amp;rsquo;t even know how the pieces moved. Trying to encourage and support her, I picked it up too and found my way to chess.com. I started watching chess content and the algorithm sucked me in. Before I knew it, I labeled myself an &amp;ldquo;adult improver&amp;rdquo; and set a goal to reach 1000 &lt;a href=&#34;https://www.chess.com/terms/elo-rating-chess&#34;&gt;elo&lt;/a&gt; on two &lt;a href=&#34;https://www.chess.com/terms/chess-time-controls&#34;&gt;time controls&lt;/a&gt;: rapid and blitz.&lt;/p&gt;
+&lt;p&gt;After 17 months of either playing, studying or practicing daily (often 5 minutes, sometimes 5 hours), I achieved both goals. Based on the screenshot below, Claude puts me at 160+ hours of actual game time. Let&amp;rsquo;s not even get into my lichess.org account..&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;1000 rapid&#34; loading=&#34;lazy&#34; src=&#34;https://jefclaes.be/post/images/chess-1000-rapid.PNG&#34;&gt;
+&lt;img alt=&#34;1000 blitz&#34; loading=&#34;lazy&#34; src=&#34;https://jefclaes.be/post/images/chess-1000-blitz.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I cringe when I now review the first few weeks and months of playing. Throwing pieces across the board, lacking board vision and no instinct for harmony of the pieces. Hanging pieces, missing tactics, not spotting a mate in 1 threat, playing passively or just crumbling in a scramble for time. It really makes me appreciate how daily practice adds up. Don&amp;rsquo;t get me wrong - I still blunder, just less frequently. I&amp;rsquo;m still very much a beginner as the levels to this game continue to unfold - but at least we are out of the opening and solidly into the middlegame.&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s an abundance of material out there to learn and improve at chess. Some of it paid, most of it available for free.&lt;/p&gt;
+&lt;p&gt;Next to reviewing my own games with an &lt;a href=&#34;https://en.wikipedia.org/wiki/Stockfish_(chess)&#34;&gt;engine&lt;/a&gt; and drilling puzzles, these resources are gold:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Youtube:
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PLUjxDD7HNNThwCNW3f36RZcMxPwQIjYae&#34;&gt;GM Aman Hambleton: Building Habits V2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PLT1F2nOxLHOeyyw85utYJpWtSmxvA-2WR&#34;&gt;Late GM Naroditsky: The Sensei Speedrun&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PLdT3OotRiHJkaRjrG0GSfaddcf0cDyqhn&#34;&gt;IM Eric Rosen: Beginner to Master Speedrun&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PL4KCWZ5Ti2H4hFLv7HBwVzYflOrUZ3qum&#34;&gt;GM Hikaru Nakamura: Master Slowkaru Educational Speedrun&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Chessable:
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.chessable.com/the-chess-elevator-climb-to-1200-and-beyond/course/229177/&#34;&gt;The Chess Elevator: Climb to 1200 and Beyond ($)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.chessable.com/endgame-studies-101/course/81472/&#34;&gt;Endgame Studies 101 ($)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Chess has accidentally become a part of my life. Learning something new every day, discovering and appreciating the nuances of a position, feeling patterns click over time is incredibly rewarding. I&amp;rsquo;m not setting out a new objective just yet. Knowing myself, it will be some equally trivial number I&amp;rsquo;ll obsess over.&lt;/p&gt;
+&lt;p&gt;As far as my daughters go, occasionally they pull up the chessboard but often end up playing made up games with the ponies and the towers.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>GES scavenging and the hidden cost of link events</title>
